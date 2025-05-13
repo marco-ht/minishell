@@ -125,7 +125,7 @@ minishell/
 1. **Clone the Repository:**
 
    ```sh
-   git clone https://github.com/yourusername/minishell.git
+   git clone https://github.com/marco-ht/minishell.git
    cd minishell
    ```
 
