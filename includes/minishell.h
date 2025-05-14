@@ -26,6 +26,9 @@ typedef struct s_redirect
 
 typedef struct s_pipe
 {
+	int		type;
+	char	*left;
+	char	*right;
 }			t_pipe;
 
 void		set_zeros(char *line, t_exec *exec_str);
