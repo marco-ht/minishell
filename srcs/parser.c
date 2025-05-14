@@ -5,6 +5,11 @@ int    is_whitespace(char c)
     return(c == 32 || (c >= 9 && c <= 13));
 }
 
+void    set_exec_type(t_exec *exec_str)
+{
+    exec_str->type = EXEC;
+}
+
 void    set_zeros(char *line, t_exec *exec_str)
 {
     int i;

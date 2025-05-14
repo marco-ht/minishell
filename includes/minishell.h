@@ -5,12 +5,15 @@
 # include <readline/history.h>
 # include <readline/readline.h>
 # include <stdio.h>
-#include <sys/types.h>
-#include <sys/wait.h>
 # include <stdlib.h>
+# include <sys/types.h>
+# include <sys/wait.h>
 # include <unistd.h>
 
-typedef struct	s_exec
+# define PIPE 1
+# define EXEC 2
+
+typedef struct s_exec
 {
 	int		type;
 	char	**args;
@@ -27,6 +30,7 @@ typedef struct s_pipe
 
 void		set_zeros(char *line, t_exec *exec_str);
 void		set_starts(char *line, t_exec *exec_str);
+void		set_exec_type(t_exec *exec_str);
 int			is_whitespace(char c);
 
 // DEBUG FUNCTIONS

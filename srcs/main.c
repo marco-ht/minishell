@@ -11,6 +11,7 @@ int main(void)
 		str = readline("$ ");
 		if (!str || ft_strncmp(str, "exit", 4) == 0) //useremo la buildin exit, questo e' solo un esempio iniziale
 			break;
+		set_exec_type(&exec_str);
 		set_starts(str, &exec_str);
 		set_zeros(str, &exec_str);
 		add_history(str);
