@@ -33,16 +33,16 @@ void	ft_check_args(t_exec *exec_str)
 	printf("\n");
 	printf("\n");
 	i = 0;
-	while(exec_str->evargs[i])
+	while(exec_str->args[i])
 	{
-		printf("*exec_str->evargs[%d] =%d ", i, is_whitespace(*(exec_str->args[i])));
+		printf("*exec_str->args[%d] =%d ", i, is_whitespace(*(exec_str->args[i])));
 		i++;
 	}
 	printf("\n");
 	i =0;
-	while(exec_str->evargs[i])
+	while(exec_str->args[i])
 	{
-		printf("exec_str->evargs[%d] =%p ", i, (exec_str->args[i]));
+		printf("exec_str->args[%d] =%p ", i, (exec_str->args[i]));
 		i++;
 	}
 	printf("\n");
@@ -107,17 +107,18 @@ void    set_zeros(char *line, t_exec *exec_str)
 
 void set_starts(char *line, t_exec *exec_str)
 {
-    int i = 0;
-    int j = 0;
-
-    exec_str->args = malloc(100 * sizeof(char *));
+    int i;
+    int j;
+	
+	i = 0;
+	j = 0;
+    exec_str->args = malloc(100 * sizeof(char *));	//ATTENZIONE VANNO LIBERATI DOPO AVER USATO QUEL NODO!!!!!
     if (!exec_str->args)
         return;
 
     // Skip leading whitespace
     while (line[j] && is_whitespace(line[j]))
         j++;
-
     while (line[j])
     {
         // Start of a word
