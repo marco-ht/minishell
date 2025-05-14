@@ -5,10 +5,12 @@
 # include <readline/history.h>
 # include <readline/readline.h>
 # include <stdio.h>
+#include <sys/types.h>
+#include <sys/wait.h>
 # include <stdlib.h>
 # include <unistd.h>
 
-typedef struct s_exec
+typedef struct	s_exec
 {
 	int		type;
 	char	**args;

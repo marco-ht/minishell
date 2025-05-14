@@ -14,8 +14,8 @@ void    set_zeros(char *line, t_exec *exec_str)
 	if (!exec_str->evargs)
         return;
 
-	printf("line start = %p ", line);
-	printf("\n");
+	/* printf("line start = %p ", line);
+	printf("\n"); */
     j = 0;
     while (line[j] && is_whitespace(line[j]))
 		j++;
@@ -25,12 +25,12 @@ void    set_zeros(char *line, t_exec *exec_str)
 		while (line[j] && !is_whitespace(line[j]))
 			j++;
 		if(is_whitespace(line[j]))
-			exec_str->evargs[i++] = &line[j];
+            exec_str->evargs[i++] = &line[j];
 		while (line[j] && is_whitespace(line[j]))
 			j++;
 	}
 	exec_str->evargs[i] = NULL;
-	ft_check(exec_str);
+	/* ft_check(exec_str); */
 }
 
 void set_starts(char *line, t_exec *exec_str)
@@ -59,6 +59,6 @@ void set_starts(char *line, t_exec *exec_str)
             j++;
     }
     exec_str->args[i] = NULL;
-    ft_check_args(exec_str);
+    //ft_check_args(exec_str);
 }
 
