@@ -43,21 +43,21 @@ void	ft_check_args(t_exec *exec_str)
 	printf("\n");
 }
 
-/* void    set_zeros(char *line, t_exec *exec_str)
+/* void	set_zeros(char *line, t_exec *exec_str)
 {
-    int i;
+	int	i;
 	int	j;
 
-    exec_str->evargs = malloc(100 * sizeof(char *));
+	exec_str->evargs = malloc(100 * sizeof(char *));
 
 	printf("line start = %p ", line);
 	printf("\n");
-    j = 0;
-    while (line[j] && is_whitespace(line[j]))
+	j = 0;
+	while (line[j] && is_whitespace(line[j]))
 		j++;
 	i = 0;
-    while(line[j])
-    {
+	while(line[j])
+	{
 		if (!ft_strchr(&line[j], ' '))
 		{
 			exec_str->evargs[i] = &line[j];

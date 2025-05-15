@@ -1,16 +1,16 @@
 #include "../includes/minishell.h"
 
-int main(void)
+int	main(void)
 {
 	char	*str;
 	char	**matrix;
 	t_exec	exec_str;
 
-    while(1)
-    {
+	while(1)
+	{
 		str = readline("$ ");
 		if (!str || ft_strncmp(str, "exit", 4) == 0) //useremo la buildin exit, questo e' solo un esempio iniziale
-			break;
+			break ;
 		set_exec_type(&exec_str);
 		set_starts(str, &exec_str);
 		set_zeros(str, &exec_str);
@@ -19,7 +19,7 @@ int main(void)
 		if(fork() == 0)
 			execvp(matrix[0], matrix);
 		wait(NULL);
-    }
+	}
 		return(free(str), rl_clear_history(), 0);
 }
 /*
