@@ -9,6 +9,8 @@
 # include <sys/types.h>
 # include <sys/wait.h>
 # include <unistd.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 
 # define EXEC 1
 # define REDIR 2
@@ -66,5 +68,6 @@ void		ft_exit_err(char *str);
 int			fork1(void);
 
 t_cmd		*ft_tree_test(void);
+void		ft_ret_err(char *str);
 
 #endif

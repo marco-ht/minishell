@@ -14,6 +14,12 @@ void    ft_exit_err(char *str)
     exit(1);
 }
 
+void    ft_ret_err(char *str)
+{
+    printf("%s\n", str);
+    return;
+}
+
 int fork1(void)
 {
     int pid;

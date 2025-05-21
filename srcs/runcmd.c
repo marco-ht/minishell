@@ -4,9 +4,9 @@ void    ft_runcmd(t_cmd *cmd)
 {
     int p[2];
     t_execcmd  *ecmd;
-    /* t_listcmd   *lcmd; */
+    t_listcmd   *lcmd;
     t_pipecmd   *pcmd;
-    /* t_redircmd  *rcmd; */
+    t_redircmd  *rcmd;
 
     /* if(cmd->type == BUILTIN) //builtin nel parent
     {
@@ -20,10 +20,33 @@ void    ft_runcmd(t_cmd *cmd)
     {
         ecmd = (t_execcmd *) cmd;
         if(ecmd->argv[0] == NULL)
-            exit(1);
+            return;
+        /* if(fork1() == 0)
+        { */
+        /* printf("ok %s\n", ecmd->argv[0]); */
         execvp(ecmd->argv[0], ecmd->argv);
-        printf("exec %s failded\n", ecmd->argv[0]);
+        printf("exec %s failed\n", ecmd->argv[0]);
+        /* } */
         exit(1);
+    }
+    else if(cmd->type == REDIR)
+    {
+        rcmd = (t_redircmd *) cmd;
+        close(rcmd->fd);
+        if(open(rcmd->file, rcmd->mode) < 0)
+        {
+            printf("open %s failed\n", rcmd->file);
+            exit(1);
+        }
+        ft_runcmd(rcmd->cmd);
+    }
+    else if(cmd->type == LIST)
+    {
+        lcmd = (t_listcmd *) cmd;
+        if(fork1() == 0)
+            ft_runcmd(lcmd->left);
+        wait(NULL);
+        ft_runcmd(lcmd->right);
     }
     else if(cmd->type == PIPE)
     {
@@ -37,6 +60,7 @@ void    ft_runcmd(t_cmd *cmd)
             close(p[1]);
             ft_runcmd(pcmd->left);
         }
+        wait(NULL);
         if(fork1() == 0)
         {
             dup2(p[0], 0);
@@ -47,8 +71,6 @@ void    ft_runcmd(t_cmd *cmd)
         close(p[0]);
         close(p[1]);
         wait(NULL);
-        wait(NULL);
-        exit(0);
     }
     else
     {

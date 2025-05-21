@@ -12,8 +12,8 @@ int main(void)
 			break;
 
         /* ft_runcmd(ft_parsecmd(buf)); */
-        /* if(fork1() == 0) */
-        ft_runcmd(ft_tree_test());
+        if(fork1() == 0)
+            ft_runcmd(ft_tree_test());
         wait(NULL);
         free(buf);
 	}
