@@ -1,4 +1,4 @@
-#include "../includes/minishell.h"
+/* #include "../includes/minishell.h"
 
 int	is_whitespace(char c)
 {
@@ -19,8 +19,8 @@ void	set_zeros(char *line, t_exec *exec_str)
 	if (!exec_str->evargs)
 		return ;
 
-	/* printf("line start = %p ", line);
-	printf("\n"); */
+	// printf("line start = %p ", line);
+	// printf("\n"); 
 	j = 0;
 	while (line[j] && is_whitespace(line[j]))
 		j++;
@@ -35,7 +35,7 @@ void	set_zeros(char *line, t_exec *exec_str)
 			j++;
 	}
 	exec_str->evargs[i] = NULL;
-	/* ft_check(exec_str); */
+	// ft_check(exec_str);
 }
 
 void	set_starts(char *line, t_exec *exec_str)
@@ -67,3 +67,4 @@ void	set_starts(char *line, t_exec *exec_str)
 	//ft_check_args(exec_str);
 }
 
+ */

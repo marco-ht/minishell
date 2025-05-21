@@ -1,4 +1,4 @@
-#include "../includes/minishell.h"
+/* #include "../includes/minishell.h"
 
 void	ft_check(t_exec *exec_str)
 {
@@ -41,7 +41,7 @@ void	ft_check_args(t_exec *exec_str)
 		i++;
 	}
 	printf("\n");
-}
+} */
 
 /* void	set_zeros(char *line, t_exec *exec_str)
 {
