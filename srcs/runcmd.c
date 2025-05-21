@@ -16,7 +16,7 @@ void    ft_runcmd(t_cmd *cmd)
 
     if(cmd == NULL)
         return;
-    if(cmd->type == EXEC && fork1() == 0)
+    if(cmd->type == EXEC)
     {
         ecmd = (t_execcmd *) cmd;
         if(ecmd->argv[0] == NULL)
@@ -25,7 +25,7 @@ void    ft_runcmd(t_cmd *cmd)
         printf("exec %s failded\n", ecmd->argv[0]);
         exit(1);
     }
-    else if(cmd->type == PIPE && fork1() == 0)
+    else if(cmd->type == PIPE)
     {
         pcmd = (t_pipecmd *) cmd;
         if(pipe(p) < 0)
@@ -55,4 +55,5 @@ void    ft_runcmd(t_cmd *cmd)
         if(fork1() == 0)
             ft_exit_err("runcmd error\n");
     }
+    exit(0);
 }
