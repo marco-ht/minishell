@@ -53,7 +53,7 @@ typedef struct s_listcmd
 	t_cmd	*right;
 }			t_listcmd;
 
-int			ft_getcmd(char *buf);
+int			ft_getcmd(char **buf);
 void		ft_runcmd(t_cmd *cmd);
 
 t_cmd		*ft_execcmd(void);

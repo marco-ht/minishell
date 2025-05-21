@@ -1,4 +1,4 @@
-#include "includes/minishell.h"
+#include "../includes/minishell.h"
 
 t_cmd	*ft_tree_test(void)
 {

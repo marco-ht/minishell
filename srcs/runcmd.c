@@ -4,9 +4,9 @@ void    ft_runcmd(t_cmd *cmd)
 {
     int p[2];
     t_execcmd  *ecmd;
-    t_listcmd   *lcmd;
+    /* t_listcmd   *lcmd; */
     t_pipecmd   *pcmd;
-    t_redircmd  *rcmd;
+    /* t_redircmd  *rcmd; */
 
     /* if(cmd->type == BUILTIN) //builtin nel parent
     {
@@ -19,13 +19,13 @@ void    ft_runcmd(t_cmd *cmd)
     if(cmd->type == EXEC && fork1() == 0)
     {
         ecmd = (t_execcmd *) cmd;
-        if(ecmd->argv[0] = '\0')
+        if(ecmd->argv[0] == NULL)
             exit(1);
-        exec(ecmd->argv[0], ecmd->argv);
+        execvp(ecmd->argv[0], ecmd->argv);
         printf("exec %s failded\n", ecmd->argv[0]);
         exit(1);
     }
-    else if(cmd->type = PIPE && fork1() == 0)
+    else if(cmd->type == PIPE && fork1() == 0)
     {
         pcmd = (t_pipecmd *) cmd;
         if(pipe(p) < 0)
@@ -51,6 +51,8 @@ void    ft_runcmd(t_cmd *cmd)
         exit(0);
     }
     else
-        if(fork1 == 0)
+    {
+        if(fork1() == 0)
             ft_exit_err("runcmd error\n");
+    }
 }

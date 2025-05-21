@@ -4,7 +4,7 @@ int main(void)
 {
     char	*buf;
 
-    while(ft_getcmd(buf) >= 0) //!buf (EOF, ctrl+D) -> -1 we stop while loop
+    while(ft_getcmd(&buf) >= 0) //!buf (EOF, ctrl+D) -> -1 we stop while loop
 	{
         add_history(buf);
 
@@ -12,7 +12,7 @@ int main(void)
 			break;
 
         /* ft_runcmd(ft_parsecmd(buf)); */
-        ft_runcmd(ft_tree_test);
+        ft_runcmd(ft_tree_test());
         free(buf);
 	}
     return(free(buf), rl_clear_history(), 0);

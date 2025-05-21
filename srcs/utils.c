@@ -1,11 +1,11 @@
 #include "../includes/minishell.h"
 
-int ft_getcmd(char *buf)
+int ft_getcmd(char **buf)
 {
-    buf = readline("$ ");
-    if(!buf)
+    *buf = readline("$ ");
+    if(!(*buf))
         return(-1); //EOF
-    return(ft_strlen(buf));
+    return(ft_strlen(*buf));
 }
 
 void    ft_exit_err(char *str)
