@@ -10,34 +10,59 @@
 # include <sys/wait.h>
 # include <unistd.h>
 
-# define PIPE 1
-# define EXEC 2
+# define EXEC 1
+# define REDIR 2
+# define PIPE 3
+# define LIST 4
 
-typedef struct s_exec
+# define MAX_ARGS 10
+
+typedef struct s_cmd
 {
 	int		type;
-	char	**args;
-	char	**evargs;
-}			t_exec;
+}			t_cmd;
 
-typedef struct s_redirect
-{
-}			t_redirect;
-
-typedef struct s_pipe
+typedef struct s_execcmd
 {
 	int		type;
-	char	*left;
-	char	*right;
-}			t_pipe;
+	char	*argv[MAX_ARGS];
+	char	*eargv[MAX_ARGS];
+}			t_execcmd;
 
-void		set_zeros(char *line, t_exec *exec_str);
-void		set_starts(char *line, t_exec *exec_str);
-void		set_exec_type(t_exec *exec_str);
-int			is_whitespace(char c);
+typedef struct s_redircmd
+{
+	int		type;
+	t_cmd	*cmd;
+	char	*file;
+	char	*efile;
+	int		mode;
+	int		fd;
+}			t_redircmd;
 
-// DEBUG FUNCTIONS
-void		ft_check(t_exec *exec_str);
-void		ft_check_args(t_exec *exec_str);
+typedef struct s_pipecmd
+{
+	int		type;
+	t_cmd	*left;
+	t_cmd	*right;
+}			t_pipecmd;
+
+typedef struct s_listcmd
+{
+	int		type;
+	t_cmd	*left;
+	t_cmd	*right;
+}			t_listcmd;
+
+int			ft_getcmd(char *buf);
+void		ft_runcmd(t_cmd *cmd);
+
+t_cmd		*ft_execcmd(void);
+t_cmd		*ft_pipecmd(t_cmd *left, t_cmd *right);
+t_cmd		*ft_redircmd(t_cmd *subcmd, char *file, char *efile, int mode,
+				int fd);
+t_cmd		*ft_listcmd(t_cmd *left, t_cmd *right);
+
+void		ft_exit_err(char *str);
+int			fork1(void);
 
 #endif
