@@ -65,4 +65,6 @@ t_cmd		*ft_listcmd(t_cmd *left, t_cmd *right);
 void		ft_exit_err(char *str);
 int			fork1(void);
 
+t_cmd		*ft_tree_test(void);
+
 #endif
