@@ -10,7 +10,7 @@ int main(void)
 
 		if (ft_strncmp(buf, "exit", 4) == 0) //useremo la buildin exit, questo e' solo un esempio iniziale
 			break;
-        
+
         /* ft_runcmd(ft_parsecmd(buf)); */
         ft_runcmd(ft_tree_test);
         free(buf);

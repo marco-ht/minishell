@@ -3,7 +3,7 @@
 t_cmd   *ft_execcmd(void)
 {
     t_execcmd *cmd;
-    
+
     cmd = malloc(sizeof(* cmd));
     memset(cmd, 0, sizeof(* cmd));
     cmd ->type = EXEC;
@@ -33,7 +33,7 @@ t_cmd   *ft_redircmd(t_cmd *subcmd, char *file, char *efile, int mode, int fd)
     cmd->file = file;
     cmd->efile = efile;
     cmd->mode = mode;
-    cmd->fd;
+    cmd->fd = fd;
     return(t_cmd *) cmd;
 }
 
