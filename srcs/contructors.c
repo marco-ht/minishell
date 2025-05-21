@@ -15,7 +15,7 @@ t_cmd   *ft_pipecmd(t_cmd *left, t_cmd * right)
 
     cmd = malloc(sizeof(* cmd));
     memset(cmd, 0, sizeof(* cmd));
-    cmd->type = pipe;
+    cmd->type = PIPE;
     cmd -> left = left;
     cmd ->right = right;
     return (t_cmd *) cmd;

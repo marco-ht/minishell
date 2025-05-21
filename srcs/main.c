@@ -14,7 +14,7 @@ int main(void)
         ft_runcmd(ft_parsecmd(buf));
         free(buf);
 	}
-		return(free(buf), rl_clear_history(), 0);
+    return(free(buf), rl_clear_history(), 0);
 }
 
 /*
