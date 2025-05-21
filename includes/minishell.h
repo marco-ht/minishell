@@ -2,15 +2,15 @@
 # define MINISHELL_H
 
 # include "../libft/libft.h"
+# include <fcntl.h>
 # include <readline/history.h>
 # include <readline/readline.h>
 # include <stdio.h>
 # include <stdlib.h>
+# include <sys/stat.h>
 # include <sys/types.h>
 # include <sys/wait.h>
 # include <unistd.h>
-#include <sys/stat.h>
-#include <fcntl.h>
 
 # define EXEC 1
 # define REDIR 2
@@ -69,5 +69,7 @@ int			fork1(void);
 
 t_cmd		*ft_tree_test(void);
 void		ft_ret_err(char *str);
+t_cmd		*ft_tree_pipe2(void);
+t_cmd		*ft_tree_pipe3(void);
 
 #endif

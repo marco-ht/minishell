@@ -13,7 +13,7 @@ int main(void)
 
         /* ft_runcmd(ft_parsecmd(buf)); */
         if(fork1() == 0)
-            ft_runcmd(ft_tree_pipe2());
+            ft_runcmd(ft_tree_pipe3());
         wait(NULL);
         free(buf);
     }
