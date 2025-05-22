@@ -12,12 +12,10 @@ int main(void)
 		if (ft_strncmp(buf, "exit", 4) == 0) // useremo la buildin exit, questo e' solo un esempio iniziale
 			break;
 
+		tree = ft_tree_pipe3();
 		/* ft_runcmd(ft_parsecmd(buf)); */
 		if (fork1() == 0)
-		{
-			tree = ft_tree_pipe3();
 			ft_runcmd(tree);
-		}
 		wait(NULL);
 		free_tree(tree);
 		free(buf);
@@ -26,5 +24,5 @@ int main(void)
 }
 
 /*
-valgrind --leak-check=full --show-leak-kinds=all ./nome_programma
+valgrind --leak-check=full --show-leak-kinds=all --log-file=valgrind_output.txt ./nome_programma
 */
