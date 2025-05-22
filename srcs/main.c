@@ -13,7 +13,7 @@ int main(void)
 			break;
 
 		tree = ft_tree_pipe3();
-		/* ft_runcmd(ft_parsecmd(buf)); */
+		/* tree = ft_parsecmd(buf); */
 		if (fork1() == 0)
 			ft_runcmd(tree);
 		wait(NULL);
