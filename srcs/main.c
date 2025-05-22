@@ -2,22 +2,22 @@
 
 int main(void)
 {
-    char	*buf;
+	char *buf;
 
-    while(ft_getcmd(&buf) >= 0) //!buf (EOF, ctrl+D) -> -1 we stop while loop
+	while (ft_getcmd(&buf) >= 0) //! buf (EOF, ctrl+D) -> -1 we stop while loop
 	{
-        add_history(buf);
+		add_history(buf);
 
-		if (ft_strncmp(buf, "exit", 4) == 0) //useremo la buildin exit, questo e' solo un esempio iniziale
+		if (ft_strncmp(buf, "exit", 4) == 0) // useremo la buildin exit, questo e' solo un esempio iniziale
 			break;
 
-        /* ft_runcmd(ft_parsecmd(buf)); */
-        if(fork1() == 0)
-            ft_runcmd(ft_tree_pipe3());
-        wait(NULL);
-        free(buf);
-    }
-    return(free(buf), rl_clear_history(), 0);
+		/* ft_runcmd(ft_parsecmd(buf)); */
+		if (fork1() == 0)
+			ft_runcmd(ft_tree_builtin());
+		wait(NULL);
+		free(buf);
+	}
+	return (free(buf), rl_clear_history(), 0);
 }
 
 /*

@@ -11,11 +11,13 @@
 # include <sys/types.h>
 # include <sys/wait.h>
 # include <unistd.h>
+# include <limits.h>
 
 # define EXEC 1
 # define REDIR 2
 # define PIPE 3
 # define LIST 4
+# define BUILTIN 5
 
 # define MAX_ARGS 10
 
@@ -59,6 +61,7 @@ int			ft_getcmd(char **buf);
 void		ft_runcmd(t_cmd *cmd);
 
 t_cmd		*ft_execcmd(void);
+t_cmd		*ft_execbuiltin(void);
 t_cmd		*ft_pipecmd(t_cmd *left, t_cmd *right);
 t_cmd		*ft_redircmd(t_cmd *subcmd, char *file, char *efile, int mode,
 				int fd);
@@ -71,5 +74,8 @@ t_cmd		*ft_tree_test(void);
 void		ft_ret_err(char *str);
 t_cmd		*ft_tree_pipe2(void);
 t_cmd		*ft_tree_pipe3(void);
+t_cmd		*ft_tree_builtin(void);
+
+void	builtin_pwd(t_execcmd *ecmd);
 
 #endif

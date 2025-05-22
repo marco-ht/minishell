@@ -118,3 +118,15 @@ t_cmd *ft_tree_pipe3(void)
 
 	return ((t_cmd *)and);
 }
+
+t_cmd	*ft_tree_builtin(void)
+{
+	t_execcmd	*ex;
+
+	ex = malloc(sizeof(*ex));
+	memset(ex, 0, sizeof(*ex));
+	ex->type = BUILTIN;
+	ex->argv[0] = "pwd";
+	ex->argv[1] = NULL;
+	return ((t_cmd *)ex);
+}
