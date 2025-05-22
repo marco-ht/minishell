@@ -3,6 +3,7 @@
 int main(void)
 {
 	char *buf;
+	t_cmd	*tree;
 
 	while (ft_getcmd(&buf) >= 0) //! buf (EOF, ctrl+D) -> -1 we stop while loop
 	{
@@ -13,8 +14,12 @@ int main(void)
 
 		/* ft_runcmd(ft_parsecmd(buf)); */
 		if (fork1() == 0)
-			ft_runcmd(ft_tree_builtin());
+		{
+			tree = ft_tree_pipe3();
+			ft_runcmd(tree);
+		}
 		wait(NULL);
+		free_tree(tree);
 		free(buf);
 	}
 	return (free(buf), rl_clear_history(), 0);

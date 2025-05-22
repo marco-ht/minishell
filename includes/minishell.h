@@ -63,7 +63,7 @@ void		ft_runcmd(t_cmd *cmd);
 t_cmd		*ft_execcmd(void);
 t_cmd		*ft_execbuiltin(void);
 t_cmd		*ft_pipecmd(t_cmd *left, t_cmd *right);
-t_cmd		*ft_redircmd(t_cmd *subcmd, char *file, char *efile, int mode,
+t_cmd		*ft_redircmd(t_cmd *subcmd, char *file, char *efile, int mode, \
 				int fd);
 t_cmd		*ft_listcmd(t_cmd *left, t_cmd *right);
 
@@ -76,6 +76,8 @@ t_cmd		*ft_tree_pipe2(void);
 t_cmd		*ft_tree_pipe3(void);
 t_cmd		*ft_tree_builtin(void);
 
-void	builtin_pwd(t_execcmd *ecmd);
+void		free_tree(t_cmd *cmd);
+
+void		builtin_pwd(t_execcmd *ecmd);
 
 #endif
