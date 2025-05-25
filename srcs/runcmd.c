@@ -16,16 +16,16 @@ void ft_runcmd(t_cmd *cmd)
 		ecmd = (t_execcmd *)cmd;
 		if (ecmd->argv[0] == NULL)
 			return ;
-		if (strcmp(ecmd->argv[0], "pwd") == 0)
+		if (ft_strncmp(ecmd->argv[0], "pwd", 3) == 0)
 			builtin_pwd(ecmd);
-		/*else if (strcmp(ecmd->argv[0], "cd") == 0)
-			builtin_cd(ecmd);
-		else if (strcmp(ecmd->argv[0], "echo") == 0)
-			builtin_echo(ecmd);*/
+		else if (strncmp(ecmd->argv[0], "echo", 4) == 0)
+			builtin_echo(ecmd);
+		/*else if (strcmp(ecmd->argv[0], "echo") == 0)
+			builtin_echo(ecmd);
 		else {
 			printf("Builtin %s not found", ecmd->argv[0]);
 			exit(1);
-		}
+		}*/
 	}
 	else if (cmd->type == EXEC)
 	{

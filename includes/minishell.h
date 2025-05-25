@@ -78,6 +78,7 @@ t_cmd		*ft_tree_builtin(void);
 
 void		free_tree(t_cmd *cmd);
 
-void		builtin_pwd(t_execcmd *ecmd);
+void		builtin_pwd();
+void	builtin_echo(t_execcmd *ecmd);
 
 #endif

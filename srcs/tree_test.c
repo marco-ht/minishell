@@ -126,7 +126,9 @@ t_cmd	*ft_tree_builtin(void)
 	ex = malloc(sizeof(*ex));
 	memset(ex, 0, sizeof(*ex));
 	ex->type = BUILTIN;
-	ex->argv[0] = "pwd";
-	ex->argv[1] = NULL;
+	ex->argv[0] = "echo";
+	ex->argv[1] = "miao";
+	ex->argv[2] = "ciao";
+	ex->argv[3] = NULL;
 	return ((t_cmd *)ex);
 }
