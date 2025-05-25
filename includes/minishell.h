@@ -78,7 +78,10 @@ t_cmd		*ft_tree_builtin(void);
 
 void		free_tree(t_cmd *cmd);
 
+char		*get_pwd();
 void		builtin_pwd();
-void	builtin_echo(t_execcmd *ecmd);
+void		builtin_echo(t_execcmd *ecmd);
+void		builtin_cd(t_execcmd *ecmd);
+char		*get_current_directory_string(char *buffer, size_t size);
 
 #endif

@@ -20,12 +20,12 @@ void ft_runcmd(t_cmd *cmd)
 			builtin_pwd(ecmd);
 		else if (strncmp(ecmd->argv[0], "echo", 4) == 0)
 			builtin_echo(ecmd);
-		/*else if (strcmp(ecmd->argv[0], "echo") == 0)
-			builtin_echo(ecmd);
+		else if (strncmp(ecmd->argv[0], "cd", 2) == 0)
+			builtin_cd(ecmd);
 		else {
-			printf("Builtin %s not found", ecmd->argv[0]);
+			printf("minishell: %s: command not found\n", ecmd->argv[0]);
 			exit(1);
-		}*/
+		}
 	}
 	else if (cmd->type == EXEC)
 	{

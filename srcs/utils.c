@@ -1,31 +1,31 @@
 #include "../includes/minishell.h"
 
-int ft_getcmd(char **buf)
+int	ft_getcmd(char **buf)
 {
-    *buf = readline("$ ");
-    if(!(*buf))
-        return(-1); //EOF
-    return(ft_strlen(*buf));
+	*buf = readline("$ ");
+	if (!(*buf))
+		return (-1); // EOF
+	return (ft_strlen(*buf));
 }
 
-void    ft_exit_err(char *str)
+void	ft_exit_err(char *str)
 {
-    printf("%s\n", str);
-    exit(1);
+	printf("%s\n", str);
+	exit(1);
 }
 
-void    ft_ret_err(char *str)
+void	ft_ret_err(char *str)
 {
-    printf("%s\n", str);
-    return;
+	printf("%s\n", str);
+	return;
 }
 
-int fork1(void)
+int	fork1(void)
 {
-    int pid;
+	int pid;
 
-    pid = fork();
-    if(pid == -1)
-        ft_exit_err("Fork");
-    return(pid);
+	pid = fork();
+	if (pid == -1)
+		ft_exit_err("Fork");
+	return (pid);
 }

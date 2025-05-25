@@ -1,19 +1,24 @@
 #include "../includes/minishell.h"
 
-void	builtin_pwd()
+char	*get_pwd()
 {
-	char cwd_buffer[1024];
-
-	if (getcwd(cwd_buffer, sizeof(cwd_buffer)) != NULL)
-	{
-		printf("%s\n", cwd_buffer);
-	}
-	else
-	{
-		perror("minishell: pwd\n");
-	}
+	char *cwd = getcwd(NULL, 0);
+	if (!cwd)
+		perror("minishell: cd");
+	return (cwd);
 }
 
+void	builtin_pwd()
+{
+	char *cwd;
+
+	cwd = get_pwd();
+	if (cwd)
+	{
+		printf("%s\n", cwd);
+		free(cwd);
+	}
+}
 int	check_echo_args(char *arg)
 {
 	if (!arg)
@@ -84,5 +89,16 @@ void	builtin_echo(t_execcmd *ecmd)
 		{
 			perror("minishell: echo\n");
 		}
+	}
+}
+
+void	builtin_cd(t_execcmd *ecmd)
+{
+	if (!ecmd->argv[1])
+		printf("no args\n");
+
+	else if (ecmd->argv[1])
+	{
+		chdir(ecmd->argv[1]);
 	}
 }
