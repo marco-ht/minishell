@@ -14,7 +14,7 @@ int main(void)
 
 		/* printf("buffer = %s\n", buf); */
 		/* printf("pid main = %d\n", getpid()); */
-		tree = ft_tree_pipe3();
+		tree = ft_tree_builtin2();
 		/* tree = ft_parsecmd(buf); */
 		/* if (fork1() == 0) */
 			ft_runcmd(tree);
