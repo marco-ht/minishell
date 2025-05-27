@@ -12,7 +12,9 @@ int main(void)
 		if (ft_strncmp(buf, "exit", 4) == 0) // useremo la buildin exit, questo e' solo un esempio iniziale
 			break;
 
-		tree = ft_tree_builtin();
+		/* printf("buffer = %s\n", buf); */
+		printf("pid main = %d\n", getpid());
+		tree = ft_tree_pipe3();
 		/* tree = ft_parsecmd(buf); */
 		if (fork1() == 0)
 			ft_runcmd(tree);

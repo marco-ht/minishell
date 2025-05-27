@@ -131,3 +131,30 @@ t_cmd	*ft_tree_builtin(void)
 	ex->argv[2] = NULL;
 	return ((t_cmd *)ex);
 }
+t_cmd	*ft_tree_builtin2(void)
+{
+	t_execcmd	*ex;
+
+	ex = malloc(sizeof(*ex));
+	memset(ex, 0, sizeof(*ex));
+	ex->type = BUILTIN;
+	ex->argv[0] = "cd";
+	ex->argv[1] = "..";
+	ex->argv[2] = NULL;
+
+	t_execcmd	*ex2;
+
+	ex2 = malloc(sizeof(*ex2));
+	memset(ex2, 0, sizeof(*ex2));
+	ex2->type = BUILTIN;
+	ex2->argv[0] = "pwd";
+	ex2->argv[1] = NULL;
+
+	t_listcmd	*lst;
+	lst = malloc(sizeof(*ex));
+	memset(lst, 0, sizeof(*lst));
+	lst->type = LIST;
+	lst->left = (t_cmd *) ex;
+	lst->right = (t_cmd *) ex2;
+	return ((t_cmd *)lst);
+}

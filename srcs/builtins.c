@@ -99,6 +99,9 @@ void	builtin_cd(t_execcmd *ecmd)
 
 	else if (ecmd->argv[1])
 	{
-		chdir(ecmd->argv[1]);
+		/* printf("pid cd = %d\n", getpid()); */
+		/* printf("argv[1] = %s\n", ecmd->argv[1]); */
+		if(chdir(ecmd->argv[1]) < 0)
+		printf("cannot cd %s\n", ecmd->argv[1]);
 	}
 }
