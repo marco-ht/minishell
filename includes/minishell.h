@@ -60,7 +60,6 @@ typedef struct s_listcmd
 
 int			ft_getcmd(char **buf);
 void		ft_runcmd(t_cmd *cmd);
-void		ft_runcmd2(t_cmd *cmd);
 
 t_cmd		*ft_execcmd(void);
 t_cmd		*ft_execbuiltin(void);
