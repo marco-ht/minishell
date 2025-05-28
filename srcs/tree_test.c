@@ -139,7 +139,7 @@ t_cmd	*ft_tree_builtin2(void)
 	memset(ex, 0, sizeof(*ex));
 	ex->type = BUILTIN;
 	ex->argv[0] = "cd";
-	ex->argv[1] = "..";
+	ex->argv[1] = "/etc/";
 	ex->argv[2] = NULL;
 
 	t_execcmd	*ex2;

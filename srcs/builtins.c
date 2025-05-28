@@ -1,6 +1,6 @@
 #include "../includes/minishell.h"
 
-char	*get_pwd()
+char *get_pwd()
 {
 	char *cwd = getcwd(NULL, 0);
 	if (!cwd)
@@ -8,7 +8,7 @@ char	*get_pwd()
 	return (cwd);
 }
 
-void	builtin_pwd()
+void builtin_pwd()
 {
 	char *cwd;
 
@@ -19,7 +19,7 @@ void	builtin_pwd()
 		free(cwd);
 	}
 }
-int	check_echo_args(char *arg)
+int check_echo_args(char *arg)
 {
 	if (!arg)
 		return (0);
@@ -35,23 +35,23 @@ int	check_echo_args(char *arg)
 	return (1);
 }
 
-void	builtin_echo(t_execcmd *ecmd)
+void builtin_echo(t_execcmd *ecmd)
 {
-	int	i;
+	int i;
 
 	if (!ecmd->argv[1])
 	{
 		printf("\n");
-		return ;
+		return;
 	}
 	if (check_echo_args(ecmd->argv[1]))
 	{
 		i = 2;
-		if(!ecmd->argv[3])
+		if (!ecmd->argv[3])
 		{
 			printf("%s", ecmd->argv[2]);
 		}
-		else if(ecmd->argv[3])
+		else if (ecmd->argv[3])
 		{
 			while (ecmd->argv[i])
 			{
@@ -59,22 +59,22 @@ void	builtin_echo(t_execcmd *ecmd)
 				if (ecmd->argv[i])
 					printf(" ");
 				else
-					return ;
+					return;
 			}
 		}
 		else
 		{
-			perror("minishell: echo\n");
+			perror("minishell: echo");
 		}
 	}
 	else
 	{
 		i = 1;
-		if(!ecmd->argv[2])
+		if (!ecmd->argv[2])
 		{
 			printf("%s\n", ecmd->argv[1]);
 		}
-		else if(ecmd->argv[2])
+		else if (ecmd->argv[2])
 		{
 			while (ecmd->argv[i])
 			{
@@ -87,21 +87,54 @@ void	builtin_echo(t_execcmd *ecmd)
 		}
 		else
 		{
-			perror("minishell: echo\n");
+			perror("minishell: echo");
 		}
 	}
 }
 
-void	builtin_cd(t_execcmd *ecmd)
+void builtin_cd(t_execcmd *ecmd)
 {
-	if (!ecmd->argv[1])
-		printf("no args\n");
+	char *home;
+	char *subpath;
+	char *joined;
 
-	else if (ecmd->argv[1])
+	if (!ecmd->argv[1])
 	{
-		/* printf("pid cd = %d\n", getpid()); */
-		/* printf("argv[1] = %s\n", ecmd->argv[1]); */
-		if(chdir(ecmd->argv[1]) < 0)
-		printf("cannot cd %s\n", ecmd->argv[1]);
+		home = getenv("HOME");
+		if (!home || chdir(home) < 0)
+			perror("minishell: cd");
+	}
+	else if (ecmd->argv[1][0] == '~')
+	{
+		home = getenv("HOME");
+		if (!home)
+		{
+			perror("minishell: cd");
+			return;
+		}
+		if (ecmd->argv[1][1] == '\0')
+		{
+			if (chdir(home) < 0)
+				perror("minishell: cd");
+		}
+		else if (ecmd->argv[1][1] == '/')
+		{
+			subpath = ecmd->argv[1] + 1;
+			joined = ft_strjoin(home, subpath);
+
+			if (!joined || chdir(joined) < 0)
+				perror("minishell: cd");
+
+			free(joined);
+		}
+		else
+		{
+			perror("minishell: cd");
+		}
+	}
+	else
+	{
+		if (chdir(ecmd->argv[1]) < 0)
+			perror("minishell: cd");
 	}
 }
