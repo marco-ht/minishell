@@ -85,7 +85,9 @@ char		*get_pwd(void);
 void		builtin_pwd(void);
 void		builtin_echo(t_execcmd *ecmd);
 void		builtin_cd(t_execcmd *ecmd);
+void		builtin_exit(t_execcmd *ecmd);
 char		*get_current_directory_string(char *buffer, size_t size);
 void		handler(int signum);
+int			ft_isnumreal(const char *s);
 
 #endif

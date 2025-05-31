@@ -8,21 +8,23 @@ void ft_runcmd(t_cmd *cmd)
 	t_pipecmd *pcmd;
 	t_redircmd *rcmd;
 
-
 	if (cmd == NULL)
-		return ;
-	if(cmd->type == BUILTIN)
+		return;
+	if (cmd->type == BUILTIN)
 	{
 		ecmd = (t_execcmd *)cmd;
 		if (ecmd->argv[0] == NULL)
-			return ;
-		if (ft_strncmp(ecmd->argv[0], "pwd", 3) == 0)
+			return;
+		if (strncmp(ecmd->argv[0], "pwd", 3) == 0 && ecmd->argv[0][3] == '\0')
 			builtin_pwd();
-		else if (strncmp(ecmd->argv[0], "echo", 4) == 0)
+		else if (strncmp(ecmd->argv[0], "echo", 4) == 0 && ecmd->argv[0][4] == '\0')
 			builtin_echo(ecmd);
-		else if (strncmp(ecmd->argv[0], "cd", 2) == 0)
+		else if (strncmp(ecmd->argv[0], "cd", 2) == 0 && ecmd->argv[0][2] == '\0')
 			builtin_cd(ecmd);
-		else {
+		else if (strncmp(ecmd->argv[0], "exit", 4) == 0 && ecmd->argv[0][4] == '\0')
+			builtin_exit(ecmd);
+		else
+		{
 			printf("minishell: %s: command not found\n", ecmd->argv[0]);
 			return;
 		}
@@ -31,10 +33,10 @@ void ft_runcmd(t_cmd *cmd)
 	{
 		ecmd = (t_execcmd *)cmd;
 		if (ecmd->argv[0] == NULL)
-			return ;
-		if(fork1() == 0)
+			return;
+		if (fork1() == 0)
 		{
-		/* printf("ok %s\n", ecmd->argv[0]); */
+			/* printf("ok %s\n", ecmd->argv[0]); */
 			execvp(ecmd->argv[0], ecmd->argv);
 			printf("exec %s failed\n", ecmd->argv[0]);
 			exit(1);
@@ -46,7 +48,7 @@ void ft_runcmd(t_cmd *cmd)
 	{
 		ecmd = (t_execcmd *)cmd;
 		if (ecmd->argv[0] == NULL)
-			return ;
+			return;
 		/* if(fork1() == 0)
 		{ */
 		execvp(ecmd->argv[0], ecmd->argv);
@@ -71,7 +73,7 @@ void ft_runcmd(t_cmd *cmd)
 	{
 		lcmd = (t_listcmd *)cmd;
 		/* if (fork1() == 0) */
-			ft_runcmd(lcmd->left);
+		ft_runcmd(lcmd->left);
 		/* wait(NULL); */
 		ft_runcmd(lcmd->right);
 	}
@@ -85,7 +87,7 @@ void ft_runcmd(t_cmd *cmd)
 			dup2(p[1], 1);
 			close(p[0]);
 			close(p[1]);
-			if(pcmd->left->type == EXEC)
+			if (pcmd->left->type == EXEC)
 				pcmd->left->type = EXECP;
 			ft_runcmd(pcmd->left);
 		}
@@ -95,7 +97,7 @@ void ft_runcmd(t_cmd *cmd)
 			dup2(p[0], 0);
 			close(p[0]);
 			close(p[1]);
-			if(pcmd->right->type == EXEC)
+			if (pcmd->right->type == EXEC)
 				pcmd->right->type = EXECP;
 			ft_runcmd(pcmd->right);
 		}

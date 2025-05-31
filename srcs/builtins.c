@@ -138,3 +138,31 @@ void builtin_cd(t_execcmd *ecmd)
 			perror("minishell: cd");
 	}
 }
+
+void	builtin_exit(t_execcmd *ecmd)
+{
+	int		exit_status;
+
+	if (ecmd->argv[1] == NULL)
+	{
+		rl_clear_history();
+		exit(0);
+	}
+	else if (ecmd->argv[2] != NULL)
+	{
+		perror("minishell: exit");
+		return ;
+	}
+	else if (!ft_isnumreal(ecmd->argv[1]))
+	{
+		perror("minishell: exit");
+		exit(255);
+	}
+	else
+	{
+		exit_status = (int)(ft_atoi(ecmd->argv[1]) & 0xFF);
+		rl_clear_history();
+		exit(exit_status);
+	}
+	return ;
+}
