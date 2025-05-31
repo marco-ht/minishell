@@ -6,7 +6,7 @@ int main(void)
 	t_cmd *tree;
 
 	signal(SIGINT, handler);
-	signal(SIGQUIT, handler);
+	signal(SIGQUIT, SIG_IGN);
 
 	while (ft_getcmd(&buf) >= 0) //! buf (EOF, ctrl+D) -> -1 we stop while loop
 	{

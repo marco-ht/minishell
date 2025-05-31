@@ -9,8 +9,5 @@ void	handler(int signum)
 		rl_replace_line("", 0);
 		rl_redisplay();
 	}
-	else if (signum == SIGQUIT)
-	{
-		return ;
-	}
+	return ;
 }
