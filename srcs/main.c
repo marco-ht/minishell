@@ -15,7 +15,6 @@ int main(void)
 		if (ft_strncmp(buf, "exit", 4) == 0) // useremo la buildin exit, questo e' solo un esempio iniziale
 			break;
 
-		/*test*/
 		/* printf("buffer = %s\n", buf); */
 		/* printf("pid main = %d\n", getpid()); */
 		tree = ft_tree_builtin2();
