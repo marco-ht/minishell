@@ -44,7 +44,7 @@ void ft_ret_err(char *str)
 
 int fork1(void)
 {
-	int pid;
+	pid_t pid;
 
 	pid = fork();
 	if (pid == -1)
