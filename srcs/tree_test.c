@@ -72,7 +72,7 @@ t_cmd *ft_tree_pipe3(void)
 	t_pipecmd	*pipe;
 	t_execcmd	*ex;
 	t_execcmd	*ex2;
-	t_listcmd		*and;
+	t_andcmd		*and;
 
 	ex = malloc(sizeof(*ex));
 	memset(ex, 0, sizeof(*ex));
@@ -112,7 +112,7 @@ t_cmd *ft_tree_pipe3(void)
 
 	and = malloc(sizeof(*and));
 	memset(and, 0, sizeof(*and));
-	and->type = LIST;
+	and->type = AND;
 	and->left = (t_cmd *)pipe;
 	and->right = (t_cmd *) ex2;
 
@@ -150,10 +150,10 @@ t_cmd	*ft_tree_builtin2(void)
 	ex2->argv[0] = "pwd";
 	ex2->argv[1] = NULL;
 
-	t_listcmd	*lst;
+	t_andcmd	*lst;
 	lst = malloc(sizeof(*ex));
 	memset(lst, 0, sizeof(*lst));
-	lst->type = LIST;
+	lst->type = AND;
 	lst->left = (t_cmd *) ex;
 	lst->right = (t_cmd *) ex2;
 	return ((t_cmd *)lst);

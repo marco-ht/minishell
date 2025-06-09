@@ -5,7 +5,9 @@ t_cmd *ft_execcmd(void)
 	t_execcmd *cmd;
 
 	cmd = malloc(sizeof(*cmd));
-	memset(cmd, 0, sizeof(*cmd));
+	if (!cmd)
+    	ft_exit_err("malloc");
+	ft_memset(cmd, 0, sizeof(*cmd));
 	cmd->type = EXEC;
 	return (t_cmd *)cmd;
 }
@@ -15,7 +17,9 @@ t_cmd	*ft_execbuiltin(void)
 	t_execcmd *cmd;
 
 	cmd = malloc(sizeof(*cmd));
-	memset(cmd, 0, sizeof(*cmd));
+	if (!cmd)
+    	ft_exit_err("malloc");
+	ft_memset(cmd, 0, sizeof(*cmd));
 	cmd->type = BUILTIN;
 	return (t_cmd *)cmd;
 }
@@ -24,20 +28,24 @@ t_cmd *ft_pipecmd(t_cmd *left, t_cmd *right)
 	t_pipecmd *cmd;
 
 	cmd = malloc(sizeof(*cmd));
-	memset(cmd, 0, sizeof(*cmd));
+	if (!cmd)
+    	ft_exit_err("malloc");
+	ft_memset(cmd, 0, sizeof(*cmd));
 	cmd->type = PIPE;
 	cmd->left = left;
 	cmd->right = right;
 	return (t_cmd *)cmd;
 }
-// fai file[0] = file e file[1] = efile
+// fai file[0] = file e file[1] = efile per ridurre a 4 variabili
 
 t_cmd *ft_redircmd(t_cmd *subcmd, char *file, char *efile, int mode, int fd)
 {
 	t_redircmd *cmd;
 
 	cmd = malloc(sizeof(*cmd));
-	memset(cmd, 0, sizeof(*cmd));
+	if (!cmd)
+    	ft_exit_err("malloc");
+	ft_memset(cmd, 0, sizeof(*cmd));
 	cmd->type = REDIR;
 	cmd->cmd = subcmd;
 	cmd->file = file;
@@ -47,14 +55,44 @@ t_cmd *ft_redircmd(t_cmd *subcmd, char *file, char *efile, int mode, int fd)
 	return (t_cmd *)cmd;
 }
 
-t_cmd *ft_listcmd(t_cmd *left, t_cmd *right)
+t_cmd *ft_andcmd(t_cmd *left, t_cmd *right)
 {
-	t_listcmd *cmd;
+	t_andcmd *cmd;
 
 	cmd = malloc(sizeof(*cmd));
-	memset(cmd, 0, sizeof(*cmd));
-	cmd->type = LIST;
+	if (!cmd)
+    	ft_exit_err("malloc");
+	ft_memset(cmd, 0, sizeof(*cmd));
+	cmd->type = AND;
 	cmd->left = left;
 	cmd->right = right;
 	return (t_cmd *)cmd;
+}
+
+t_cmd *ft_orcmd(t_cmd *left, t_cmd *right)
+{
+	t_orcmd *cmd;
+
+	cmd = malloc(sizeof(*cmd));
+	if (!cmd)
+    	ft_exit_err("malloc");
+	ft_memset(cmd, 0, sizeof(*cmd));
+	cmd->type = OR;
+	cmd->left = left;
+	cmd->right = right;
+	return (t_cmd *)cmd;
+}
+t_cmd *ft_heredoccmd(t_cmd *subcmd, char *lim_start, char *lim_end)
+{
+    t_heredoccmd *hd;
+
+	hd = malloc(sizeof(*hd));
+	if (!hd)
+    	ft_exit_err("malloc");
+    ft_memset(hd, 0, sizeof(*hd));
+    hd->type      = HEREDOC;
+    hd->cmd       = subcmd;
+    hd->lim_start = lim_start;
+    hd->lim_end   = lim_end;
+    return (t_cmd *)hd;
 }
