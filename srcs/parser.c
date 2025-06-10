@@ -10,7 +10,7 @@ int	gettoken(char **ps, char *es, char **q, char **eq) //metti in file dedicato 
 	whitespace = " \t\r\n\v";
 	symbols = "<|>&;()";	//devo mettere gli apici in symbols per fermare scansione di quel token "a" o no?
 	s = *ps;
-	while (s < es && strchr(whitespace, *s))
+	while (s < es && ft_strchr(whitespace, *s))
 		s++;
 	if (q)
 		*q = s;
@@ -36,7 +36,7 @@ int	gettoken(char **ps, char *es, char **q, char **eq) //metti in file dedicato 
    		if (s < es)
 		s++;       // salta l'apice di chiusura se presente (cioe se non ci siamo fermati per fine stringa)
 	}
-	else if (*s == '\"') // se caso singolo apice
+	else if (*s == '\"') // se caso doppio apice
 	{
 		//ret = 'd'; VEDERE DOPO COME IMPLEMENTARE
 		ret = 'd';
@@ -54,7 +54,7 @@ int	gettoken(char **ps, char *es, char **q, char **eq) //metti in file dedicato 
 	/* else if (*s == '\"') // se caso doppio apice
 	{
 		ret = 'd';
-		while (s < es && !strchr("\"", *s))
+		while (s < es && !ft_strchr("\"", *s))
 			// scorriamo fino all'altro apice doppio ingorando metacaratteri ($ verra considerato in espansione variab in execution)
 			s++;
 		s++; //vai oltre apice finale
@@ -107,12 +107,12 @@ int	gettoken(char **ps, char *es, char **q, char **eq) //metti in file dedicato 
 	else
 	{
 		ret = 'a'; // all other cases
-		while (s < es && !strchr(whitespace, *s) && !strchr(symbols, *s))
+		while (s < es && !ft_strchr(whitespace, *s) && !strchr(symbols, *s))
 			s++;
 	}
 	if (eq && *eq && **eq != '\'' && **eq != '\"')
 		*eq = s;
-	while (s < es && strchr(whitespace, *s))
+	while (s < es && ft_strchr(whitespace, *s))
 		s++;
 	*ps = s;
 	return (ret);
@@ -127,10 +127,10 @@ int	peek(char **ps, char *es, char *toks)
 
 	whitespace = " \t\r\n\v";
 	s = *ps;
-	while (s < es && strchr(whitespace, *s))
+	while (s < es && ft_strchr(whitespace, *s))
 		s++;
 	*ps = s;
-	return (*s && strchr(toks, *s));
+	return (*s && ft_strchr(toks, *s));
 }
 
 t_cmd	*ft_parsecmd(char *s)
