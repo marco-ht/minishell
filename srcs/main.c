@@ -10,7 +10,7 @@ int main(void)
 
 	//IMPORTANTE PER "ls |" CI VOGLIONO PIU ITERAZIONI
 	//(vedi main modificato "Bash pipeline behavior")
-	while (ft_getcmd(&buf) >= 0) //! buf (EOF, ctrl+D) -> -1 we stop while loop
+	while (ft_getcmd(&buf) >= 0) //if (!buf) <-> (EOF, ctrl+D) -> -1 we stop while loop
 	{
 		add_history(buf);
 		tree = ft_parsecmd(buf);
