@@ -13,7 +13,7 @@ int main(int argc, char **argv, char **env)
 	signal(SIGQUIT, SIG_IGN);
 	//IMPORTANTE PER "ls |" CI VOGLIONO PIU ITERAZIONI
 	//(vedi main modificato "Bash pipeline behavior")
-	while (ft_getcmd(&buf) >= 0) //ctrl+D == EOF -> -1 -> stop while loop
+	while (ft_getcmd(&buf) >= 0) // until EOF (Ctrl-D)
 	{
 		add_history(buf);
 		tree = ft_parsecmd(buf);
