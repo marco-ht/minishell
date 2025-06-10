@@ -6,9 +6,8 @@ int main(int argc, char **argv, char **env)
 	char **envp;
 	t_cmd *tree;
 
-	envp = ft_envcpy(env);
-	if(!envp || !argc || !argv[0])
-		return(perror("envcpy"), 1);
+	if(argc && argv[0])
+		envp = ft_envcpy(env);
 	signal(SIGINT, handler);
 	signal(SIGQUIT, SIG_IGN);
 	//IMPORTANTE PER "ls |" CI VOGLIONO PIU ITERAZIONI

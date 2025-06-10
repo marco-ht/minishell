@@ -23,7 +23,10 @@ char    **ft_envcpy(char **env)
         i++;
     envp = malloc((i + 1) * sizeof(char *));
     if (!envp)
-        return (NULL);
+    {
+        perror("envcpy");
+        exit (1);
+    }
     i = -1;
     while (env[++i])
     {
