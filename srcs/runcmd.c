@@ -14,7 +14,7 @@ int	ft_check_builtin(t_execcmd *ecmd)
 			return(0);
 }
 
-int ft_runcmd(t_cmd *cmd)
+int ft_runcmd(t_cmd *cmd, char **envp)
 {
 	int p[2];
 	int status_left;
@@ -44,9 +44,10 @@ int ft_runcmd(t_cmd *cmd)
 		if(pid == 0)
 		{
 		/* printf("ok %s\n", ecmd->argv[0]); */
-			execvp(ecmd->argv[0], ecmd->argv);
+			/* execvp(ecmd->argv[0], ecmd->argv);  //OLD VERSION,  NOT ADMITTED FUNCTION */
+			execve(find_path(ecmd->argv), ecmd->argv, envp);
 			printf("exec %s failed\n", ecmd->argv[0]);
-			exit(1);
+			exit(127);
 		}
 		/* wait(NULL);  //return(checkstatus di pipex!!!!!!) */
 		waitpid(pid, &status, 0);
@@ -64,12 +65,13 @@ int ft_runcmd(t_cmd *cmd)
 			return(0);
 		/* if(fork1() == 0)
 		{ */
-		execvp(ecmd->argv[0], ecmd->argv);
+		/* execvp(ecmd->argv[0], ecmd->argv); //OLD VERSION,  NOT ADMITTED FUNCTION */
+		execve(find_path(ecmd->argv), ecmd->argv, envp);
 		printf("exec %s failed\n", ecmd->argv[0]);
 		/* exit(1); */
 		/* }
 		wait(NULL); */
-		exit (1);
+		exit (127);
 	}
 	else if (cmd->type == REDIR)	//REDIRECT NEL FIGLIO E NON NEL PADRE!!!
 	{
@@ -96,7 +98,7 @@ int ft_runcmd(t_cmd *cmd)
         	close(fd);
 			if(rcmd->cmd->type == EXEC) //se funziona lascia, altrimenti rivedi
 				rcmd->cmd->type = EXECP;
-        	exit(ft_runcmd(rcmd->cmd)); //va bene che sia un figlio nel figlio o ci puo essere caso builtin come in pipe?
+        	exit(ft_runcmd(rcmd->cmd, envp)); //va bene che sia un figlio nel figlio o ci puo essere caso builtin come in pipe?
 		}
 		close(fd);
 		waitpid(pid, &status, 0);
@@ -118,7 +120,7 @@ int ft_runcmd(t_cmd *cmd)
 			close(p[1]);
 			if(pcmd->left->type == EXEC)
 				pcmd->left->type = EXECP;
-			exit(ft_runcmd(pcmd->left));
+			exit(ft_runcmd(pcmd->left, envp));
 		}
 		pid_right = fork1();
 		if (pid_right == 0)
@@ -128,7 +130,7 @@ int ft_runcmd(t_cmd *cmd)
 			close(p[1]);
 			if(pcmd->right->type == EXEC)
 				pcmd->right->type = EXECP;
-			exit(ft_runcmd(pcmd->right));
+			exit(ft_runcmd(pcmd->right, envp));
 		}
 		close(p[0]);
 		close(p[1]);
@@ -142,18 +144,18 @@ int ft_runcmd(t_cmd *cmd)
 	else if (cmd->type == AND)
 	{
         acmd = (t_andcmd *) cmd;
-        status_left = ft_runcmd(acmd->left);
+        status_left = ft_runcmd(acmd->left, envp);
         if (status_left == 0) // se left è andato a buon fine, eseguo right
-            return ft_runcmd(acmd->right);
+            return ft_runcmd(acmd->right, envp);
 		else  // left ha fallito: non eseguo right, torno status_left
             return status_left;
 	}
 	else if (cmd->type == OR)
 	{
             ocmd = (t_orcmd *) cmd;
-            status_left = ft_runcmd(ocmd->left);
+            status_left = ft_runcmd(ocmd->left, envp);
             if (status_left != 0)  // se left è fallito, eseguo right
-                return ft_runcmd(ocmd->right);
+                return ft_runcmd(ocmd->right, envp);
             else // left è andato a buon fine: salto right, torno 0
                 return 0;
     }

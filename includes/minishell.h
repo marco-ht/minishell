@@ -79,9 +79,15 @@ typedef struct s_heredoccmd
 	char	*lim_end;
 }			t_heredoccmd;
 
-// MAIN FUNCTIONS
+// GET CMD STRING FUNCTIONS
 int			ft_getcmd(char **buf);
-int			ft_runcmd(t_cmd *cmd);
+
+// ENV HANDLING
+char		**ft_envcpy(char **env);
+
+// EXECUTION
+int			ft_runcmd(t_cmd *cmd, char **envp);
+char		*find_path(char **cmd);
 
 // PARSING
 t_cmd		*ft_parsecmd(char *s);
@@ -117,6 +123,7 @@ t_cmd		*ft_tree_builtin2(void);
 
 // CLEANUP FUNCTIONS (No Leaks)
 void		free_tree(t_cmd *cmd);
+void		ft_free_envp(char **envp);
 
 // BUILTINS
 char		*get_pwd(void);
