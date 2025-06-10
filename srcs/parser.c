@@ -133,12 +133,22 @@ int	peek(char **ps, char *es, char *toks)
 	return (*s && ft_strchr(toks, *s));
 }
 
-t_cmd	*ft_parsecmd(char *s)
+t_cmd	*ft_parsecmd(char *s, int *status)
 {
 	char	*es;
+	char	*p;
 	t_cmd	*cmd;
 
 	es = s + strlen(s);      // find end of the string
+	p = es - 1;
+	while (p >= s && (*p == ' ' || *p == '\t' || *p == '\n'))
+    	p--;
+	if (p >= s && *p == '|') {
+		// pipe “libera” alla fine: segnalo incomplete
+		*status = 1;
+		return (NULL);
+	}
+	*status = 0;
 	cmd = parseandor(&s, es); // do the parsing job
 	peek(&s, es, "");        // skip whitespaces
 	if (s != es)

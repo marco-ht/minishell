@@ -90,7 +90,7 @@ int			ft_runcmd(t_cmd *cmd, char **envp);
 char		*find_path(char **cmd);
 
 // PARSING
-t_cmd		*ft_parsecmd(char *s);
+t_cmd		*ft_parsecmd(char *s, int *status);
 t_cmd		*parseandor(char **ps, char *es);
 t_cmd		*parsepipe(char **, char *);
 t_cmd		*parseredirs(t_cmd *cmd, char **ps, char *es);
