@@ -12,6 +12,17 @@ t_cmd *ft_execcmd(void)
 	return (t_cmd *)cmd;
 }
 
+t_cmd	*ft_execbuiltin(void)
+{
+	t_execcmd *cmd;
+
+	cmd = malloc(sizeof(*cmd));
+	if (!cmd)
+    	ft_exit_err("malloc");
+	ft_memset(cmd, 0, sizeof(*cmd));
+	cmd->type = BUILTIN;
+	return (t_cmd *)cmd;
+}
 t_cmd *ft_pipecmd(t_cmd *left, t_cmd *right)
 {
 	t_pipecmd *cmd;

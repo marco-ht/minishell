@@ -125,7 +125,7 @@ t_cmd	*ft_tree_builtin(void)
 
 	ex = malloc(sizeof(*ex));
 	memset(ex, 0, sizeof(*ex));
-	ex->type = EXEC;
+	ex->type = BUILTIN;
 	ex->argv[0] = "cd";
 	ex->argv[1] = "/home/blue/";
 	ex->argv[2] = NULL;
@@ -137,7 +137,7 @@ t_cmd	*ft_tree_builtin2(void)
 
 	ex = malloc(sizeof(*ex));
 	memset(ex, 0, sizeof(*ex));
-	ex->type = EXEC;
+	ex->type = BUILTIN;
 	ex->argv[0] = "cd";
 	ex->argv[1] = "/etc/";
 	ex->argv[2] = NULL;
@@ -146,7 +146,7 @@ t_cmd	*ft_tree_builtin2(void)
 
 	ex2 = malloc(sizeof(*ex2));
 	memset(ex2, 0, sizeof(*ex2));
-	ex2->type = EXEC;
+	ex2->type = BUILTIN;
 	ex2->argv[0] = "pwd";
 	ex2->argv[1] = NULL;
 

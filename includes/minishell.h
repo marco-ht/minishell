@@ -18,7 +18,6 @@
 # define EXEC 1
 # define REDIR 2
 # define PIPE 3
-# define BUILTIN 4
 # define EXECP 5
 # define AND 6
 # define OR 7
@@ -97,7 +96,6 @@ int			peek(char **ps, char *es, char *toks);
 
 // AST NODE'S CONSTRUCTORS
 t_cmd		*ft_execcmd(void);
-t_cmd		*ft_execbuiltin(void);
 t_cmd		*ft_pipecmd(t_cmd *left, t_cmd *right);
 t_cmd		*ft_redircmd(t_cmd *subcmd, char *file, char *efile, int mode,
 				int fd);

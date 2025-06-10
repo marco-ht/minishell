@@ -30,6 +30,9 @@ static void print_node_type(int type)
         case HEREDOC:
             printf("[HEREDOC]");
             break;
+        case BUILTIN:
+            printf("[BUILTIN]");
+            break;
         default:
             printf("[UNKNOWN]");
             break;
@@ -122,7 +125,7 @@ void ft_printtree_recursive(t_cmd *cmd, int depth)
     print_indent(depth);
     print_node_type(cmd->type);
 
-    if (cmd->type == EXEC)
+    if (cmd->type == BUILTIN || cmd->type == EXEC)
     {
         ecmd = (t_execcmd *)cmd;
         print_argv(ecmd->argv);

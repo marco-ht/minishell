@@ -24,7 +24,7 @@ void	free_tree(t_cmd *cmd)
 
 	if (cmd == NULL)
 		return ;
-	if(cmd->type == EXEC)
+	if(cmd->type == EXEC || cmd->type == BUILTIN) //rimuovi builtin
 	{
 		execmd = (t_execcmd *)cmd;
 		free_exec(execmd);

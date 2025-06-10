@@ -33,6 +33,22 @@ int ft_runcmd(t_cmd *cmd)
 
 	if (cmd == NULL)
 		return 0;
+	if(cmd->type == BUILTIN) //da rimuovere, sostituito con funzione in caso EXEC
+	{
+		ecmd = (t_execcmd *)cmd;
+		if (ecmd->argv[0] == NULL)
+			return 0;
+		if (ft_strncmp(ecmd->argv[0], "pwd", 3) == 0)
+			return(builtin_pwd(), 0);
+		else if (strncmp(ecmd->argv[0], "echo", 4) == 0)
+			return(builtin_echo(ecmd), 0);
+		else if (strncmp(ecmd->argv[0], "cd", 2) == 0)
+			return(builtin_cd(ecmd), 0);
+		else {
+			printf("minishell: %s: command not found\n", ecmd->argv[0]);
+			return 1;
+		}
+	}
 	else if (cmd->type == EXEC)
 	{
 		ecmd = (t_execcmd *)cmd;
