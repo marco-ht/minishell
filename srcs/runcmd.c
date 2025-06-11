@@ -38,7 +38,7 @@ int ft_runcmd(t_cmd *cmd, char **envp)
 		ecmd = (t_execcmd *)cmd;
 		if (ecmd->argv[0] == NULL)
 			return 0;
-		if(ft_check_builtin(ecmd))  //NO NODO BUILTIN, VERIFICO PRIMA DI ECXEC SE BUILTIN
+		if(ft_check_builtin(ecmd))  //NO NODO BUILTIN, VERIFICO PRIMA DI ECXECVE SE BUILTIN
 			return(0);
 		pid = fork1();
 		if(pid == 0)
