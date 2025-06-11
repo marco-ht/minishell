@@ -88,6 +88,7 @@ char							**ft_envcpy(char **env);
 // EXECUTION
 int								ft_runcmd(t_cmd *cmd, char **envp);
 char							*find_path(char **cmd);
+void							ft_child(int *fd, char *limiter);
 
 // PARSING
 t_cmd							*ft_parsecmd(char *s, int *status);
@@ -143,5 +144,12 @@ void							setup_signals_interactive(void);
 void							setup_signals_child(void);
 void							reset_signal_flag(void);
 int								ft_isnumreal(const char *s);
+
+// GNL
+char							*get_next_line(int fd);
+void							*ft_calloc(size_t nmemb, size_t size);
+char							*ft_strchr(const char *s, int c);
+char							*ft_strjoin(char const *s1, char const *s2);
+size_t							ft_strlen(const char *s);
 
 #endif

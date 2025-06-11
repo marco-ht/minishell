@@ -23,13 +23,14 @@ int ft_runcmd(t_cmd *cmd, char **envp)
 	pid_t	pid;
 	pid_t	pid_left;
 	pid_t	pid_right;
+	pid_t	pid_here;
 	int	fd;
 	t_execcmd *ecmd;
 	t_pipecmd *pcmd;
 	t_redircmd *rcmd;
 	t_andcmd *acmd;
 	t_orcmd *ocmd;
-	/* t_heredoccmd *hcmd; */
+	t_heredoccmd *hcmd;
 
 	if (cmd == NULL)
 		return 0;
@@ -163,7 +164,31 @@ int ft_runcmd(t_cmd *cmd, char **envp)
     }
 	else if (cmd->type == HEREDOC)
 	{
-            printf("CASO HEREDOC da implementare in runcmd");
+		hcmd = (t_heredoccmd *)cmd;
+		if (pipe(p) < 0)
+			ft_exit_err("pipe");
+		pid_here = fork1();
+		if (pid_here == 0)
+		{
+			close(p[0]);
+			ft_child(p, hcmd->lim_start); //legge da STDIN e scrive sulla pipe
+			exit(0);
+		}
+		close(p[1]);
+		waitpid(pid_here, &status, 0);
+		pid = fork1();
+		if (pid == 0)
+		{
+			dup2(p[0], STDIN_FILENO);
+			close(p[0]);
+			exit(ft_runcmd(hcmd->cmd, envp)); //leggera' dalla pipe
+		}
+		close(p[0]);
+		waitpid(pid, &status, 0);
+		if (WIFEXITED(status))
+			return WEXITSTATUS(status);
+		else
+			return 1;
     }
 	else
 	{
@@ -171,4 +196,24 @@ int ft_runcmd(t_cmd *cmd, char **envp)
 		return 1;
 	}
 	return 1;
+}
+void	ft_child(int *fd, char *limiter)
+{
+	char	*line;
+
+	close(fd[0]);
+	line = get_next_line(STDIN_FILENO);
+	while (line != NULL)
+	{
+		if (ft_strncmp(line, limiter, ft_strlen(limiter)) == 0)
+		{
+			free(line);
+			close(fd[1]);
+			exit(0);
+		}
+		write(fd[1], line, ft_strlen(line));
+		free(line);
+		line = get_next_line(STDIN_FILENO);
+	}
+	close(fd[1]);
 }
