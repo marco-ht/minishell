@@ -175,15 +175,17 @@ int ft_runcmd(t_cmd *cmd, char **envp)
 			exit(0);
 		}
 		close(p[1]);
-		waitpid(pid_here, &status, 0);
 		pid = fork1();
 		if (pid == 0)
 		{
 			dup2(p[0], STDIN_FILENO);
 			close(p[0]);
+			/* if(hcmd->cmd->type == EXEC)
+            	hcmd->cmd->type = EXECP; */
 			exit(ft_runcmd(hcmd->cmd, envp)); //leggera' dalla pipe
 		}
 		close(p[0]);
+		waitpid(pid_here, NULL, 0);  //QUI O PRIMA
 		waitpid(pid, &status, 0);
 		if (WIFEXITED(status))
 			return WEXITSTATUS(status);
