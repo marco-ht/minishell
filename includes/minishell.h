@@ -134,7 +134,10 @@ void		builtin_exit(t_execcmd *ecmd);
 char		*get_current_directory_string(char *buffer, size_t size);
 
 // SIGNALS HANDLING
-void		handler(int signum);
-int			ft_isnumreal(const char *s);
+extern volatile sig_atomic_t  g_signal_received;
+
+void		setup_signals_interactive();
+void		setup_signals_child();
+void		reset_signal_flag();
 
 #endif

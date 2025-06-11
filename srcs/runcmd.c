@@ -43,8 +43,7 @@ int ft_runcmd(t_cmd *cmd, char **envp)
 		pid = fork1();
 		if(pid == 0)
 		{
-		/* printf("ok %s\n", ecmd->argv[0]); */
-			/* execvp(ecmd->argv[0], ecmd->argv);  //OLD VERSION,  NOT ADMITTED FUNCTION */
+			setup_signals_child();
 			execve(find_path(ecmd->argv), ecmd->argv, envp);
 			printf("exec %s failed\n", ecmd->argv[0]);
 			exit(127);
@@ -85,11 +84,12 @@ int ft_runcmd(t_cmd *cmd, char **envp)
 		if (fd < 0)
 		{
 			printf("open file \"%s\" failed\n", rcmd->file);
-			return(1); 
+			return(1);
 		}
 		pid = fork1();
 		if (pid == 0)
 		{
+			setup_signals_child();
 			if (dup2(fd, rcmd->fd) < 0)
 			{
             	perror("dup2");
@@ -115,6 +115,7 @@ int ft_runcmd(t_cmd *cmd, char **envp)
 		pid_left = fork1();
 		if (pid_left == 0)
 		{
+			setup_signals_child();
 			dup2(p[1], 1);
 			close(p[0]);
 			close(p[1]);
@@ -125,6 +126,7 @@ int ft_runcmd(t_cmd *cmd, char **envp)
 		pid_right = fork1();
 		if (pid_right == 0)
 		{
+			setup_signals_child();
 			dup2(p[0], 0);
 			close(p[0]);
 			close(p[1]);
