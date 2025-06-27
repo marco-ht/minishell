@@ -2,12 +2,12 @@
 # define MINISHELL_H
 
 # include "../libft/libft.h"
+# include <stdio.h>
 # include <fcntl.h>
 # include <limits.h>
 # include <readline/history.h>
 # include <readline/readline.h>
 # include <signal.h>
-# include <stdio.h>
 # include <stdlib.h>
 # include <sys/stat.h>
 # include <sys/types.h>
@@ -86,7 +86,7 @@ int								ft_getcmd(char **buf);
 char							**ft_envcpy(char **env);
 
 // EXECUTION
-int								ft_runcmd(t_cmd *cmd, char **envp);
+int								ft_runcmd(t_cmd *cmd, char ***envp);
 char							*find_path(char **cmd);
 void							ft_child(int *fd, char *limiter);
 
@@ -134,8 +134,11 @@ void							builtin_pwd(void);
 void							builtin_echo(t_execcmd *ecmd);
 void							builtin_cd(t_execcmd *ecmd);
 void							builtin_exit(t_execcmd *ecmd);
-char							*get_current_directory_string(char *buffer,
+char							*get_current_directory_string(char *buffer, \
 									size_t size);
+void							builtin_env(char **envp);
+void							builtin_export(t_execcmd *ecmd, char ***envp);
+void							builtin_unset(t_execcmd *ecmd, char ***envp);
 
 // SIGNALS HANDLING
 extern volatile sig_atomic_t	g_signal_received;
@@ -151,5 +154,8 @@ void							*ft_calloc(size_t nmemb, size_t size);
 char							*ft_strchr(const char *s, int c);
 char							*ft_strjoin(char const *s1, char const *s2);
 size_t							ft_strlen(const char *s);
+
+// AMBIENT VARIABLES
+void	expand_variables(t_execcmd *ecmd, char **envp);
 
 #endif
