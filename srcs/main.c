@@ -8,8 +8,10 @@ int main(int argc, char **argv, char **env)
 	char *lineparser;
 	int status;
 	char **envp;
+	int	last_exit_status;
 	t_cmd *tree;
 
+	last_exit_status = 0;
 	if (argc && argv[0])
 		envp = ft_envcpy(env);
 	setup_signals_interactive();
@@ -45,7 +47,7 @@ int main(int argc, char **argv, char **env)
 			tmp++;
 		}
 		add_history(buf);
-		ft_runcmd(tree, &envp);
+		ft_runcmd(tree, &envp, &last_exit_status);
 		free(lineparser);
 		free_tree(tree);
 		free(buf);

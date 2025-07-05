@@ -2,12 +2,12 @@
 # define MINISHELL_H
 
 # include "../libft/libft.h"
-# include <stdio.h>
 # include <fcntl.h>
 # include <limits.h>
 # include <readline/history.h>
 # include <readline/readline.h>
 # include <signal.h>
+# include <stdio.h>
 # include <stdlib.h>
 # include <sys/stat.h>
 # include <sys/types.h>
@@ -86,7 +86,8 @@ int								ft_getcmd(char **buf);
 char							**ft_envcpy(char **env);
 
 // EXECUTION
-int								ft_runcmd(t_cmd *cmd, char ***envp);
+int								ft_runcmd(t_cmd *cmd, char ***envp,
+									int *p_last_exit_status);
 char							*find_path(char **cmd, char **envp);
 void							ft_child(int *fd, char *limiter);
 
@@ -97,7 +98,6 @@ t_cmd							*parsepipe(char **, char *);
 t_cmd							*parseredirs(t_cmd *cmd, char **ps, char *es);
 t_cmd							*parseexec(char **, char *);
 t_cmd							*nulterminate(t_cmd *);
-void							ft_printtree(t_cmd *cmd);
 int								gettoken(char **ps, char *es, char **q,
 									char **eq);
 int								peek(char **ps, char *es, char *toks);
@@ -114,15 +114,10 @@ t_cmd							*ft_heredoccmd(t_cmd *subcmd, char *lim_start,
 
 // ERROR HANDLING
 void							ft_exit_err(char *str);
+void							ft_exit_err_n(char *str,
+									int *p_last_exit_status);
 void							ft_ret_err(char *str);
 int								fork1(void);
-
-// tree_test per test iniziali di RUNCMD (da rimuovere)
-t_cmd							*ft_tree_test(void);
-t_cmd							*ft_tree_pipe2(void);
-t_cmd							*ft_tree_pipe3(void);
-t_cmd							*ft_tree_builtin(void);
-t_cmd							*ft_tree_builtin2(void);
 
 // CLEANUP FUNCTIONS (No Leaks)
 void							free_tree(t_cmd *cmd);
@@ -134,7 +129,7 @@ void							builtin_pwd(void);
 void							builtin_echo(t_execcmd *ecmd);
 void							builtin_cd(t_execcmd *ecmd);
 void							builtin_exit(t_execcmd *ecmd);
-char							*get_current_directory_string(char *buffer, \
+char							*get_current_directory_string(char *buffer,
 									size_t size);
 void							builtin_env(char **envp);
 void							builtin_export(t_execcmd *ecmd, char ***envp);
@@ -156,6 +151,8 @@ char							*ft_strjoin(char const *s1, char const *s2);
 size_t							ft_strlen(const char *s);
 
 // AMBIENT VARIABLES
-void	expand_variables(t_execcmd *ecmd, char **envp);
+void							expand_variables(t_execcmd *ecmd, char **envp);
+void							update_exit_status(int status,
+									int *p_last_exit_status);
 
 #endif

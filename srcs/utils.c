@@ -36,6 +36,13 @@ void ft_exit_err(char *str)
 	exit(1);
 }
 
+void ft_exit_err_n(char *str, int *p_last_exit_status)
+{
+	printf("%s\n", str);
+	update_exit_status(1, p_last_exit_status);
+	exit(1);
+}
+
 void ft_ret_err(char *str)
 {
 	printf("%s\n", str);
