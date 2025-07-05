@@ -18,7 +18,7 @@ int main(int argc, char **argv, char **env)
 		reset_signal_flag();
 		while (1)
 		{
-			lineparser = strdup(buf);
+			lineparser = ft_strdup(buf);
 			tree = ft_parsecmd(lineparser, &status);
 			if (tree == NULL && status == 1)
 			{
