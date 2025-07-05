@@ -171,6 +171,7 @@ int	ft_runcmd(t_cmd *cmd, char ***envp)
 			exit(0);
 		}
 		close(p[1]);
+		waitpid(pid_here, &status, 0);
 		pid = fork1();
 		if (pid == 0)
 		{
@@ -179,7 +180,6 @@ int	ft_runcmd(t_cmd *cmd, char ***envp)
 			exit(ft_runcmd(hcmd->cmd, envp));
 		}
 		close(p[0]);
-		waitpid(pid_here, NULL, 0);
 		waitpid(pid, &status, 0);
 		if (WIFEXITED(status))
 			return (WEXITSTATUS(status));
