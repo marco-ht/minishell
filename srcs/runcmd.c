@@ -53,7 +53,7 @@ int	ft_runcmd(t_cmd *cmd, char ***envp)
 		if (pid == 0)
 		{
 			setup_signals_child();
-			execve(find_path(ecmd->argv), ecmd->argv, *envp);
+			execve(find_path(ecmd->argv, *envp), ecmd->argv, *envp);
 			printf("exec %s failed\n", ecmd->argv[0]);
 			exit(127);
 		}
@@ -70,7 +70,7 @@ int	ft_runcmd(t_cmd *cmd, char ***envp)
 			return (0);
 		if (ft_check_builtin(ecmd, envp))
 			return (0);
-		execve(find_path(ecmd->argv), ecmd->argv, *envp);
+		execve(find_path(ecmd->argv, *envp), ecmd->argv, *envp);
 		printf("exec %s failed\n", ecmd->argv[0]);
 		exit(127);
 	}

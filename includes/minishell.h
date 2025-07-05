@@ -87,7 +87,7 @@ char							**ft_envcpy(char **env);
 
 // EXECUTION
 int								ft_runcmd(t_cmd *cmd, char ***envp);
-char							*find_path(char **cmd);
+char							*find_path(char **cmd, char **envp);
 void							ft_child(int *fd, char *limiter);
 
 // PARSING

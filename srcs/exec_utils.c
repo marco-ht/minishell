@@ -13,14 +13,31 @@ void	ft_free_args(char **args)
 	free(args);
 }
 
-char	*find_path(char **cmd)
+char	*my_getenv(char **envp, char *word)
+{
+	int	word_len;
+	int	i;
+
+	word_len = ft_strlen(word);
+	i = 0;
+	while (envp[i])
+	{
+		if (ft_strncmp(envp[i], word, word_len) == 0)
+			return (envp[i] + word_len);
+		i++;
+	}
+	perror("PATH not found in environment");
+	exit(1);
+}
+
+char	*find_path(char **cmd, char **envp)
 {
 	char	*path_str;
 	char	*cmd_str;
 	char	**paths;
 	int		i;
 
-	path_str = getenv("PATH");
+	path_str = my_getenv(envp, "PATH=");
 	paths = ft_split(path_str, ':');
 	i = 0;
 	while (paths[i])
