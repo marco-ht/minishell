@@ -26,9 +26,7 @@ int main(int argc, char **argv, char **env)
 				more = readline("> ");
 				if (!more)
 					break;
-				tmp = buf;
 				buf = ft_strjoin(ft_strjoin(buf, "\n"), more);
-				free(tmp);
 				free(more);
 				continue;
 			}
