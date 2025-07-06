@@ -90,6 +90,7 @@ int								ft_runcmd(t_cmd *cmd, char ***envp,
 									int *p_last_exit_status);
 char							*find_path(char **cmd, char **envp);
 void							ft_child(int *fd, char *limiter);
+char							*my_getenv(char **envp, char *word);
 
 // PARSING
 t_cmd							*ft_parsecmd(char *s, int *status);
@@ -125,15 +126,15 @@ void							ft_free_envp(char **envp);
 
 // BUILTINS
 char							*get_pwd(void);
-void							builtin_pwd(void);
-void							builtin_echo(t_execcmd *ecmd);
-void							builtin_cd(t_execcmd *ecmd);
-void							builtin_exit(t_execcmd *ecmd);
+int							builtin_pwd(void);
+int							builtin_echo(t_execcmd *ecmd);
+int							builtin_cd(t_execcmd *ecmd, char **envp);
+int							builtin_exit(t_execcmd *ecmd);
 char							*get_current_directory_string(char *buffer,
 									size_t size);
-void							builtin_env(char **envp);
-void							builtin_export(t_execcmd *ecmd, char ***envp);
-void							builtin_unset(t_execcmd *ecmd, char ***envp);
+int							builtin_env(char **envp);
+int							builtin_export(t_execcmd *ecmd, char ***envp);
+int							builtin_unset(t_execcmd *ecmd, char ***envp);
 
 // SIGNALS HANDLING
 extern volatile sig_atomic_t	g_signal_received;

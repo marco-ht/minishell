@@ -5,25 +5,48 @@ void update_exit_status(int status, int *p_last_exit_status)
     *p_last_exit_status = status;
 }
 
-int	ft_check_builtin(t_execcmd *ecmd, char ***envp)
+int	ft_check_builtin(t_execcmd *ecmd, char ***envp, int *p_last_exit_status)
 {
-	if (ecmd->argv[0] == NULL)
-		return (0);
-	if (ft_strncmp(ecmd->argv[0], "pwd", 4) == 0)
-		return (builtin_pwd(), 1);
-	else if (ft_strncmp(ecmd->argv[0], "echo", 5) == 0)
-		return (builtin_echo(ecmd), 1);
-	else if (ft_strncmp(ecmd->argv[0], "cd", 3) == 0)
-		return (builtin_cd(ecmd), 1);
-	else if (ft_strncmp(ecmd->argv[0], "exit", 5) == 0)
-		return (builtin_exit(ecmd), 1);
-	else if (ft_strncmp(ecmd->argv[0], "env", 4) == 0)
-		return (builtin_env(*envp), 1);
-	else if (ft_strncmp(ecmd->argv[0], "export", 7) == 0)
-		return (builtin_export(ecmd, envp), 1);
-	else if (ft_strncmp(ecmd->argv[0], "unset", 6) == 0)
-		return (builtin_unset(ecmd, envp), 1);
-	return (0);
+    int exit_status;
+    
+    if (ecmd->argv[0] == NULL)
+        return (-1); //no builtin
+    if (ft_strncmp(ecmd->argv[0], "pwd", 4) == 0)
+    {
+        exit_status = builtin_pwd();
+        return (update_exit_status(exit_status, p_last_exit_status), exit_status);
+    }
+    else if (ft_strncmp(ecmd->argv[0], "echo", 5) == 0)
+    {
+        exit_status = builtin_echo(ecmd);
+        return (update_exit_status(exit_status, p_last_exit_status), exit_status);
+    }
+    else if (ft_strncmp(ecmd->argv[0], "cd", 3) == 0)
+    {
+        exit_status = builtin_cd(ecmd, *envp);
+        return (update_exit_status(exit_status, p_last_exit_status), exit_status);
+    }
+    else if (ft_strncmp(ecmd->argv[0], "exit", 5) == 0)
+    {
+        exit_status = builtin_exit(ecmd);
+        return (update_exit_status(exit_status, p_last_exit_status), exit_status);
+    }
+    else if (ft_strncmp(ecmd->argv[0], "env", 4) == 0)
+    {
+        exit_status = builtin_env(*envp);
+        return (update_exit_status(exit_status, p_last_exit_status), exit_status);
+    }
+    else if (ft_strncmp(ecmd->argv[0], "export", 7) == 0)
+    {
+        exit_status = builtin_export(ecmd, envp);
+        return (update_exit_status(exit_status, p_last_exit_status), exit_status);
+    }
+    else if (ft_strncmp(ecmd->argv[0], "unset", 6) == 0)
+    {
+        exit_status = builtin_unset(ecmd, envp);
+        return (update_exit_status(exit_status, p_last_exit_status), exit_status);
+    }
+    return (-1); //no builtin
 }
 
 int	ft_runcmd(t_cmd *cmd, char ***envp, int *p_last_exit_status)
@@ -52,8 +75,9 @@ int	ft_runcmd(t_cmd *cmd, char ***envp, int *p_last_exit_status)
 		expand_variables(ecmd, *envp);
 		if (ecmd->argv[0] == NULL)
 			return (update_exit_status(0, p_last_exit_status), 0);
-		if (ft_check_builtin(ecmd, envp))
-			return (0); //check_builtin exit status da sistemare!!
+		status = ft_check_builtin(ecmd, envp, p_last_exit_status);
+    	if (status != -1)
+			return (status); //last_exit_status già aggiornato in ft_check_builtin
 		pid = fork1();
 		if (pid == 0)
 		{
@@ -72,9 +96,10 @@ int	ft_runcmd(t_cmd *cmd, char ***envp, int *p_last_exit_status)
 	{
 		ecmd = (t_execcmd *)cmd;
 		if (ecmd->argv[0] == NULL)
-			return (update_exit_status(0, p_last_exit_status), 0);
-		if (ft_check_builtin(ecmd, envp))
-			return (update_exit_status(0, p_last_exit_status), 0);
+			return(update_exit_status(0, p_last_exit_status), 0);
+		status = ft_check_builtin(ecmd, envp, p_last_exit_status);
+    	if (status != -1)
+			return(status); //exit status già aggiornato in ft_check_builtin
 		execve(find_path(ecmd->argv, *envp), ecmd->argv, *envp);
 		printf("exec %s failed\n", ecmd->argv[0]);
 		exit(127);

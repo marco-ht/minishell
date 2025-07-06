@@ -8,7 +8,7 @@ char	*get_pwd()
 	return (cwd);
 }
 
-void	builtin_pwd()
+int	builtin_pwd()
 {
 	char *cwd;
 
@@ -17,7 +17,9 @@ void	builtin_pwd()
 	{
 		printf("%s\n", cwd);
 		free(cwd);
+		return (0);
 	}
+	return (1);
 }
 int	check_echo_args(char *arg)
 {
@@ -35,20 +37,20 @@ int	check_echo_args(char *arg)
 	return (1);
 }
 
-void	builtin_echo(t_execcmd *ecmd)
+int	builtin_echo(t_execcmd *ecmd)
 {
 	int	i;
 
 	if (!ecmd->argv[1])
 	{
 		printf("\n");
-		return;
+		return(0);
 	}
 	if (check_echo_args(ecmd->argv[1]))
 	{
 		i = 2;
 		if (!ecmd->argv[2])
-			return;
+			return(0);
 		while (ecmd->argv[i])
 		{
 			printf("%s", ecmd->argv[i++]);
@@ -67,9 +69,10 @@ void	builtin_echo(t_execcmd *ecmd)
 		}
 		printf("\n");
 	}
+	return (0);
 }
 
-void	builtin_cd(t_execcmd *ecmd)
+int	builtin_cd(t_execcmd *ecmd,  char **envp)
 {
 	char *home;
 	char *subpath;
@@ -77,46 +80,60 @@ void	builtin_cd(t_execcmd *ecmd)
 
 	if (!ecmd->argv[1])
 	{
-		home = getenv("HOME");
+		home = my_getenv(envp, "HOME");
 		if (!home || chdir(home) < 0)
+		{
 			perror("minishell: cd");
+			return (1);
+		}
 	}
 	else if (ecmd->argv[1][0] == '~')
 	{
-		home = getenv("HOME");
+		home = my_getenv(envp, "HOME");
 		if (!home)
 		{
 			perror("minishell: cd");
-			return;
+			return (1);
 		}
 		if (ecmd->argv[1][1] == '\0')
 		{
 			if (chdir(home) < 0)
+			{
 				perror("minishell: cd");
+				return (1);
+			}
 		}
 		else if (ecmd->argv[1][1] == '/')
 		{
 			subpath = ecmd->argv[1] + 1;
 			joined = ft_strjoin(home, subpath);
-
 			if (!joined || chdir(joined) < 0)
+			{
 				perror("minishell: cd");
-
+				if (joined)
+					free(joined);
+				return (1);
+			}
 			free(joined);
 		}
 		else
 		{
 			perror("minishell: cd");
+			return (1);
 		}
 	}
 	else
 	{
 		if (chdir(ecmd->argv[1]) < 0)
+		{
 			perror("minishell: cd");
+			return (1);
+		}
 	}
+	return (0);
 }
 
-void	builtin_exit(t_execcmd *ecmd)
+int	builtin_exit(t_execcmd *ecmd)
 {
 	int		exit_status;
 
@@ -128,7 +145,7 @@ void	builtin_exit(t_execcmd *ecmd)
 	else if (ecmd->argv[2] != NULL)
 	{
 		perror("minishell: exit: too many arguments");
-		return ;
+		return (1);
 	}
 	else if (!ft_isnumreal(ecmd->argv[1]))
 	{
@@ -143,7 +160,7 @@ void	builtin_exit(t_execcmd *ecmd)
 	}
 }
 
-void    builtin_env(char **envp)
+int    builtin_env(char **envp)
 {
 	int i;
 
@@ -153,6 +170,7 @@ void    builtin_env(char **envp)
 		printf("%s\n", envp[i]);
 		i++;
 	}
+	return (0);
 }
 
 static char	**find_env_var(char **envp, const char *key)
@@ -163,15 +181,13 @@ static char	**find_env_var(char **envp, const char *key)
 	while (*envp)
 	{
 		if (ft_strncmp(*envp, key, key_len) == 0 && ((*envp)[key_len] == '='))
-		{
 			return (envp);
-		}
 		envp++;
 	}
 	return (NULL);
 }
 
-void	builtin_export(t_execcmd *ecmd, char ***envp)
+int	builtin_export(t_execcmd *ecmd, char ***envp)
 {
 	char	*arg_copy;
 	char	*key;
@@ -190,7 +206,7 @@ void	builtin_export(t_execcmd *ecmd, char ***envp)
 			printf("declare -x %s\n", (*envp)[i]);
 			i++;
 		}
-		return ;
+		return (0);
 	}
 	i = 1;
 	while (ecmd->argv[i])
@@ -199,7 +215,7 @@ void	builtin_export(t_execcmd *ecmd, char ***envp)
 		if (!arg_copy)
 		{
 			perror("minishell: export");
-			return ;
+			return (1);
 		}
 		key = arg_copy;
 		value = ft_strchr(key, '=');
@@ -212,6 +228,12 @@ void	builtin_export(t_execcmd *ecmd, char ***envp)
 			{
 				free(*var_ptr);
 				*var_ptr = ft_strdup(ecmd->argv[i]);
+				if (!*var_ptr)
+				{
+					perror("minishell: export");
+					free(arg_copy);
+					return (1);
+				}
 			}
 			else
 			{
@@ -223,7 +245,7 @@ void	builtin_export(t_execcmd *ecmd, char ***envp)
 				{
 					perror("minishell: export");
 					free(arg_copy);
-					return ;
+					return (1);
 				}
 				j = 0;
 				while (j < count)
@@ -232,6 +254,13 @@ void	builtin_export(t_execcmd *ecmd, char ***envp)
 					j++;
 				}
 				new_envp[count] = ft_strdup(ecmd->argv[i]);
+				if (!new_envp[count])
+				{
+					perror("minishell: export");
+					free(new_envp);
+					free(arg_copy);
+					return (1);
+				}
 				new_envp[count + 1] = NULL;
 				free(*envp);
 				*envp = new_envp;
@@ -240,17 +269,17 @@ void	builtin_export(t_execcmd *ecmd, char ***envp)
 		free(arg_copy);
 		i++;
 	}
+	return (0);
 }
 
-void	builtin_unset(t_execcmd *ecmd, char ***envp)
+int	builtin_unset(t_execcmd *ecmd, char ***envp)
 {
 	char	**var_ptr;
 	char	**next_var;
 	int		i;
 
 	if (!ecmd->argv[1])
-		return;
-	
+		return (0);
 	i = 1;
 	while (ecmd->argv[i])
 	{
@@ -269,4 +298,5 @@ void	builtin_unset(t_execcmd *ecmd, char ***envp)
 		}
 		i++;
 	}
+	return (0);
 }
