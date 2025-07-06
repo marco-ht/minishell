@@ -72,7 +72,7 @@ int	ft_runcmd(t_cmd *cmd, char ***envp, int *p_last_exit_status)
 	if (cmd->type == EXEC)
 	{
 		ecmd = (t_execcmd *)cmd;
-		expand_variables(ecmd, *envp);
+		expand_variables(ecmd, *envp, p_last_exit_status);
 		if (ecmd->argv[0] == NULL)
 			return (update_exit_status(0, p_last_exit_status), 0);
 		status = ft_check_builtin(ecmd, envp, p_last_exit_status);

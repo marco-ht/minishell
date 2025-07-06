@@ -1,10 +1,5 @@
 #include "../includes/minishell.h"
 
-// IMPORTANT!!
-//• Handle ’ (single quote) which should prevent the shell from interpreting the metacharacters in the quoted sequence.
-//• Handle " (double quote) which should prevent the shell from interpreting the metacharacters in the quoted sequence except for $ (dollar sign).
-//no expantion for single quote argv[i]!!!!! ecmd->qtype[i] = 's';
-
 int main(int argc, char **argv, char **env)
 {
 	char *buf;

@@ -36,7 +36,7 @@ typedef struct s_execcmd
 	int							type;
 	char						*argv[MAX_ARGS];
 	char						*eargv[MAX_ARGS];
-	char qtype[MAX_ARGS];    //EXPANSION!! 'a', 's' o 'd' per ciascun argv
+	char qtype[MAX_ARGS];    // EXPANSION!! 'a', 's' o 'd' per ciascun argv
 	int allocated[MAX_ARGS]; // se argv[i] alloc. free in free_tree
 }								t_execcmd;
 
@@ -126,15 +126,15 @@ void							ft_free_envp(char **envp);
 
 // BUILTINS
 char							*get_pwd(void);
-int							builtin_pwd(void);
-int							builtin_echo(t_execcmd *ecmd);
-int							builtin_cd(t_execcmd *ecmd, char **envp);
-int							builtin_exit(t_execcmd *ecmd);
+int								builtin_pwd(void);
+int								builtin_echo(t_execcmd *ecmd);
+int								builtin_cd(t_execcmd *ecmd, char **envp);
+int								builtin_exit(t_execcmd *ecmd);
 char							*get_current_directory_string(char *buffer,
 									size_t size);
-int							builtin_env(char **envp);
-int							builtin_export(t_execcmd *ecmd, char ***envp);
-int							builtin_unset(t_execcmd *ecmd, char ***envp);
+int								builtin_env(char **envp);
+int								builtin_export(t_execcmd *ecmd, char ***envp);
+int								builtin_unset(t_execcmd *ecmd, char ***envp);
 
 // SIGNALS HANDLING
 extern volatile sig_atomic_t	g_signal_received;
@@ -152,8 +152,11 @@ char							*ft_strjoin(char const *s1, char const *s2);
 size_t							ft_strlen(const char *s);
 
 // AMBIENT VARIABLES
-void							expand_variables(t_execcmd *ecmd, char **envp);
+void							expand_variables(t_execcmd *ecmd, char **envp,
+									int *p_last_exit_status);
 void							update_exit_status(int status,
+									int *p_last_exit_status);
+char							*expand_exit_status(char *str,
 									int *p_last_exit_status);
 
 #endif

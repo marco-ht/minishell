@@ -50,16 +50,25 @@ static void	perform_expansion(char **arg_ptr, char **envp)
 	*arg_ptr = ft_strdup(buffer);
 }
 
-void	expand_variables(t_execcmd *ecmd, char **envp)
+void	expand_variables(t_execcmd *ecmd, char **envp, int *p_last_exit_status)
 {
 	int		i;
 	char	*temp_arg;
+	char	*expanded_exit;
 
 	i = 0;
 	while (ecmd->argv[i])
 	{
 		if (ecmd->qtype[i] != 's' && ft_strchr(ecmd->argv[i], '$'))
 		{
+			expanded_exit = expand_exit_status(ecmd->argv[i], p_last_exit_status);
+			if (expanded_exit != ecmd->argv[i])
+			{
+				if (ecmd->allocated[i])
+					free(ecmd->argv[i]);
+				ecmd->argv[i] = expanded_exit;
+				ecmd->allocated[i] = 1;
+			}
 			temp_arg = ft_strdup(ecmd->argv[i]);
 			perform_expansion(&temp_arg, envp);
 			if (ecmd->allocated[i])
@@ -69,4 +78,31 @@ void	expand_variables(t_execcmd *ecmd, char **envp)
 		}
 		i++;
 	}
+}
+
+char *expand_exit_status(char *str, int *p_last_exit_status)
+{
+    char *result;
+    char *pos;
+    char *exit_str;
+    int len;
+    
+    if (!str)
+        return (NULL);
+    pos = ft_strnstr(str, "$?", ft_strlen(str));
+    if (!pos)
+        return (str);
+    exit_str = ft_itoa(*p_last_exit_status);
+    len = ft_strlen(str) - 2 + ft_strlen(exit_str) + 1;
+    result = malloc(len);
+    if (!result)
+        return (NULL);
+    // Copia la parte prima di $?
+    ft_strlcpy(result, str, pos - str + 1);
+    result[pos - str] = '\0';
+    // Aggiunge l'exit status
+    ft_strlcat(result, exit_str, len);
+    // Aggiungi la parte dopo $?
+    ft_strlcat(result, pos + 2, len);
+    return (result);
 }
