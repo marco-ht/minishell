@@ -36,7 +36,7 @@ typedef struct s_execcmd
 	int							type;
 	char						*argv[MAX_ARGS];
 	char						*eargv[MAX_ARGS];
-	char qtype[MAX_ARGS];    // EXPANSION!! 'a', 's' o 'd' per ciascun argv
+	char qtype[MAX_ARGS];    // 'a', 's' o 'd' per ciascun argv
 	int allocated[MAX_ARGS]; // se argv[i] alloc. free in free_tree
 }								t_execcmd;
 
