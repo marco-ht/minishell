@@ -110,7 +110,7 @@ int	ft_runcmd(t_cmd *cmd, char ***envp, int *p_last_exit_status)
 		fd = open(rcmd->file, rcmd->mode, 0644);
 		if (fd < 0)
 		{
-			printf("open file \"%s\" failed\n", rcmd->file);
+			ft_putstr_fd(" Permission denied", 2);
 			return (update_exit_status(1, p_last_exit_status), 1);
 		}
 		pid = fork1();
