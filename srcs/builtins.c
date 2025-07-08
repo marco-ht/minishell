@@ -189,6 +189,28 @@ static char	**find_env_var(char **envp, const char *key)
 	return (NULL);
 }
 
+static int	is_valid_identifier(const char *str)
+{
+	int i;
+
+	if (!str || !*str)
+		return (0);
+	
+	// Must start with letter or underscore
+	if (!ft_isalpha(str[0]) && str[0] != '_')
+		return (0);
+	
+	// Rest can be letters, numbers, or underscores
+	i = 1;
+	while (str[i])
+	{
+		if (!ft_isalnum(str[i]) && str[i] != '_')
+			return (0);
+		i++;
+	}
+	return (1);
+}
+
 int	builtin_export(t_execcmd *ecmd, char ***envp)
 {
 	char	*arg_copy;
@@ -247,6 +269,12 @@ int	builtin_export(t_execcmd *ecmd, char ***envp)
 		if (value)
 		{
 			*value = '\0';
+			if (!is_valid_identifier(key))
+			{
+				ft_putstr_fd(" not a valid identifier", 2);
+				free(arg_copy);
+				return (1);
+			}
 			value++;
 			var_ptr = find_env_var(*envp, key);
 			if (var_ptr)
@@ -293,6 +321,15 @@ int	builtin_export(t_execcmd *ecmd, char ***envp)
 				new_envp[count + 1] = NULL;
 				free(*envp);
 				*envp = new_envp;
+			}
+		}
+		else // Handle variables without '=' if needed (just add to env without value)
+		{
+			if (!is_valid_identifier(key))
+			{
+				fprintf(stderr, "minishell: export: `%s': not a valid identifier\n", ecmd->argv[i]);
+				free(arg_copy);
+				return (1);
 			}
 		}
 		free(arg_copy);
