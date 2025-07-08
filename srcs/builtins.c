@@ -197,6 +197,7 @@ int	builtin_export(t_execcmd *ecmd, char ***envp)
 	int		i;
 	int		j;
 	int		count;
+	char	*temp;
 
 	if (!ecmd->argv[1])
 	{
@@ -219,6 +220,28 @@ int	builtin_export(t_execcmd *ecmd, char ***envp)
 		}
 		key = arg_copy;
 		value = ft_strchr(key, '=');
+
+
+		/* 
+           caso split: token "KEY=" separato da VALUE quotato:
+           argv[i] == "KEY="  e  argv[i+1] == "valore del campo"
+        */
+        if (value && value[1] == '\0'               /* termina con '=' */
+            && ecmd->argv[i+1]                      /* esiste token dopo */
+            && (ecmd->qtype[i+1] == 'd'             /* era quotato doppio */
+             || ecmd->qtype[i+1] == 's'))           /* o singolo */
+        {
+            /* ricompongo "KEY=" + "some value" */
+            {
+                temp = arg_copy;
+                arg_copy = ft_strjoin(ecmd->argv[i], ecmd->argv[i + 1]);
+                free(temp);
+            }
+            key   = arg_copy;
+            value = ft_strchr(key, '=');        /* punta a "=" */
+            i++;
+        }
+
 		if (value)
 		{
 			*value = '\0';
@@ -227,7 +250,9 @@ int	builtin_export(t_execcmd *ecmd, char ***envp)
 			if (var_ptr)
 			{
 				free(*var_ptr);
-				*var_ptr = ft_strdup(ecmd->argv[i]);
+				*(value - 1) = '=';
+				*var_ptr = ft_strdup(arg_copy);
+				*(value - 1) = '\0';
 				if (!*var_ptr)
 				{
 					perror("minishell: export");
@@ -253,7 +278,9 @@ int	builtin_export(t_execcmd *ecmd, char ***envp)
 					new_envp[j] = (*envp)[j];
 					j++;
 				}
-				new_envp[count] = ft_strdup(ecmd->argv[i]);
+				*(value - 1) = '=';
+				new_envp[count] = ft_strdup(arg_copy);
+				*(value - 1) = '\0';
 				if (!new_envp[count])
 				{
 					perror("minishell: export");

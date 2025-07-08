@@ -107,7 +107,7 @@ int	gettoken(char **ps, char *es, char **q, char **eq) //metti in file dedicato 
 	else
 	{
 		ret = 'a'; // all other cases
-		while (s < es && !ft_strchr(whitespace, *s) && !strchr(symbols, *s))
+		while (s < es && !ft_strchr(whitespace, *s) && !strchr(symbols, *s) && *s != '\'' && *s != '\"')
 			s++;
 	}
 	if (eq && *eq && **eq != '\'' && **eq != '\"')
