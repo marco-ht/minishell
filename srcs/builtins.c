@@ -152,13 +152,13 @@ int	builtin_exit(t_execcmd *ecmd)
 	}
 	else if (ecmd->argv[2] != NULL)
 	{
-		perror("minishell: exit: too many arguments");
+		ft_putstr_fd(" too many arguments", 2);
 		return (1);
 	}
 	else if (!ft_isnumreal(ecmd->argv[1]))
 	{
-		perror("minishell: exit: numeric argument required");
-		exit(255);
+		ft_putstr_fd(" numeric argument required", 2);
+		exit(2);
 	}
 	else
 	{
