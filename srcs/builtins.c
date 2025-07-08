@@ -80,6 +80,12 @@ int	builtin_cd(t_execcmd *ecmd,  char **envp)
 	char *subpath;
 	char *joined;
 
+	// check if too many arguments
+	if (ecmd->argv[1] && ecmd->argv[2])
+	{
+		ft_putstr_fd(" too many arguments", 2);
+		return (1);
+	}
 	if (!ecmd->argv[1])
 	{
 		home = my_getenv(envp, "HOME");
@@ -327,7 +333,7 @@ int	builtin_export(t_execcmd *ecmd, char ***envp)
 		{
 			if (!is_valid_identifier(key))
 			{
-				fprintf(stderr, "minishell: export: `%s': not a valid identifier\n", ecmd->argv[i]);
+				ft_putstr_fd(" not a valid identifier", 2);
 				free(arg_copy);
 				return (1);
 			}
