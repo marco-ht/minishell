@@ -37,39 +37,41 @@ int	check_echo_args(char *arg)
 	return (1);
 }
 
-int	builtin_echo(t_execcmd *ecmd)
+int builtin_echo(t_execcmd *ecmd)
 {
-	int	i;
-
-	if (!ecmd->argv[1])
-	{
-		printf("\n");
-		return(0);
-	}
-	if (check_echo_args(ecmd->argv[1]))
-	{
-		i = 2;
-		if (!ecmd->argv[2])
-			return(0);
-		while (ecmd->argv[i])
-		{
-			printf("%s", ecmd->argv[i++]);
-			if (ecmd->argv[i])
-				printf(" ");
-		}
-	}
-	else
-	{
-		i = 1;
-		while (ecmd->argv[i])
-		{
-			printf("%s", ecmd->argv[i++]);
-			if (ecmd->argv[i])
-				printf(" ");
-		}
-		printf("\n");
-	}
-	return (0);
+    int i;
+    
+    if (!ecmd->argv[1])
+    {
+        printf("\n");
+        return(0);
+    }
+    if (check_echo_args(ecmd->argv[1]))
+    {
+        i = 2;
+        if (!ecmd->argv[2])
+            return(0);
+        while (ecmd->argv[i])
+        {
+            if (i > 2 && ecmd->qtype[i-1] == 'a' && ecmd->qtype[i] == 'a')
+                printf(" ");
+            printf("%s", ecmd->argv[i]);
+            i++;
+        }
+    }
+    else
+    {
+        i = 1;
+        while (ecmd->argv[i])
+        {
+            if (i > 1 && ecmd->qtype[i-1] == 'a' && ecmd->qtype[i] == 'a')
+                printf(" ");
+            printf("%s", ecmd->argv[i]);
+            i++;
+        }
+        printf("\n");
+    }
+    return (0);
 }
 
 int	builtin_cd(t_execcmd *ecmd,  char **envp)
