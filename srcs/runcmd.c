@@ -110,7 +110,10 @@ int	ft_runcmd(t_cmd *cmd, char ***envp, int *p_last_exit_status)
 		fd = open(rcmd->file, rcmd->mode, 0644);
 		if (fd < 0)
 		{
-			ft_putstr_fd(" Permission denied", 2);
+			if (errno == ENOENT)
+				ft_putstr_fd(" No such file or directory", 2);
+			else
+				ft_putstr_fd(" Permission denied", 2);
 			return (update_exit_status(1, p_last_exit_status), 1);
 		}
 		pid = fork1();

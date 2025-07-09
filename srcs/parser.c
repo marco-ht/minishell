@@ -255,11 +255,13 @@ t_cmd	*parseredirs(t_cmd *cmd, char **ps, char *es)
 	int	tok;
 	char  *q;
   	char  *eq;
+	int		tok_type;
 
 	while (peek(ps, es, "<>"))
 	{
 		tok = gettoken(ps, es, 0, 0);
-		if (gettoken(ps, es, &q, &eq) != 'a')
+		tok_type = gettoken(ps, es, &q, &eq);
+		if (tok_type != 'a' && tok_type != 's' && tok_type != 'd')
 			ft_exit_err("missing file for redirection"); //non chiudere minishell, no exit, si freetree e return
     if(tok == '<')
       cmd = ft_redircmd(cmd, q, eq, O_RDONLY, 0);

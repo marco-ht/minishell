@@ -37,6 +37,24 @@ char	*find_path(char **cmd, char **envp)
 	char	**paths;
 	int		i;
 
+	if (ft_strchr(cmd[0], '/'))
+	{
+		if (access(cmd[0], F_OK) == 0)
+		{
+			if (access(cmd[0], X_OK) == 0)
+				return (ft_strdup(cmd[0]));
+			else
+			{
+				ft_putstr_fd(" Permission denied\n", 2);
+				exit(126);
+			}
+		}
+		else
+		{
+			ft_putstr_fd(" No such file or directory\n", 2);
+			exit(127);
+		}
+	}
 	path_str = my_getenv(envp, "PATH=");
 	paths = ft_split(path_str, ':');
 	i = 0;
