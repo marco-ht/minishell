@@ -1,6 +1,7 @@
 #include "../includes/minishell.h"
 
-int	gettoken(char **ps, char *es, char **q, char **eq) //metti in file dedicato e spezza
+//metti in file dedicato e spezza
+int	gettoken(char **ps, char *es, char **q, char **eq) 
 {
 	char	*s;
 	int		ret;
@@ -21,7 +22,7 @@ int	gettoken(char **ps, char *es, char **q, char **eq) //metti in file dedicato 
 	// quindi scorriamo solo, senno' lo settiamo
 	if (*s == '\0') // caso raggiunta fine buffer, no nuovo token
 		return (0);
-	else if (*s == '\'') // se caso singolo apice
+	/* else if (*s == '\'') // se caso singolo apice
 	{
 		//ret = 's'; VEDERE DOPO COME IMPLEMENTARE
 		ret = 's';
@@ -50,14 +51,6 @@ int	gettoken(char **ps, char *es, char **q, char **eq) //metti in file dedicato 
 		*eq = s;       // fine esclusivo
    		if (s < es)
 		s++;       // salta l'apice di chiusura se presente (cioe se non ci siamo fermati per fine stringa)
-	}
-	/* else if (*s == '\"') // se caso doppio apice
-	{
-		ret = 'd';
-		while (s < es && !ft_strchr("\"", *s))
-			// scorriamo fino all'altro apice doppio ingorando metacaratteri ($ verra considerato in espansione variab in execution)
-			s++;
-		s++; //vai oltre apice finale
 	} */
 	else if (*s == '(' || *s == ')') // simbolo operatore singolo
 		s++;
@@ -104,54 +97,49 @@ int	gettoken(char **ps, char *es, char **q, char **eq) //metti in file dedicato 
 			s++;
 		}
 	}
-	else
-{
-    ret = 'a';
+else
     {
-        char  *start      = s;
-        char  *out_write  = s;     // scriviamo token pulito
-        char   part_qtype = 'a';   // presunto di tipo a
-
-        while (s < es 
-            && !ft_strchr(whitespace, *s) 
-            && !ft_strchr(symbols, *s))
+        /* un unico ramo che gestisce casi token 'a', 's' e 'd' */
+        ret = 'a';            /* caso token di tipo 'a' o misto */
         {
-            if (*s == '\'')
-            {
-                // se nessuna quote incontrata prima, ora single quoted
-                if (part_qtype == 'a')
-                    part_qtype = 's';
-                s++;  // salto apertura
-                while (s < es && *s != '\'') //copio tutto fino a prossima single quote
-                    *out_write++ = *s++;
-                if (s < es)
-                    s++;  // salto chiusura
-            }
-            else if (*s == '\"')
-            {
-                // se nessuna quote o solo atomico finora, ora double quoted
-                if (part_qtype == 'a')
-                    part_qtype = 'd';
-                s++;  // salto apertura
-                while (s < es && *s != '\"') //copio tutto fino a prossima double quote
-                    *out_write++ = *s++;
-                if (s < es)
-                    s++;  // salto chiusura
-            }
-            else
-                *out_write++ = *s++;
-        }
-
-        // chiudo token e registro bounds
-        *out_write = '\0';
-        if (q)
-			*q  = start;
-        if (eq)
-			*eq = out_write;
-        ret = part_qtype;
-        /* s = out_write; */
-    }
-}
+            char *start      = s;
+            char *out_write  = s;
+            char  quote;
+ 
+             /* scansiono fino a spazio o symbols (<|>&;()) */
+             while (s < es
+                 && !ft_strchr(whitespace, *s)
+                 && !ft_strchr(symbols,    *s))
+             {
+                 if (*s == '\'' || *s == '\"')
+                 {
+                     /* trovo una quote: salto e copro contenuto */
+                    quote = *s++;
+                    /* se era ancora 'a', ora imposto il tipo */
+                    if (ret == 'a')
+                    {
+                        if (quote == '\'')
+                            ret = 's';
+                        else
+                            ret = 'd';
+                    }
+                     /* copio tutto fino alla chiusura */
+                     while (s < es && *s != quote)
+                         *out_write++ = *s++;
+                     if (s < es)
+                         s++;
+                 }
+                 else /* copro anche $ dentro lo stesso token */
+                     *out_write++ = *s++;
+             }
+             /* null termino token e assegno q ed eq */
+             *out_write = '\0';
+             if (q)
+			 	*q  = start;
+             if (eq)
+			 	*eq = out_write;
+         }
+     }
 	if (eq && *eq && **eq != '\'' && **eq != '\"')
 		*eq = s;
 	while (s < es && ft_strchr(whitespace, *s))
