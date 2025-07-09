@@ -47,6 +47,7 @@ int main(int argc, char **argv, char **env)
 			tmp++;
 		}
 		add_history(buf);
+		/* ft_printtree(tree); */
 		ft_runcmd(tree, &envp, &last_exit_status);
 		free(lineparser);
 		free_tree(tree);

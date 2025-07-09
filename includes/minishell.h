@@ -26,7 +26,7 @@
 # define OR 7
 # define HEREDOC 8
 
-# define MAX_ARGS 10
+# define MAX_ARGS 1000
 
 // AST NODES STRUCTS
 typedef struct s_cmd
@@ -162,5 +162,8 @@ void							update_exit_status(int status,
 char							*expand_exit_status(char *str,
 									int *p_last_exit_status);
 int								expand_wildcards(t_execcmd *ecmd);
+
+// PER TEST
+void ft_printtree(t_cmd *cmd);
 
 #endif
