@@ -105,11 +105,53 @@ int	gettoken(char **ps, char *es, char **q, char **eq) //metti in file dedicato 
 		}
 	}
 	else
-	{
-		ret = 'a'; // all other cases
-		while (s < es && !ft_strchr(whitespace, *s) && !strchr(symbols, *s) && *s != '\'' && *s != '\"')
-			s++;
-	}
+{
+    ret = 'a';
+    {
+        char  *start      = s;
+        char  *out_write  = s;     // scriviamo token pulito
+        char   part_qtype = 'a';   // presunto di tipo a
+
+        while (s < es 
+            && !ft_strchr(whitespace, *s) 
+            && !ft_strchr(symbols, *s))
+        {
+            if (*s == '\'')
+            {
+                // se nessuna quote incontrata prima, ora single quoted
+                if (part_qtype == 'a')
+                    part_qtype = 's';
+                s++;  // salto apertura
+                while (s < es && *s != '\'') //copio tutto fino a prossima single quote
+                    *out_write++ = *s++;
+                if (s < es)
+                    s++;  // salto chiusura
+            }
+            else if (*s == '\"')
+            {
+                // se nessuna quote o solo atomico finora, ora double quoted
+                if (part_qtype == 'a')
+                    part_qtype = 'd';
+                s++;  // salto apertura
+                while (s < es && *s != '\"') //copio tutto fino a prossima double quote
+                    *out_write++ = *s++;
+                if (s < es)
+                    s++;  // salto chiusura
+            }
+            else
+                *out_write++ = *s++;
+        }
+
+        // chiudo token e registro bounds
+        *out_write = '\0';
+        if (q)
+			*q  = start;
+        if (eq)
+			*eq = out_write;
+        ret = part_qtype;
+        /* s = out_write; */
+    }
+}
 	if (eq && *eq && **eq != '\'' && **eq != '\"')
 		*eq = s;
 	while (s < es && ft_strchr(whitespace, *s))
