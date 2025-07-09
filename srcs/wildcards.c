@@ -31,7 +31,7 @@ int expand_wildcards(t_execcmd *ecmd)
     int i;
     int t_count;
 
-    argc = 0
+    argc = 0;
     t_count = 0;
     // salvo vecchi valori
     while (ecmd->argv[argc] && argc < MAX_ARGS)
