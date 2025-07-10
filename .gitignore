@@ -1,1 +1,18 @@
-.vscode
+.vscode/
+
+# Object files from libft
+libft/*.o
+
+# Static library archive
+libft/libft.a
+
+# Minishell executables and tester directory
+minishell
+minishell_tester/
+
+# Object files from minishell directory
+objs/
+
+# Misc
+.DS_Store
+*.swp
