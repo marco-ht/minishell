@@ -209,7 +209,7 @@ int	ft_runcmd(t_cmd *cmd, char ***envp, int *p_last_exit_status)
 		if (pid_here == 0)
 		{
 			close(p[0]);
-			ft_child(p, hcmd->lim_start);
+			ft_child(p, hcmd, *envp);
 			exit(0);
 		}
 		close(p[1]);
@@ -236,7 +236,7 @@ int	ft_runcmd(t_cmd *cmd, char ***envp, int *p_last_exit_status)
 	return (1);
 }
 
-void	ft_child(int *fd, char *limiter)
+void	ft_child(int *fd, t_heredoccmd *hcmd, char **envp)
 {
 	char	*line;
 
@@ -244,12 +244,14 @@ void	ft_child(int *fd, char *limiter)
 	line = get_next_line(STDIN_FILENO);
 	while (line != NULL)
 	{
-		if (ft_strncmp(line, limiter, ft_strlen(limiter)) == 0)
+		if (ft_strncmp(line, hcmd->lim_start, ft_strlen(hcmd->lim_start)) == 0)
 		{
 			free(line);
 			close(fd[1]);
-			exit(0);
+			return;
 		}
+		if (hcmd->expand && ft_strchr(line, '$'))
+			perform_expansion(&line, envp);
 		write(fd[1], line, ft_strlen(line));
 		free(line);
 		line = get_next_line(STDIN_FILENO);

@@ -71,7 +71,7 @@ t_cmd *ft_orcmd(t_cmd *left, t_cmd *right)
 	cmd->right = right;
 	return (t_cmd *)cmd;
 }
-t_cmd *ft_heredoccmd(t_cmd *subcmd, char *lim_start, char *lim_end)
+t_cmd *ft_heredoccmd(t_cmd *subcmd, int	tok_type, char *lim_start, char *lim_end)
 {
     t_heredoccmd *hd;
 
@@ -79,6 +79,9 @@ t_cmd *ft_heredoccmd(t_cmd *subcmd, char *lim_start, char *lim_end)
 	if (!hd)
     	ft_exit_err("malloc");
     ft_memset(hd, 0, sizeof(*hd));
+	hd->expand = 0;
+	if (tok_type == 'a')
+		hd->expand = 1;
     hd->type      = HEREDOC;
     hd->cmd       = subcmd;
     hd->lim_start = lim_start;

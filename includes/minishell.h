@@ -80,6 +80,7 @@ typedef struct s_heredoccmd
 	t_cmd						*cmd;
 	char						*lim_start;
 	char						*lim_end;
+	int							expand;
 }								t_heredoccmd;
 
 // GET CMD STRING FUNCTIONS
@@ -92,7 +93,8 @@ char							**ft_envcpy(char **env);
 int								ft_runcmd(t_cmd *cmd, char ***envp,
 									int *p_last_exit_status);
 char							*find_path(char **cmd, char **envp);
-void							ft_child(int *fd, char *limiter);
+void							ft_child(int *fd, t_heredoccmd *hcmd,
+									char **envp);
 char							*my_getenv(char **envp, char *word);
 
 // PARSING
@@ -113,8 +115,8 @@ t_cmd							*ft_redircmd(t_cmd *subcmd, char *file,
 									char *efile, int mode, int fd);
 t_cmd							*ft_andcmd(t_cmd *left, t_cmd *right);
 t_cmd							*ft_orcmd(t_cmd *left, t_cmd *right);
-t_cmd							*ft_heredoccmd(t_cmd *subcmd, char *lim_start,
-									char *lim_end);
+t_cmd							*ft_heredoccmd(t_cmd *subcmd, int tok_type,
+									char *lim_start, char *lim_end);
 
 // ERROR HANDLING
 void							ft_exit_err(char *str);
@@ -162,8 +164,9 @@ void							update_exit_status(int status,
 char							*expand_exit_status(char *str,
 									int *p_last_exit_status);
 int								expand_wildcards(t_execcmd *ecmd);
+void							perform_expansion(char **arg_ptr, char **envp);
 
 // PER TEST
-void ft_printtree(t_cmd *cmd);
+void							ft_printtree(t_cmd *cmd);
 
 #endif

@@ -292,7 +292,10 @@ t_cmd	*parseredirs(t_cmd *cmd, char **ps, char *es)
 		tok = gettoken(ps, es, 0, 0);
 		tok_type = gettoken(ps, es, &q, &eq);
 		if (tok_type != 'a' && tok_type != 's' && tok_type != 'd')
-			ft_exit_err("missing file for redirection"); //non chiudere minishell, no exit, si freetree e return
+		{
+			ft_putstr_fd(" missing file for redirection", 2);
+			return(free_tree(cmd), NULL);
+		}
     if(tok == '<')
       cmd = ft_redircmd(cmd, q, eq, O_RDONLY, 0);
     else if(tok == '>')
@@ -300,7 +303,7 @@ t_cmd	*parseredirs(t_cmd *cmd, char **ps, char *es)
     else if(tok == '+') // >>
       cmd = ft_redircmd(cmd, q, eq, O_WRONLY | O_CREAT | O_APPEND, 1);
 	else if (tok == 'h')
-    	cmd = ft_heredoccmd(cmd, q, eq); // q, eq inizio e fine stringa limiter in buffer
+    	cmd = ft_heredoccmd(cmd, tok_type, q, eq); // q, eq inizio e fine stringa limiter in buffer
 	}
 	return (cmd);
 }

@@ -18,7 +18,7 @@ char	*get_env_value(const char *key, char **envp)
 	return ("");
 }
 
-static void	perform_expansion(char **arg_ptr, char **envp)
+void	perform_expansion(char **arg_ptr, char **envp)
 {
 	char	buffer[4096];
 	char	*arg;
