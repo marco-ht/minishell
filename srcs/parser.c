@@ -102,10 +102,12 @@ else
         /* un unico ramo che gestisce casi token 'a', 's' e 'd' */
         ret = 'a';            /* caso token di tipo 'a' o misto */
         {
-            char *start      = s;
-            char *out_write  = s;
+            char *start;
+            char *out_write;
             char  quote;
- 
+
+			start      = s;
+			out_write  = s;
              /* scansiono fino a spazio o symbols (<|>&;()) */
              while (s < es
                  && !ft_strchr(whitespace, *s)
@@ -113,7 +115,7 @@ else
              {
                  if (*s == '\'' || *s == '\"')
                  {
-                     /* trovo una quote: salto e copro contenuto */
+                     /* trovo una quote: la salto e salvo tipo */
                     quote = *s++;
                     /* se era ancora 'a', ora imposto il tipo */
                     if (ret == 'a')
@@ -129,7 +131,13 @@ else
                      if (s < es)
                          s++;
                  }
-                 else /* copro anche $ dentro lo stesso token */
+				 else if (*s == '\\' && s + 1 < es) /* gestione backslash escape */
+                 {
+                    s++; /* salto il backslash */
+                    *out_write++ = *s++; /* copio il carattere escapato */
+                    ret = 's'; /* lo gestisco come se fosse single quoted */
+                 }
+                 else /* includo anche $ dentro lo stesso token */
                      *out_write++ = *s++;
              }
              /* null termino token e assegno q ed eq */
