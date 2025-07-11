@@ -53,7 +53,7 @@ int builtin_echo(t_execcmd *ecmd)
             return(0);
         while (ecmd->argv[i])
         {
-            if (i > 2 && ecmd->qtype[i-1] == 'a' && ecmd->qtype[i] == 'a')
+            if (i > 2) //&& ecmd->qtype[i-1] == 'a' && ecmd->qtype[i] == 'a'
                 printf(" ");
             printf("%s", ecmd->argv[i]);
             i++;
@@ -64,7 +64,7 @@ int builtin_echo(t_execcmd *ecmd)
         i = 1;
         while (ecmd->argv[i])
         {
-            if (i > 1 && ecmd->qtype[i-1] == 'a' && ecmd->qtype[i] == 'a')
+            if (i > 1) //&& ecmd->qtype[i-1] == 'a' && ecmd->qtype[i] == 'a'
                 printf(" ");
             printf("%s", ecmd->argv[i]);
             i++;
