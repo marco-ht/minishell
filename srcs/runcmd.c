@@ -49,6 +49,48 @@ int	ft_check_builtin(t_execcmd *ecmd, char ***envp, int *p_last_exit_status)
     return (-1); //no builtin
 }
 
+// ora restituisce 1 se fd==1 è stato rediretto, 0 altrimenti
+static int apply_redirs(t_cmd *cmd, int *p_last_exit_status)
+{
+    t_redircmd *redirs[32];
+    int         n = 0, i;
+    int         did_redirect_stdout = 0;
+    t_cmd      *cur = cmd;
+
+    while (cur && cur->type == REDIR) {
+        redirs[n++] = (t_redircmd *)cur;
+        cur = redirs[n-1]->cmd;
+    }
+    for (i = n - 1; i >= 0; i--) {
+        t_redircmd *rc = redirs[i];
+        if (rc->fd == STDOUT_FILENO)
+            did_redirect_stdout = 1;
+        int flags = (rc->fd == STDIN_FILENO)
+                    ? O_RDONLY
+                    : ((rc->mode & O_APPEND)
+                       ? O_WRONLY|O_APPEND|O_CREAT
+                       : O_WRONLY|O_CREAT|O_TRUNC);
+        int fd = open(rc->file, flags, 0644);
+        if (fd < 0) {
+            ft_putstr_fd(rc->file, 2);
+            ft_putstr_fd((errno == ENOENT)
+                         ? ": No such file or directory\n"
+                         : ": Permission denied\n", 2);
+            update_exit_status(1, p_last_exit_status);
+            exit(1);
+        }
+        if (dup2(fd, rc->fd) < 0) {
+            perror("dup2");
+            close(fd);
+            update_exit_status(1, p_last_exit_status);
+            exit(1);
+        }
+        close(fd);
+    }
+    return did_redirect_stdout;
+}
+
+
 int	ft_runcmd(t_cmd *cmd, char ***envp, int *p_last_exit_status)
 {
 	int				p[2];
@@ -76,6 +118,7 @@ int	ft_runcmd(t_cmd *cmd, char ***envp, int *p_last_exit_status)
 		expand_variables(ecmd, *envp, p_last_exit_status);
 		if (ecmd->argv[0] == NULL)
 			return (update_exit_status(0, p_last_exit_status), 0);
+		apply_redirs(cmd, p_last_exit_status);
 		status = ft_check_builtin(ecmd, envp, p_last_exit_status);
     	if (status != -1)
 			return (status); //last_exit_status già aggiornato in ft_check_builtin
@@ -100,6 +143,7 @@ int	ft_runcmd(t_cmd *cmd, char ***envp, int *p_last_exit_status)
 		expand_variables(ecmd, *envp, p_last_exit_status);
 		if (ecmd->argv[0] == NULL)
 			return(update_exit_status(0, p_last_exit_status), 0);
+		apply_redirs(cmd, p_last_exit_status);
 		status = ft_check_builtin(ecmd, envp, p_last_exit_status);
     	if (status != -1)
 			return(status); //exit status già aggiornato in ft_check_builtin
@@ -175,7 +219,9 @@ restore_fds:
 		if (pid_left == 0)
 		{
 			setup_signals_child();
-			dup2(p[1], 1);
+			int redir_stdout = apply_redirs(pcmd->left, p_last_exit_status);
+        	if (!redir_stdout)
+				dup2(p[1], 1);
 			close(p[0]);
 			close(p[1]);
 			if (pcmd->left->type == EXEC)
@@ -186,7 +232,9 @@ restore_fds:
 		if (pid_right == 0)
 		{
 			setup_signals_child();
-			dup2(p[0], 0);
+			int redir_stdin = apply_redirs(pcmd->right, p_last_exit_status); 
+        	if (!redir_stdin)
+				dup2(p[0], 0);
 			close(p[0]);
 			close(p[1]);
 			if (pcmd->right->type == EXEC)
