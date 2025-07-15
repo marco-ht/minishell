@@ -141,15 +141,15 @@ else
                      *out_write++ = *s++;
              }
              /* null termino token e assegno q ed eq */
-             *out_write = '\0';
+             /* *out_write = '\0'; */
              if (q)
 			 	*q  = start;
              if (eq)
 			 	*eq = out_write;
          }
      }
-	if (eq && *eq && **eq != '\'' && **eq != '\"')
-		*eq = s;
+	/* if (eq && *eq && **eq != '\'' && **eq != '\"')
+		*eq = s; */
 	while (s < es && ft_strchr(whitespace, *s))
 		s++;
 	*ps = s;
