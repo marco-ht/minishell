@@ -152,12 +152,12 @@ int	builtin_exit(t_execcmd *ecmd)
 	}
 	else if (ecmd->argv[2] != NULL)
 	{
-		ft_putstr_fd(" too many arguments", 2);
+		ft_putstr_fd(" too many arguments\n", 2);
 		return (1);
 	}
 	else if (!ft_isnumreal(ecmd->argv[1]))
 	{
-		ft_putstr_fd(" numeric argument required", 2);
+		ft_putstr_fd(" numeric argument required\n", 2);
 		exit(2);
 	}
 	else
