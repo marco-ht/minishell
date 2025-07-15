@@ -37,7 +37,7 @@ int main(int argc, char **argv, char **env)
 		if (!more && tree == NULL)
 		{
 			free(lineparser);
-			break;
+			continue;
 		}
 		tmp = buf;
 		while (*tmp)
