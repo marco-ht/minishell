@@ -154,6 +154,7 @@ int expand_wildcards(t_execcmd *ecmd)
     int old_alloc[MAX_ARGS];
     int argc;
     int i;
+    int j;
     int t_count;
     char *pat;
     char *slash;
@@ -315,14 +316,14 @@ int expand_wildcards(t_execcmd *ecmd)
             if (match_count > 0)
             {
                 sort_matches(matches, match_count);
-                i = 0;
-                while (i < match_count && t_count < MAX_ARGS - 1)
+                j = 0;
+                while (j < match_count && t_count < MAX_ARGS - 1)
                 {
-                    ecmd->argv[t_count] = matches[i];
+                    ecmd->argv[t_count] = matches[j];
                     ecmd->qtype[t_count] = 'a';
                     ecmd->allocated[t_count] = 1;
                     t_count++;
-                    i++;
+                    ++j;
                 }
             }
             if (found == 0)
