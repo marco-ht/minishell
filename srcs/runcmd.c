@@ -91,6 +91,29 @@ static int apply_redirs(t_cmd *cmd, int *p_last_exit_status)
     return did_redirect_stdout;
 }
 
+/* funzione per rimuovere argv[i]=="" empty strings */
+static void remove_empty_args(t_execcmd *ecmd)
+{
+    int read_i;
+    int write_i;
+
+    read_i  = 0;
+    write_i = 0;
+    while (ecmd->argv[read_i])
+    {
+        if (ecmd->argv[read_i][0] != '\0')
+        {
+            ecmd->argv[write_i]     = ecmd->argv[read_i];
+            ecmd->eargv[write_i]    = ecmd->eargv[read_i];
+            ecmd->qtype[write_i]    = ecmd->qtype[read_i];
+            ecmd->allocated[write_i]= ecmd->allocated[read_i];
+            write_i++;
+        }
+        read_i++;
+    }
+    ecmd->argv[write_i]  = NULL;
+    ecmd->eargv[write_i] = NULL;
+}
 
 int	ft_runcmd(t_cmd *cmd, char ***envp, int *p_last_exit_status)
 {
@@ -117,6 +140,7 @@ int	ft_runcmd(t_cmd *cmd, char ***envp, int *p_last_exit_status)
 		ecmd = (t_execcmd *)cmd;
 		expand_wildcards(ecmd);
 		expand_variables(ecmd, *envp, p_last_exit_status);
+		remove_empty_args(ecmd);
 		if (ecmd->argv[0] == NULL)
 			return (update_exit_status(0, p_last_exit_status), 0);
 		apply_redirs(cmd, p_last_exit_status);
@@ -151,6 +175,7 @@ int	ft_runcmd(t_cmd *cmd, char ***envp, int *p_last_exit_status)
 		ecmd = (t_execcmd *)cmd;
 		expand_wildcards(ecmd);
 		expand_variables(ecmd, *envp, p_last_exit_status);
+		remove_empty_args(ecmd);
 		if (ecmd->argv[0] == NULL)
 			return(update_exit_status(0, p_last_exit_status), 0);
 		apply_redirs(cmd, p_last_exit_status);
