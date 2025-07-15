@@ -27,7 +27,7 @@ t_cmd *ft_pipecmd(t_cmd *left, t_cmd *right)
 }
 // fai file[0] = file e file[1] = efile per ridurre a 4 variabili
 
-t_cmd *ft_redircmd(t_cmd *subcmd, char *file, char *efile, int mode, int fd)
+t_cmd *ft_redircmd(t_cmd *subcmd, char *file, char *efile, int mode, int fd, int allocated)
 {
 	t_redircmd *cmd;
 
@@ -41,6 +41,7 @@ t_cmd *ft_redircmd(t_cmd *subcmd, char *file, char *efile, int mode, int fd)
 	cmd->efile = efile;
 	cmd->mode = mode;
 	cmd->fd = fd;
+	cmd->allocated = allocated;
 	return (t_cmd *)cmd;
 }
 

@@ -294,6 +294,7 @@ t_cmd	*parseredirs(t_cmd *cmd, char **ps, char *es)
 	char  *q;
   	char  *eq;
 	int		tok_type;
+	int		allocated;
 
 	while (peek(ps, es, "<>"))
 	{
@@ -304,12 +305,19 @@ t_cmd	*parseredirs(t_cmd *cmd, char **ps, char *es)
 			ft_putstr_fd(" missing file for redirection", 2);
 			return(free_tree(cmd), NULL);
 		}
+	allocated = 0;
+	if (tok_type == 'a' && ft_strchr(q, '*'))
+	{
+		*eq = '\0';
+		q = expand_redirect_glob(q, &allocated);
+		eq = q + ft_strlen(q);
+	}
     if(tok == '<')
-      cmd = ft_redircmd(cmd, q, eq, O_RDONLY, 0);
+      cmd = ft_redircmd(cmd, q, eq, O_RDONLY, 0, allocated);
     else if(tok == '>')
-      cmd = ft_redircmd(cmd, q, eq, O_WRONLY | O_CREAT | O_TRUNC, 1);
+      cmd = ft_redircmd(cmd, q, eq, O_WRONLY | O_CREAT | O_TRUNC, 1, allocated);
     else if(tok == '+') // >>
-      cmd = ft_redircmd(cmd, q, eq, O_WRONLY | O_CREAT | O_APPEND, 1);
+      cmd = ft_redircmd(cmd, q, eq, O_WRONLY | O_CREAT | O_APPEND, 1, allocated);
 	else if (tok == 'h')
     	cmd = ft_heredoccmd(cmd, tok_type, q, eq); // q, eq inizio e fine stringa limiter in buffer
 	}

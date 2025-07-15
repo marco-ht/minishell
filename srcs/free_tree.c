@@ -40,6 +40,8 @@ void	free_tree(t_cmd *cmd)
 	{
 		redircmd = (t_redircmd *)cmd;
 		free_tree(redircmd->cmd);
+		if (redircmd->allocated)
+			free(redircmd->file);
 		free(redircmd);
 	}
 	else if (cmd->type == AND)

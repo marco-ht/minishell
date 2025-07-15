@@ -51,6 +51,7 @@ typedef struct s_redircmd
 	char						*efile;
 	int							mode;
 	int							fd;
+	int							allocated;
 }								t_redircmd;
 
 typedef struct s_pipecmd
@@ -112,7 +113,8 @@ int								peek(char **ps, char *es, char *toks);
 t_cmd							*ft_execcmd(void);
 t_cmd							*ft_pipecmd(t_cmd *left, t_cmd *right);
 t_cmd							*ft_redircmd(t_cmd *subcmd, char *file,
-									char *efile, int mode, int fd);
+									char *efile, int mode, int fd,
+									int allocated);
 t_cmd							*ft_andcmd(t_cmd *left, t_cmd *right);
 t_cmd							*ft_orcmd(t_cmd *left, t_cmd *right);
 t_cmd							*ft_heredoccmd(t_cmd *subcmd, int tok_type,
@@ -165,6 +167,8 @@ char							*expand_exit_status(char *str,
 									int *p_last_exit_status);
 int								expand_wildcards(t_execcmd *ecmd);
 void							perform_expansion(char **arg_ptr, char **envp);
+int								match_star(const char *pat, const char *name);
+char							*expand_redirect_glob(char *pattern, int *allocated);
 
 // PER TEST
 void							ft_printtree(t_cmd *cmd);

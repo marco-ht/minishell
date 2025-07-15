@@ -1,7 +1,7 @@
 #include "../includes/minishell.h"
 
 // match '*'
-static int match_star(const char *pat, const char *name)
+int match_star(const char *pat, const char *name)
 {
     if (*pat == '\0')
         return (*name == '\0');
@@ -22,6 +22,40 @@ static int match_star(const char *pat, const char *name)
     if (*pat == *name)
         return match_star(pat + 1, name + 1);
     return 0;
+}
+
+/**
+ * Se `pattern` contiene un asterisco, cerca nel CWD
+ * il primo nome che matcha e restituisce una strdup()
+ * di quel nome. Altrimenti torna semplicemente `pattern`.
+ */
+char *expand_redirect_glob(char *pattern, int *allocated)
+{
+    DIR            *d;
+    struct dirent  *e;
+    char           *matched;
+
+    if (!ft_strchr(pattern, '*'))
+        return pattern;
+    matched = NULL;
+    d = opendir(".");
+    if (!d)
+        return pattern;
+    while ((e = readdir(d)))
+    {
+        if (match_star(pattern, e->d_name))
+        {
+            matched = ft_strdup(e->d_name);
+            break;
+        }
+    }
+    closedir(d);
+    if (matched)
+    {
+        *allocated = 1;
+        return (matched);
+    }
+    return (pattern);
 }
 
 char *ft_strndup(const char *s, size_t n)
