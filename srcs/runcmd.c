@@ -73,9 +73,10 @@ static int apply_redirs(t_cmd *cmd, int *p_last_exit_status)
         int fd = open(rc->file, flags, 0644);
         if (fd < 0) {
             ft_putstr_fd(rc->file, 2);
-            ft_putstr_fd((errno == ENOENT)
-                         ? ": No such file or directory\n"
-                         : ": Permission denied\n", 2);
+            if (errno == ENOENT)
+    			ft_putstr_fd(": No such file or directory\n", 2);
+			else
+    			ft_putstr_fd(": Permission denied\n", 2);
             update_exit_status(1, p_last_exit_status);
             exit(1);
         }
@@ -182,9 +183,10 @@ int	ft_runcmd(t_cmd *cmd, char ***envp, int *p_last_exit_status)
         int fd = open(rc->file, flags, 0644);
         if (fd < 0) {
             ft_putstr_fd(rc->file, 2);
-            ft_putstr_fd((errno == ENOENT)
-                         ? ": No such file or directory\n"
-                         : ": Permission denied\n", 2);
+            if (errno == ENOENT)
+    			ft_putstr_fd(": No such file or directory\n", 2);
+			else
+    			ft_putstr_fd(": Permission denied\n", 2);
             update_exit_status(1, p_last_exit_status);
             status = 1;
             goto restore_fds;
