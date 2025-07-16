@@ -6,7 +6,7 @@
 /*   By: mpierant <mpierant@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 10:33:46 by mpierant          #+#    #+#             */
-/*   Updated: 2025/07/16 11:54:51 by mpierant         ###   ########.fr       */
+/*   Updated: 2025/07/16 13:30:43 by mpierant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,6 +155,24 @@ int								builtin_env(char **envp);
 char							**find_env_var(char **envp, const char *key);
 int								builtin_export(t_execcmd *ecmd, char ***envp);
 int								builtin_unset(t_execcmd *ecmd, char ***envp);
+
+// BUILTIN EXPORT UTILS
+int								is_valid_identifier(const char *str);
+int								print_all_env(char **envp);
+int								update_existing_var(char **var_ptr,
+									char *arg_copy, char *value);
+int								count_env_vars(char **envp);
+int								copy_env_vars(char **new_envp, char **envp,
+									int count);
+int								add_new_var(char ***envp, char *arg_copy,
+									char *value);
+int								handle_var_assignment(char *key, char *value,
+									char ***envp, char *arg_copy);
+int								validate_and_process_key(char *key, char *value,
+									char ***envp, char *arg_copy);
+int								handle_no_value_case(char *key, char *arg_copy,
+									char ***envp);
+int								process_export_arg(char *arg, char ***envp);
 
 // SIGNALS HANDLING
 extern volatile sig_atomic_t	g_signal_received;

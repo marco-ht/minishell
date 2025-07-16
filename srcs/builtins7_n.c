@@ -1,84 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   builtins5.c                                        :+:      :+:    :+:   */
+/*   builtins7.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mpierant <mpierant@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/07/16 11:52:19 by mpierant          #+#    #+#             */
-/*   Updated: 2025/07/16 12:25:02 by mpierant         ###   ########.fr       */
+/*   Created: 2025/07/16 13:28:01 by mpierant          #+#    #+#             */
+/*   Updated: 2025/07/16 13:28:31 by mpierant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
-
-static int	is_valid_identifier(const char *str)
-{
-	int	i;
-
-	if (!str || !*str)
-		return (0);
-	if (!ft_isalpha(str[0]) && str[0] != '_')
-		return (0);
-	i = 1;
-	while (str[i])
-	{
-		if (!ft_isalnum(str[i]) && str[i] != '_')
-			return (0);
-		i++;
-	}
-	return (1);
-}
-
-int	print_all_env(char **envp)
-{
-	int	i;
-
-	i = 0;
-	while (envp[i])
-	{
-		printf("declare -x %s\n", envp[i]);
-		i++;
-	}
-	return (0);
-}
-
-int	update_existing_var(char **var_ptr, char *arg_copy, char *value)
-{
-	free(*var_ptr);
-	*(value - 1) = '=';
-	*var_ptr = ft_strdup(arg_copy);
-	*(value - 1) = '\0';
-	if (!*var_ptr)
-	{
-		perror("minishell: export");
-		return (1);
-	}
-	return (0);
-}
-
-int	count_env_vars(char **envp)
-{
-	int	count;
-
-	count = 0;
-	while (envp[count])
-		count++;
-	return (count);
-}
-
-int	copy_env_vars(char **new_envp, char **envp, int count)
-{
-	int	j;
-
-	j = 0;
-	while (j < count)
-	{
-		new_envp[j] = envp[j];
-		j++;
-	}
-	return (0);
-}
 
 int	add_new_var(char ***envp, char *arg_copy, char *value)
 {
@@ -143,13 +75,26 @@ int	validate_and_process_key(char *key, char *value, char ***envp,
 	return (0);
 }
 
-int	handle_no_value_case(char *key, char *arg_copy)
+int	handle_no_value_case(char *key, char *arg_copy, char ***envp)
 {
+	char	*value;
+	char	**var_ptr;
+
 	if (!is_valid_identifier(key))
 	{
 		ft_putstr_fd(" not a valid identifier\n", 2);
 		free(arg_copy);
 		return (1);
+	}
+	var_ptr = find_env_var(*envp, key);
+	if (!var_ptr)
+	{
+		value = key + ft_strlen(key);
+		*value = '=';
+		*(value + 1) = '\0';
+		if (add_new_var(envp, arg_copy, value + 1))
+			return (1);
+		*value = '\0';
 	}
 	return (0);
 }
@@ -174,25 +119,9 @@ int	process_export_arg(char *arg, char ***envp)
 	}
 	else
 	{
-		if (handle_no_value_case(key, arg_copy))
+		if (handle_no_value_case(key, arg_copy, envp))
 			return (1);
 	}
 	free(arg_copy);
-	return (0);
-}
-
-int	builtin_export(t_execcmd *ecmd, char ***envp)
-{
-	int	i;
-
-	if (!ecmd->argv[1])
-		return (print_all_env(*envp));
-	i = 1;
-	while (ecmd->argv[i])
-	{
-		if (process_export_arg(ecmd->argv[i], envp))
-			return (1);
-		i++;
-	}
 	return (0);
 }
