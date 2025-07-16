@@ -6,7 +6,7 @@
 /*   By: mpierant & sfelici <marvin@student.42ro    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 10:33:46 by mpierant          #+#    #+#             */
-/*   Updated: 2025/07/16 14:11:28 by mpierant &       ###   ########.fr       */
+/*   Updated: 2025/07/16 16:46:14 by mpierant &       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -203,5 +203,11 @@ void							perform_expansion(char **arg_ptr, char **envp);
 int								match_star(const char *pat, const char *name);
 char							*expand_redirect_glob(char *pattern,
 									int *allocated);
+char							*get_env_value(const char *key, char **envp);
+void							extract_var_name(char **arg, char *var_name);
+void							process_variable(char **arg, char *buffer,
+									int *i, char **envp);
+void							handle_exit_status_expansion(t_execcmd *ecmd,
+									int i, int *p_last_exit_status);
 
 #endif
