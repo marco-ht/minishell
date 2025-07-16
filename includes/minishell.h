@@ -6,7 +6,7 @@
 /*   By: mpierant <mpierant@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 10:33:46 by mpierant          #+#    #+#             */
-/*   Updated: 2025/07/16 10:39:05 by mpierant         ###   ########.fr       */
+/*   Updated: 2025/07/16 11:16:07 by mpierant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -182,8 +182,5 @@ void							perform_expansion(char **arg_ptr, char **envp);
 int								match_star(const char *pat, const char *name);
 char							*expand_redirect_glob(char *pattern,
 									int *allocated);
-
-// PER TEST
-void							ft_printtree(t_cmd *cmd);
 
 #endif
