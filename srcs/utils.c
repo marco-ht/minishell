@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mpierant <mpierant@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/07/16 10:46:39 by mpierant          #+#    #+#             */
+/*   Updated: 2025/07/16 10:48:54 by mpierant         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/minishell.h"
 
 int	ft_isnumreal(const char *s)
@@ -22,39 +34,29 @@ int	ft_isnumreal(const char *s)
 	return (1);
 }
 
-int ft_getcmd(char **buf)
+int	ft_getcmd(char **buf)
 {
 	*buf = readline("$ ");
 	if (!(*buf))
-		return (-1); // EOF
+		return (-1);
 	return (ft_strlen(*buf));
 }
 
-void ft_exit_err(char *str)
+void	ft_exit_err(char *str)
 {
 	printf("%s\n", str);
 	exit(1);
 }
 
-void ft_exit_err_n(char *str, int *p_last_exit_status)
+void	ft_exit_err_n(char *str, int *p_last_exit_status)
 {
 	printf("%s\n", str);
 	update_exit_status(1, p_last_exit_status);
 	exit(1);
 }
 
-void ft_ret_err(char *str)
+void	ft_ret_err(char *str)
 {
 	printf("%s\n", str);
-	return;
-}
-
-int fork1(void)
-{
-	pid_t pid;
-
-	pid = fork();
-	if (pid == -1)
-		ft_exit_err("Fork");
-	return (pid);
+	return ;
 }
