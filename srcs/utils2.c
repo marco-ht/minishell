@@ -6,9 +6,11 @@
 /*   By: mpierant <mpierant@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 10:48:34 by mpierant          #+#    #+#             */
-/*   Updated: 2025/07/16 10:48:47 by mpierant         ###   ########.fr       */
+/*   Updated: 2025/07/16 10:52:10 by mpierant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+#include "../includes/minishell.h"
 
 int	fork1(void)
 {
