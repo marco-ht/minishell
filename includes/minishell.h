@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minishell.h                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mpierant <mpierant@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/07/16 10:33:46 by mpierant          #+#    #+#             */
+/*   Updated: 2025/07/16 10:39:05 by mpierant         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
@@ -39,8 +51,8 @@ typedef struct s_execcmd
 	int							type;
 	char						*argv[MAX_ARGS];
 	char						*eargv[MAX_ARGS];
-	char qtype[MAX_ARGS];    // 'a', 's' o 'd' per ciascun argv
-	int allocated[MAX_ARGS]; // se argv[i] alloc. free in free_tree
+	char						qtype[MAX_ARGS];
+	int							allocated[MAX_ARGS];
 }								t_execcmd;
 
 typedef struct s_redircmd
@@ -101,10 +113,10 @@ char							*my_getenv(char **envp, char *word);
 // PARSING
 t_cmd							*ft_parsecmd(char *s, int *status);
 t_cmd							*parseandor(char **ps, char *es);
-t_cmd							*parsepipe(char **, char *);
+t_cmd							*parsepipe(char **ps, char *es);
 t_cmd							*parseredirs(t_cmd *cmd, char **ps, char *es);
-t_cmd							*parseexec(char **, char *);
-t_cmd							*nulterminate(t_cmd *);
+t_cmd							*parseexec(char **ps, char *es);
+t_cmd							*nulterminate(t_cmd *cmd);
 int								gettoken(char **ps, char *es, char **q,
 									char **eq);
 int								peek(char **ps, char *es, char *toks);
@@ -168,7 +180,8 @@ char							*expand_exit_status(char *str,
 int								expand_wildcards(t_execcmd *ecmd);
 void							perform_expansion(char **arg_ptr, char **envp);
 int								match_star(const char *pat, const char *name);
-char							*expand_redirect_glob(char *pattern, int *allocated);
+char							*expand_redirect_glob(char *pattern,
+									int *allocated);
 
 // PER TEST
 void							ft_printtree(t_cmd *cmd);
