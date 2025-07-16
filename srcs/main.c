@@ -1,60 +1,28 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mpierant & sfelici <marvin@student.42ro    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/07/16 19:36:11 by mpierant &        #+#    #+#             */
+/*   Updated: 2025/07/16 19:37:59 by mpierant &       ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/minishell.h"
 
-int main(int argc, char **argv, char **env)
+int	main(int argc, char **argv, char **env)
 {
-	char *buf;
-	char *tmp;
-	char *more;
-	char *lineparser;
-	int status;
-	char **envp;
-	int	last_exit_status;
-	t_cmd *tree;
+	t_vars	v;
 
-	last_exit_status = 0;
-	if (argc && argv[0])
-		envp = ft_envcpy(env);
+	init_vars(&v);
+	if (argc > 0 && argv[0] != NULL)
+		v.envp = ft_envcpy(env);
 	setup_signals_interactive();
-	while (ft_getcmd(&buf) >= 0)
-	{
-		reset_signal_flag();
-		while (1)
-		{
-			lineparser = ft_strdup(buf);
-			tree = ft_parsecmd(lineparser, &status);
-			if (tree == NULL && status == 1)
-			{
-				free(lineparser);
-				more = readline("> ");
-				if (!more)
-					break;
-				buf = ft_strjoin(ft_strjoin(buf, "\n"), more);
-				free(more);
-				continue;
-			}
-			break;
-		}
-		if (!more && tree == NULL)
-		{
-			free(lineparser);
-			continue;
-		}
-		tmp = buf;
-		while (*tmp)
-		{
-			if (*tmp == '\n')
-				*tmp = ' ';
-			tmp++;
-		}
-		add_history(buf);
-		ft_runcmd(tree, &envp, &last_exit_status);
-		free(lineparser);
-		free_tree(tree);
-		free(buf);
-	}
-	return (free(buf), ft_free_envp(envp), rl_clear_history(), 0);
+	read_and_parse(&v);
+	free(v.buf);
+	ft_free_envp(v.envp);
+	rl_clear_history();
+	return (0);
 }
-
-/*
-valgrind --leak-check=full --show-leak-kinds=all --log-file=valgrind_output.txt ./nome_programma
-*/

@@ -6,7 +6,7 @@
 /*   By: mpierant & sfelici <marvin@student.42ro    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 10:33:46 by mpierant          #+#    #+#             */
-/*   Updated: 2025/07/16 16:46:14 by mpierant &       ###   ########.fr       */
+/*   Updated: 2025/07/16 19:40:06 by mpierant &       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,6 +95,26 @@ typedef struct s_heredoccmd
 	char						*lim_end;
 	int							expand;
 }								t_heredoccmd;
+
+// MAIN STRUCT
+typedef struct s_vars
+{
+	char						*buf;
+	char						*tmp;
+	char						*more;
+	char						*lineparser;
+	int							status;
+	int							last_exit_status;
+	char						**envp;
+	t_cmd						*tree;
+}								t_vars;
+
+// MAIN FUNCTIONS
+void							init_vars(t_vars *v);
+int								parse_until_tree(t_vars *v);
+void							sanitize_buf(t_vars *v);
+void							execute_and_cleanup(t_vars *v);
+void							read_and_parse(t_vars *v);
 
 // GET CMD STRING FUNCTIONS
 int								ft_getcmd(char **buf);
