@@ -6,7 +6,7 @@
 /*   By: mpierant <mpierant@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 10:33:46 by mpierant          #+#    #+#             */
-/*   Updated: 2025/07/16 11:16:07 by mpierant         ###   ########.fr       */
+/*   Updated: 2025/07/16 11:54:51 by mpierant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,6 +152,7 @@ int								builtin_exit(t_execcmd *ecmd);
 char							*get_current_directory_string(char *buffer,
 									size_t size);
 int								builtin_env(char **envp);
+char							**find_env_var(char **envp, const char *key);
 int								builtin_export(t_execcmd *ecmd, char ***envp);
 int								builtin_unset(t_execcmd *ecmd, char ***envp);
 
