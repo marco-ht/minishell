@@ -1,29 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   builtins5_n.c                                      :+:      :+:    :+:   */
+/*   free_tree2.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mpierant & sfelici <marvin@student.42ro    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/07/16 11:52:19 by mpierant          #+#    #+#             */
-/*   Updated: 2025/07/16 13:59:23 by mpierant &       ###   ########.fr       */
+/*   Created: 2025/07/16 14:10:04 by mpierant &        #+#    #+#             */
+/*   Updated: 2025/07/16 14:10:05 by mpierant &       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-int	builtin_export(t_execcmd *ecmd, char ***envp)
+void	free_exec(t_execcmd *ex)
 {
 	int	i;
 
-	if (!ecmd->argv[1])
-		return (print_all_env(*envp));
-	i = 1;
-	while (ecmd->argv[i])
+	i = -1;
+	while (ex->argv[++i])
 	{
-		if (process_export_arg(ecmd->argv[i], envp))
-			return (1);
-		i++;
+		if (ex->allocated[i])
+			free(ex->argv[i]);
 	}
-	return (0);
+	free(ex);
+}
+
+void	free_pipe_cmd(t_pipecmd *pipecmd)
+{
+	free_tree(pipecmd->left);
+	free_tree(pipecmd->right);
+	free(pipecmd);
 }

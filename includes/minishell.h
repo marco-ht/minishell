@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mpierant <mpierant@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mpierant & sfelici <marvin@student.42ro    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 10:33:46 by mpierant          #+#    #+#             */
-/*   Updated: 2025/07/16 13:30:43 by mpierant         ###   ########.fr       */
+/*   Updated: 2025/07/16 14:11:28 by mpierant &       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,6 +141,8 @@ int								fork1(void);
 
 // CLEANUP FUNCTIONS (No Leaks)
 void							free_tree(t_cmd *cmd);
+void							free_exec(t_execcmd *ex);
+void							free_pipe_cmd(t_pipecmd *pipecmd);
 void							ft_free_envp(char **envp);
 
 // BUILTINS
