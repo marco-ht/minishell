@@ -6,7 +6,7 @@
 /*   By: mpierant & sfelici <marvin@student.42ro    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 19:53:45 by mpierant &        #+#    #+#             */
-/*   Updated: 2025/07/16 19:59:46 by mpierant &       ###   ########.fr       */
+/*   Updated: 2025/07/17 15:44:39 by mpierant &       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,7 @@ t_cmd	*ft_pipecmd(t_cmd *left, t_cmd *right)
 	return ((t_cmd *)cmd);
 }
 
-t_cmd	*ft_redircmd(t_cmd *subcmd, char *file, char *efile, int mode, int fd,
-		int allocated)
+t_cmd	*ft_redircmd(t_redin *rin)
 {
 	t_redircmd	*cmd;
 
@@ -48,12 +47,12 @@ t_cmd	*ft_redircmd(t_cmd *subcmd, char *file, char *efile, int mode, int fd,
 		ft_exit_err("malloc");
 	ft_memset(cmd, 0, sizeof(*cmd));
 	cmd->type = REDIR;
-	cmd->cmd = subcmd;
-	cmd->file = file;
-	cmd->efile = efile;
-	cmd->mode = mode;
-	cmd->fd = fd;
-	cmd->allocated = allocated;
+	cmd->cmd = rin->subcmd;
+	cmd->file = rin->file;
+	cmd->efile = rin->efile;
+	cmd->mode = rin->mode;
+	cmd->fd = rin->fd;
+	cmd->allocated = rin->allocated;
 	return ((t_cmd *)cmd);
 }
 

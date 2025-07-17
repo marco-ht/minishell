@@ -6,7 +6,7 @@
 /*   By: mpierant & sfelici <marvin@student.42ro    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 10:33:46 by mpierant          #+#    #+#             */
-/*   Updated: 2025/07/16 19:40:06 by mpierant &       ###   ########.fr       */
+/*   Updated: 2025/07/17 15:46:56 by mpierant &       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,17 @@ typedef struct s_heredoccmd
 	int							expand;
 }								t_heredoccmd;
 
+// ft_redircmd INPUT STRUCT
+typedef struct s_redin
+{
+	t_cmd						*subcmd;
+	char						*file;
+	char						*efile;
+	int							mode;
+	int							fd;
+	int							allocated;
+}								t_redin;
+
 // MAIN STRUCT
 typedef struct s_vars
 {
@@ -144,9 +155,7 @@ int								peek(char **ps, char *es, char *toks);
 // AST NODE'S CONSTRUCTORS
 t_cmd							*ft_execcmd(void);
 t_cmd							*ft_pipecmd(t_cmd *left, t_cmd *right);
-t_cmd							*ft_redircmd(t_cmd *subcmd, char *file,
-									char *efile, int mode, int fd,
-									int allocated);
+t_cmd							*ft_redircmd(t_redin *rin);
 t_cmd							*ft_andcmd(t_cmd *left, t_cmd *right);
 t_cmd							*ft_orcmd(t_cmd *left, t_cmd *right);
 t_cmd							*ft_heredoccmd(t_cmd *subcmd, int tok_type,

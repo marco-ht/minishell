@@ -291,35 +291,46 @@ t_cmd	*parsepipe(char **ps, char *es)
 t_cmd	*parseredirs(t_cmd *cmd, char **ps, char *es)
 {
 	int	tok;
-	char  *q;
-  	char  *eq;
 	int		tok_type;
-	int		allocated;
+	t_redin	rin;
 
 	while (peek(ps, es, "<>"))
 	{
+		rin.subcmd = cmd;
 		tok = gettoken(ps, es, 0, 0);
-		tok_type = gettoken(ps, es, &q, &eq);
+		tok_type = gettoken(ps, es, &rin.file, &rin.efile);
 		if (tok_type != 'a' && tok_type != 's' && tok_type != 'd')
 		{
 			ft_putstr_fd(" missing file for redirection", 2);
 			return(free_tree(cmd), NULL);
 		}
-	allocated = 0;
-	if (tok_type == 'a' && ft_strchr(q, '*'))
-	{
-		*eq = '\0';
-		q = expand_redirect_glob(q, &allocated);
-		eq = q + ft_strlen(q);
-	}
-    if(tok == '<')
-      cmd = ft_redircmd(cmd, q, eq, O_RDONLY, 0, allocated);
-    else if(tok == '>')
-      cmd = ft_redircmd(cmd, q, eq, O_WRONLY | O_CREAT | O_TRUNC, 1, allocated);
-    else if(tok == '+') // >>
-      cmd = ft_redircmd(cmd, q, eq, O_WRONLY | O_CREAT | O_APPEND, 1, allocated);
-	else if (tok == 'h')
-    	cmd = ft_heredoccmd(cmd, tok_type, q, eq); // q, eq inizio e fine stringa limiter in buffer
+		rin.allocated = 0;
+		if (tok_type == 'a' && ft_strchr(rin.file, '*'))
+		{
+			*rin.efile = '\0';
+			rin.file = expand_redirect_glob(rin.file, &rin.allocated);
+			rin.efile = rin.file + ft_strlen(rin.file);
+		}
+		if(tok == '<')
+		{
+			rin.mode = O_RDONLY;
+			rin.fd = 0;
+			cmd = ft_redircmd(&rin);
+		}
+		else if(tok == '>')
+		{
+			rin.mode = O_WRONLY | O_CREAT | O_TRUNC;
+			rin.fd = 1;
+			cmd = ft_redircmd(&rin);
+		}
+		else if(tok == '+') // >>
+		{
+			rin.mode = O_WRONLY | O_CREAT | O_APPEND;
+			rin.fd = 1;
+			cmd = ft_redircmd(&rin);
+		}
+		else if (tok == 'h')
+			cmd = ft_heredoccmd(cmd, tok_type, rin.file, rin.efile); // ex q ed eq inizio e fine stringa limiter in buffer
 	}
 	return (cmd);
 }
