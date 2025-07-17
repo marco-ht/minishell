@@ -1,220 +1,189 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   wildcards.c                                        :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: mpierant & sfelici <marvin@student.42ro    +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/07/17 16:07:48 by mpierant &        #+#    #+#             */
-/*   Updated: 2025/07/17 20:13:56 by mpierant &       ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "../includes/minishell.h"
+
+//ft_cpy_oldargv
 
 int	expand_wildcards(t_execcmd *ecmd)
 {
-	char			*old_argv[MAX_ARGS];
-	char			old_q[MAX_ARGS];
-	int				old_alloc[MAX_ARGS];
-	int				argc;
-	int				i;
-	int				j;
-	int				t_count;
-	char			*pat;
-	char			*slash;
-	int				dir_len;
-	char			*dir_pat;
-	char			*file_pat;
-	DIR				*d1;
-	struct dirent	*e1;
-	struct stat		st;
-	DIR				*d2;
-	struct dirent	*e2;
-	int				found;
-	char			*matches[MAX_ARGS];
-	int				match_count;
-	char			*tmp_path;
-	char			*tmp;
+	t_expand_vars	vars;
 
-	argc = 0;
-	while (ecmd->argv[argc] && argc < MAX_ARGS)
-		argc++;
-	i = 0;
-	while (i < argc)
+	vars.argc = 0;
+	while (ecmd->argv[vars.argc] && vars.argc < MAX_ARGS)
+		vars.argc++;
+	vars.i = 0;
+	while (vars.i < vars.argc)
 	{
-		old_argv[i] = ecmd->argv[i];
-		old_q[i] = ecmd->qtype[i];
-		old_alloc[i] = ecmd->allocated[i];
-		i++;
+		vars.old_argv[vars.i] = ecmd->argv[vars.i];
+		vars.old_q[vars.i] = ecmd->qtype[vars.i];
+		vars.old_alloc[vars.i] = ecmd->allocated[vars.i];
+		vars.i++;
 	}
-	i = 0;
-	t_count = 0;
-	while (i < argc && t_count < MAX_ARGS - 1)
+	vars.i = 0;
+	vars.t_count = 0;
+	while (vars.i < vars.argc && vars.t_count < MAX_ARGS - 1)
 	{
-		pat = old_argv[i];
-		if (old_q[i] != 'a')
+		vars.pat = vars.old_argv[vars.i];
+		if (vars.old_q[vars.i] != 'a')
 		{
-			ecmd->argv[t_count] = old_argv[i];
-			ecmd->qtype[t_count] = old_q[i];
-			ecmd->allocated[t_count] = old_alloc[i];
-			t_count++;
-			i++;
+			ecmd->argv[vars.t_count] = vars.old_argv[vars.i];
+			ecmd->qtype[vars.t_count] = vars.old_q[vars.i];
+			ecmd->allocated[vars.t_count] = vars.old_alloc[vars.i];
+			vars.t_count++;
+			vars.i++;
 			continue ;
 		}
-		if (strncmp(pat, "./", 2) == 0 && ft_strchr(pat, '*'))
+		if (strncmp(vars.pat, "./", 2) == 0 && ft_strchr(vars.pat, '*'))
 		{
-			found = handle_dot_slash_pattern(pat, ecmd, &t_count);
-			if (found == 0)
+			vars.found = handle_dot_slash_pattern(vars.pat, ecmd, &vars.t_count);
+			if (vars.found == 0)
 			{
-				ecmd->argv[t_count] = old_argv[i];
-				ecmd->qtype[t_count] = old_q[i];
-				ecmd->allocated[t_count] = old_alloc[i];
-				t_count++;
+				ecmd->argv[vars.t_count] = vars.old_argv[vars.i];
+				ecmd->qtype[vars.t_count] = vars.old_q[vars.i];
+				ecmd->allocated[vars.t_count] = vars.old_alloc[vars.i];
+				vars.t_count++;
 			}
-			i++;
+			vars.i++;
 			continue ;
 		}
-		if (pat[0] == '.' && ft_strchr(pat, '*'))
+		if (vars.pat[0] == '.' && ft_strchr(vars.pat, '*'))
 		{
-			found = handle_hidden_files(pat, ecmd, &t_count);
-			if (found == 0)
+			vars.found = handle_hidden_files(vars.pat, ecmd, &vars.t_count);
+			if (vars.found == 0)
 			{
-				ecmd->argv[t_count] = old_argv[i];
-				ecmd->qtype[t_count] = old_q[i];
-				ecmd->allocated[t_count] = old_alloc[i];
-				t_count++;
+				ecmd->argv[vars.t_count] = vars.old_argv[vars.i];
+				ecmd->qtype[vars.t_count] = vars.old_q[vars.i];
+				ecmd->allocated[vars.t_count] = vars.old_alloc[vars.i];
+				vars.t_count++;
 			}
-			i++;
+			vars.i++;
 			continue ;
 		}
-		slash = ft_strchr(pat, '/');
-		if (slash)
+		vars.slash = ft_strchr(vars.pat, '/');
+		if (vars.slash)
 		{
-			found = 0;
-			match_count = 0;
-			dir_len = slash - pat;
-			dir_pat = ft_strndup(pat, dir_len);
-			file_pat = ft_strdup(slash + 1);
-			d1 = opendir(".");
-			if (d1)
+			vars.found = 0;
+			vars.match_count = 0;
+			vars.dir_len = vars.slash - vars.pat;
+			vars.dir_pat = ft_strndup(vars.pat, vars.dir_len);
+			vars.file_pat = ft_strdup(vars.slash + 1);
+			vars.d1 = opendir(".");
+			if (vars.d1)
 			{
-				while ((e1 = readdir(d1)))
+				while ((vars.e1 = readdir(vars.d1)))
 				{
-					if (e1->d_name[0] == '.')
+					if (vars.e1->d_name[0] == '.')
 						continue ;
-					if (match_star(dir_pat, e1->d_name))
+					if (match_star(vars.dir_pat, vars.e1->d_name))
 					{
-						if (stat(e1->d_name, &st) == 0 && S_ISDIR(st.st_mode))
+						if (stat(vars.e1->d_name, &vars.st) == 0 && S_ISDIR(vars.st.st_mode))
 						{
-							d2 = opendir(e1->d_name);
-							if (d2)
+							vars.d2 = opendir(vars.e1->d_name);
+							if (vars.d2)
 							{
-								while ((e2 = readdir(d2)))
+								while ((vars.e2 = readdir(vars.d2)))
 								{
-									if (e2->d_name[0] == '.')
+									if (vars.e2->d_name[0] == '.')
 										continue ;
-									if (match_star(file_pat, e2->d_name))
+									if (match_star(vars.file_pat, vars.e2->d_name))
 									{
-										tmp = ft_strjoin(e1->d_name, "/");
-										tmp_path = ft_strjoin(tmp, e2->d_name);
-										free(tmp);
-										matches[match_count] = tmp_path;
-										match_count++;
-										found = 1;
+										vars.tmp = ft_strjoin(vars.e1->d_name, "/");
+										vars.tmp_path = ft_strjoin(vars.tmp, vars.e2->d_name);
+										free(vars.tmp);
+										vars.matches[vars.match_count] = vars.tmp_path;
+										vars.match_count++;
+										vars.found = 1;
 									}
 								}
-								closedir(d2);
+								closedir(vars.d2);
 							}
 						}
 					}
 				}
-				closedir(d1);
+				closedir(vars.d1);
 			}
-			if (match_count > 0)
+			if (vars.match_count > 0)
 			{
-				sort_matches(matches, match_count);
-				i = 0;
-				while (i < match_count && t_count < MAX_ARGS - 1)
+				sort_matches(vars.matches, vars.match_count);
+				vars.i = 0;
+				while (vars.i < vars.match_count && vars.t_count < MAX_ARGS - 1)
 				{
-					ecmd->argv[t_count] = matches[i];
-					ecmd->qtype[t_count] = 'a';
-					ecmd->allocated[t_count] = 1;
-					t_count++;
-					i++;
+					ecmd->argv[vars.t_count] = vars.matches[vars.i];
+					ecmd->qtype[vars.t_count] = 'a';
+					ecmd->allocated[vars.t_count] = 1;
+					vars.t_count++;
+					vars.i++;
 				}
 			}
-			free(dir_pat);
-			free(file_pat);
-			if (found == 0)
+			free(vars.dir_pat);
+			free(vars.file_pat);
+			if (vars.found == 0)
 			{
-				ecmd->argv[t_count] = old_argv[i];
-				ecmd->qtype[t_count] = old_q[i];
-				ecmd->allocated[t_count] = old_alloc[i];
-				t_count++;
+				ecmd->argv[vars.t_count] = vars.old_argv[vars.i];
+				ecmd->qtype[vars.t_count] = vars.old_q[vars.i];
+				ecmd->allocated[vars.t_count] = vars.old_alloc[vars.i];
+				vars.t_count++;
 			}
-			i++;
+			vars.i++;
 			continue ;
 		}
-		if (ft_strchr(pat, '*'))
+		if (ft_strchr(vars.pat, '*'))
 		{
-			found = 0;
-			match_count = 0;
-			d1 = opendir(".");
-			if (d1)
+			vars.found = 0;
+			vars.match_count = 0;
+			vars.d1 = opendir(".");
+			if (vars.d1)
 			{
-				while ((e1 = readdir(d1)))
+				while ((vars.e1 = readdir(vars.d1)))
 				{
-					if (e1->d_name[0] == '.')
+					if (vars.e1->d_name[0] == '.')
 						continue ;
-					if (match_star(pat, e1->d_name))
+					if (match_star(vars.pat, vars.e1->d_name))
 					{
-						matches[match_count] = ft_strdup(e1->d_name);
-						match_count++;
-						found = 1;
+						vars.matches[vars.match_count] = ft_strdup(vars.e1->d_name);
+						vars.match_count++;
+						vars.found = 1;
 					}
 				}
-				closedir(d1);
+				closedir(vars.d1);
 			}
-			if (match_count > 0)
+			if (vars.match_count > 0)
 			{
-				sort_matches(matches, match_count);
-				j = 0;
-				while (j < match_count && t_count < MAX_ARGS - 1)
+				sort_matches(vars.matches, vars.match_count);
+				vars.j = 0;
+				while (vars.j < vars.match_count && vars.t_count < MAX_ARGS - 1)
 				{
-					ecmd->argv[t_count] = matches[j];
-					ecmd->qtype[t_count] = 'a';
-					ecmd->allocated[t_count] = 1;
-					t_count++;
-					++j;
+					ecmd->argv[vars.t_count] = vars.matches[vars.j];
+					ecmd->qtype[vars.t_count] = 'a';
+					ecmd->allocated[vars.t_count] = 1;
+					vars.t_count++;
+					++vars.j;
 				}
 			}
-			if (found == 0)
+			if (vars.found == 0)
 			{
-				ecmd->argv[t_count] = old_argv[i];
-				ecmd->qtype[t_count] = old_q[i];
-				ecmd->allocated[t_count] = old_alloc[i];
-				t_count++;
+				ecmd->argv[vars.t_count] = vars.old_argv[vars.i];
+				ecmd->qtype[vars.t_count] = vars.old_q[vars.i];
+				ecmd->allocated[vars.t_count] = vars.old_alloc[vars.i];
+				vars.t_count++;
 			}
-			i++;
+			vars.i++;
 			continue ;
 		}
-		ecmd->argv[t_count] = old_argv[i];
-		ecmd->qtype[t_count] = old_q[i];
-		ecmd->allocated[t_count] = old_alloc[i];
-		t_count++;
-		i++;
+		ecmd->argv[vars.t_count] = vars.old_argv[vars.i];
+		ecmd->qtype[vars.t_count] = vars.old_q[vars.i];
+		ecmd->allocated[vars.t_count] = vars.old_alloc[vars.i];
+		vars.t_count++;
+		vars.i++;
 	}
-	ecmd->argv[t_count] = NULL;
-	ecmd->qtype[t_count] = '\0';
-	ecmd->allocated[t_count] = 0;
-	t_count++;
-	while (t_count < MAX_ARGS)
+	ecmd->argv[vars.t_count] = NULL;
+	ecmd->qtype[vars.t_count] = '\0';
+	ecmd->allocated[vars.t_count] = 0;
+	vars.t_count++;
+	while (vars.t_count < MAX_ARGS)
 	{
-		ecmd->argv[t_count] = NULL;
-		ecmd->qtype[t_count] = '\0';
-		ecmd->allocated[t_count] = 0;
-		t_count++;
+		ecmd->argv[vars.t_count] = NULL;
+		ecmd->qtype[vars.t_count] = '\0';
+		ecmd->allocated[vars.t_count] = 0;
+		vars.t_count++;
 	}
 	return (0);
 }
