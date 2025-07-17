@@ -17,3 +17,4 @@ objs/
 # Misc
 .DS_Store
 *.swp
+srcs/wildcards5*

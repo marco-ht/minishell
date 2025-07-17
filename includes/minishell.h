@@ -6,7 +6,7 @@
 /*   By: mpierant & sfelici <marvin@student.42ro    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 10:33:46 by mpierant          #+#    #+#             */
-/*   Updated: 2025/07/17 18:16:26 by mpierant &       ###   ########.fr       */
+/*   Updated: 2025/07/17 20:11:11 by mpierant &       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -236,6 +236,32 @@ void							handle_exit_status_expansion(t_execcmd *ecmd,
 									int i, int *p_last_exit_status);
 
 // WILDCARDS '*'
+typedef struct s_expand_vars
+{
+	char			*old_argv[MAX_ARGS];
+	char			old_q[MAX_ARGS];
+	int				old_alloc[MAX_ARGS];
+	int				argc;
+	int				i;
+	int				j;
+	int				t_count;
+	char			*pat;
+	char			*slash;
+	int				dir_len;
+	char			*dir_pat;
+	char			*file_pat;
+	DIR				*d1;
+	struct dirent	*e1;
+	struct stat		st;
+	DIR				*d2;
+	struct dirent	*e2;
+	int				found;
+	char			*matches[MAX_ARGS];
+	int				match_count;
+	char			*tmp_path;
+	char			*tmp;
+}	t_expand_vars;
+
 int								expand_wildcards(t_execcmd *ecmd);
 int								match_star(const char *pat, const char *name);
 char							*expand_redirect_glob(char *pattern,
@@ -246,5 +272,7 @@ int								handle_dot_slash_pattern(char *pat,
 									t_execcmd *ecmd, int *t_count);
 int								handle_hidden_files(char *pat, t_execcmd *ecmd,
 									int *t_count);
+void							record_match(t_execcmd *ecmd, int *t_count,
+									char *name);
 
 #endif

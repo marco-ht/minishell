@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   wildcards3.c                                       :+:      :+:    :+:   */
+/*   wildcards3_n.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mpierant & sfelici <marvin@student.42ro    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 17:34:59 by mpierant &        #+#    #+#             */
-/*   Updated: 2025/07/17 18:08:05 by mpierant &       ###   ########.fr       */
+/*   Updated: 2025/07/17 18:46:41 by mpierant &       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-static void	record_match(t_execcmd *ecmd, int *t_count, char *name)
+void	record_match(t_execcmd *ecmd, int *t_count, char *name)
 {
 	char	*full_path;
 
