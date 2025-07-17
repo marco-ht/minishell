@@ -6,7 +6,7 @@
 /*   By: mpierant & sfelici <marvin@student.42ro    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 10:33:46 by mpierant          #+#    #+#             */
-/*   Updated: 2025/07/17 20:11:11 by mpierant &       ###   ########.fr       */
+/*   Updated: 2025/07/17 23:00:35 by mpierant &       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -238,29 +238,29 @@ void							handle_exit_status_expansion(t_execcmd *ecmd,
 // WILDCARDS '*'
 typedef struct s_expand_vars
 {
-	char			*old_argv[MAX_ARGS];
-	char			old_q[MAX_ARGS];
-	int				old_alloc[MAX_ARGS];
-	int				argc;
-	int				i;
-	int				j;
-	int				t_count;
-	char			*pat;
-	char			*slash;
-	int				dir_len;
-	char			*dir_pat;
-	char			*file_pat;
-	DIR				*d1;
-	struct dirent	*e1;
-	struct stat		st;
-	DIR				*d2;
-	struct dirent	*e2;
-	int				found;
-	char			*matches[MAX_ARGS];
-	int				match_count;
-	char			*tmp_path;
-	char			*tmp;
-}	t_expand_vars;
+	char						*old_argv[MAX_ARGS];
+	char						old_q[MAX_ARGS];
+	int							old_alloc[MAX_ARGS];
+	int							argc;
+	int							i;
+	int							j;
+	int							t_count;
+	char						*pat;
+	char						*slash;
+	int							dir_len;
+	char						*dir_pat;
+	char						*file_pat;
+	DIR							*d1;
+	struct dirent				*e1;
+	struct stat					st;
+	DIR							*d2;
+	struct dirent				*e2;
+	int							found;
+	char						*matches[MAX_ARGS];
+	int							match_count;
+	char						*tmp_path;
+	char						*tmp;
+}								t_expand_vars;
 
 int								expand_wildcards(t_execcmd *ecmd);
 int								match_star(const char *pat, const char *name);
@@ -274,5 +274,26 @@ int								handle_hidden_files(char *pat, t_execcmd *ecmd,
 									int *t_count);
 void							record_match(t_execcmd *ecmd, int *t_count,
 									char *name);
+
+void							init_expand_vars(t_execcmd *ecmd,
+									t_expand_vars *vars);
+int								handle_non_expandable_arg(t_execcmd *ecmd,
+									t_expand_vars *vars);
+int								handle_dot_slash_wildcard(t_execcmd *ecmd,
+									t_expand_vars *vars);
+int								handle_hidden_files_wildcard(t_execcmd *ecmd,
+									t_expand_vars *vars);
+void							add_directory_matches_to_argv(t_execcmd *ecmd,
+									t_expand_vars *vars);
+int								handle_slash_wildcard(t_execcmd *ecmd,
+									t_expand_vars *vars);
+void							process_simple_wildcard_matches(t_expand_vars *vars);
+void							add_simple_matches_to_argv(t_execcmd *ecmd,
+									t_expand_vars *vars);
+int								handle_simple_wildcard(t_execcmd *ecmd,
+									t_expand_vars *vars);
+void							handle_regular_arg(t_execcmd *ecmd,
+									t_expand_vars *vars);
+void							process_directory_matches(t_expand_vars *vars);
 
 #endif
