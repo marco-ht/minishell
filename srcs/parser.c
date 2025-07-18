@@ -1,7 +1,6 @@
 #include "../includes/minishell.h"
 
-//metti in file dedicato e spezza
-int	gettoken(char **ps, char *es, char **q, char **eq) 
+int	gettoken(char **ps, char *es, char **q, char **eq)
 {
 	char	*s;
 	int		ret;
@@ -9,7 +8,7 @@ int	gettoken(char **ps, char *es, char **q, char **eq)
 	char	*symbols;
 
 	whitespace = " \t\r\n\v";
-	symbols = "<|>&;()";	//devo mettere gli apici in symbols per fermare scansione di quel token "a" o no?
+	symbols = "<|>&;()";
 	s = *ps;
 	while (s < es && ft_strchr(whitespace, *s))
 		s++;
@@ -18,56 +17,23 @@ int	gettoken(char **ps, char *es, char **q, char **eq)
 	if (eq)
        *eq = s;
 	ret = *s;
-	// se simbolo operatore singolo e' gia' settato correttamente il ritorno,
-	// quindi scorriamo solo, senno' lo settiamo
-	if (*s == '\0') // caso raggiunta fine buffer, no nuovo token
+	if (*s == '\0')
 		return (0);
-	/* else if (*s == '\'') // se caso singolo apice
-	{
-		//ret = 's'; VEDERE DOPO COME IMPLEMENTARE
-		ret = 's';
-		s++;                   // salta l'apice di apertura
-       	if (q)
-			*q = s;         // inizio del contenuto
-		while (s < es && *s != '\'')
-			// scorriamo fino all'altro apice singolo ingorando metacaratteri ($ NON verra considerato in espansione variab in execution)
-			s++;
-		if (eq)
-		*eq = s;       // fine esclusivo
-   		if (s < es)
-		s++;       // salta l'apice di chiusura se presente (cioe se non ci siamo fermati per fine stringa)
-	}
-	else if (*s == '\"') // se caso doppio apice
-	{
-		//ret = 'd'; VEDERE DOPO COME IMPLEMENTARE
-		ret = 'd';
-		s++;                   // salta l'apice di apertura
-       	if (q)
-			*q = s;         // inizio del contenuto
-		while (s < es && *s != '\"')
-			// scorriamo fino all'altro apice singolo ingorando metacaratteri ($ NON verra considerato in espansione variab in execution)
-			s++;
-		if (eq)
-		*eq = s;       // fine esclusivo
-   		if (s < es)
-		s++;       // salta l'apice di chiusura se presente (cioe se non ci siamo fermati per fine stringa)
-	} */
-	else if (*s == '(' || *s == ')') // simbolo operatore singolo
+	else if (*s == '(' || *s == ')')
 		s++;
-	else if (*s == ';') // simbolo operatore list (poi runcmd dara' errore syntax)
+	else if (*s == ';')
 		s++;
 	else if (*s == '|')
 	{
-		s++; // se caso operatore singolo pipe "|" non entra in if, scorre solo,
-				// ret e gia' settato correttamente
+		s++;
 		if (s < es && *s == '|')
 		{
-			ret = 'o'; // caso operatore or "||"
+			ret = 'o';
 			s++;
 		}
 	}
-	else if (*s == '&') // we don't need to handle single "&",
-	{					// ret e gia' settato correttamente
+	else if (*s == '&')
+	{
 		s++;
 		if(s < es && *s == '&')
 		{
@@ -78,29 +44,24 @@ int	gettoken(char **ps, char *es, char **q, char **eq)
 	else if (*s == '>')
 	{
 		s++;
-		// se caso operatore singolo redirect ">" (redirect output) non entra in if,
-		// scorre solo, ret e gia' settato correttamente
 		if (s < es && *s == '>')
 		{
-			ret = '+'; // caso operatore ">>" (redirect output in append mode)
+			ret = '+';
 			s++;
 		}
 	}
 	else if (*s == '<')
 	{
 		s++;
-		// se caso operatore singolo redirect "<" (redirect input) non entra in if,
-		// scorre solo, ret e gia' settato correttamente
 		if (s < es && *s == '<')
 		{
-			ret = 'h'; // caso operatore "<<" (here_doc)
+			ret = 'h';
 			s++;
 		}
 	}
 else
     {
-        /* un unico ramo che gestisce casi token 'a', 's' e 'd' */
-        ret = 'a';            /* caso token di tipo 'a' o misto */
+        ret = 'a';
         {
             char *start;
             char *out_write;
@@ -108,16 +69,13 @@ else
 
 			start      = s;
 			out_write  = s;
-             /* scansiono fino a spazio o symbols (<|>&;()) */
              while (s < es
                  && !ft_strchr(whitespace, *s)
                  && !ft_strchr(symbols,    *s))
              {
                  if (*s == '\'' || *s == '\"')
                  {
-                     /* trovo una quote: la salto e salvo tipo */
                     quote = *s++;
-                    /* se era ancora 'a', ora imposto il tipo */
                     if (ret == 'a')
                     {
                         if (quote == '\'')
@@ -125,31 +83,26 @@ else
                         else
                             ret = 'd';
                     }
-                     /* copio tutto fino alla chiusura */
                      while (s < es && *s != quote)
                          *out_write++ = *s++;
                      if (s < es)
                          s++;
                  }
-				 else if (*s == '\\' && s + 1 < es) /* gestione backslash escape */
+				 else if (*s == '\\' && s + 1 < es)
                  {
-                    s++; /* salto il backslash */
-                    *out_write++ = *s++; /* copio il carattere escapato */
-                    ret = 's'; /* lo gestisco come se fosse single quoted */
+                    s++;
+                    *out_write++ = *s++;
+                    ret = 's';
                  }
-                 else /* includo anche $ dentro lo stesso token */
+                 else
                      *out_write++ = *s++;
              }
-             /* null termino token e assegno q ed eq */
-             /* *out_write = '\0'; */
              if (q)
 			 	*q  = start;
              if (eq)
 			 	*eq = out_write;
          }
      }
-	/* if (eq && *eq && **eq != '\'' && **eq != '\"')
-		*eq = s; */
 	while (s < es && ft_strchr(whitespace, *s))
 		s++;
 	*ps = s;
@@ -177,31 +130,28 @@ t_cmd	*ft_parsecmd(char *s, int *status)
 	char	*p;
 	t_cmd	*cmd;
 
-	es = s + strlen(s);      // find end of the string
+	es = s + strlen(s);
 	p = es - 1;
 	while (p >= s && (*p == ' ' || *p == '\t' || *p == '\n'))
     	p--;
-	if (p >= s && *p == '|') {
-		// pipe “libera” alla fine: segnalo incomplete
+	if (p >= s && *p == '|')
+	{
 		*status = 1;
 		return (NULL);
 	}
 	*status = 0;
-	cmd = parseandor(&s, es); // do the parsing job
-	peek(&s, es, "");        // skip whitespaces
+	cmd = parseandor(&s, es);
+	peek(&s, es, "");
 	if (s != es)
 	{
-		// if we didn't reach the end of buffer after parseandor and skipping spaces,
-		// it means ther's an error!!
 		printf("minishell: syntax error near '%s'\n", s);
 		return (free_tree(cmd), NULL);
 	}
 	nulterminate(cmd);
-	// go trough the tree recoursively and null terminate in the nodes all the strings of commands names,
-	// commands arguments and filenames
-	return (cmd); // returns the tree it built
+	return (cmd);
 }
 
+// Does the parsing job
 t_cmd	*parseandor(char **ps, char *es)
 {
 	t_cmd	*cmd;
@@ -210,59 +160,28 @@ t_cmd	*parseandor(char **ps, char *es)
 
 	cmd = parsepipe(ps, es);
 	if(!cmd)
-		return(NULL);  //propago all'indietro errore per tornare al prompt
-	while (1)	//controlla se il prossimo token e' "o" o "e", peek solo 1 token quindi chiamiamo getoken in buffer temp
-	{			//continuo finche' continuo a trovare token && o ||
+		return(NULL);
+	while (1)
+	{
 		backup = *ps;
 		tok = gettoken(ps, es, NULL, NULL);
 		if(tok == '&' || tok == ';')
 		{
-			printf("minishell: unexpected ';' or single '&' near '%s'\n", *ps); //free treee!!!!!! e free buffer!!!!!!
+			printf("minishell: unexpected ';' or single '&' near '%s'\n", *ps);
 			return(free_tree(cmd), NULL);
 		}
-		else if(tok == 'e') //abbiamo &&
-			cmd = ft_andcmd(cmd, parsepipe(ps, es)); //costruttore nodo AND
-		else if(tok == 'o') //abbiamo ||
-			cmd = ft_orcmd(cmd, parsepipe(ps, es)); //costruttore nodo OR
+		else if(tok == 'e')
+			cmd = ft_andcmd(cmd, parsepipe(ps, es));
+		else if(tok == 'o')
+			cmd = ft_orcmd(cmd, parsepipe(ps, es));
 		else
-		{	//non era ne && ne ||, ripristino *ps ed esco dal while
+		{
 			*ps = backup;
 			break;
 		}
 	}
 	return(cmd);
 }
-
-/* t_cmd	*parsepipe(char **ps, char *es) //OLD ONE WRONG
-{
-	t_cmd	*cmd;
-	t_execcmd *e;
-	char	*backup;
-	int		tok;
-
-	cmd = parseexec(ps, es);
-	while (1)
-	{
-		backup = *ps;
-		tok = gettoken(ps, es, 0, 0);
-		if (tok == '|') // Abbiamo trovato un singolo | = pipe
-		{
-			cmd = ft_pipecmd(cmd, parsepipe(ps, es));
-			if (((t_pipecmd *)cmd)->right->type == EXEC)
-			{
-        		e = (t_execcmd *) ((t_pipecmd *)cmd)->right;
-        		if (e->argv[0] == NULL)
-					return(printf("error token `|'\n"), free_tree(cmd), NULL);
-    		}
-		}
-		else // Non era un '|' singolo: ripristino e torno
-		{
-			*ps = backup;
-            break;
-		}
-	}
-	return (cmd);
-} */
 
 t_cmd	*parsepipe(char **ps, char *es)
 {
@@ -277,9 +196,9 @@ t_cmd	*parsepipe(char **ps, char *es)
 	{
 		backup = *ps;
 		tok = gettoken(ps, es, 0, 0);
-		if (tok == '|') // Abbiamo trovato un singolo | = pipe
+		if (tok == '|')
 			cmd = ft_pipecmd(cmd, parsepipe(ps, es));
-		else // Non era un '|' singolo: ripristino e torno
+		else
 		{
 			*ps = backup;
             break;
@@ -323,14 +242,14 @@ t_cmd	*parseredirs(t_cmd *cmd, char **ps, char *es)
 			rin.fd = 1;
 			cmd = ft_redircmd(&rin);
 		}
-		else if(tok == '+') // >>
+		else if(tok == '+')
 		{
 			rin.mode = O_WRONLY | O_CREAT | O_APPEND;
 			rin.fd = 1;
 			cmd = ft_redircmd(&rin);
 		}
 		else if (tok == 'h')
-			cmd = ft_heredoccmd(cmd, tok_type, rin.file, rin.efile); // ex q ed eq inizio e fine stringa limiter in buffer
+			cmd = ft_heredoccmd(cmd, tok_type, rin.file, rin.efile);
 	}
 	return (cmd);
 }
@@ -341,14 +260,14 @@ t_cmd	*parseblock(char **ps, char *es)
 
 	if (!peek(ps, es, "("))
 	{
-		printf("parseblock '(' missing)"); //aggiustato perche no exit da minishell, solo free e return
+		printf("parseblock '(' missing)");
 		return(NULL);
 	}
 	gettoken(ps, es, 0, 0);
 	cmd = parseandor(ps, es);
 	if (!peek(ps, es, ")"))
 	{
-		printf("parseblock ')' missing)");  //aggiustato perche no exit da minishell, solo free e return
+		printf("parseblock ')' missing)");
 		return(free(cmd), NULL);
 	}
 	gettoken(ps, es, 0, 0);
@@ -356,48 +275,9 @@ t_cmd	*parseblock(char **ps, char *es)
 	return (cmd);
 }
 
-/* t_cmd	*parseexec(char **ps, char *es)  //OLD, WRONG
-{
-	t_execcmd	*cmd;		//ci vorra' struttura per ridurre righe e gestire cosi tante variabili in una funzione
-	t_cmd		*ret;
-	char		*q;
-	char		*eq;
-	int			tok;
-	int			argc;
-
-	if (peek(ps, es, "("))
-		return (parseblock(ps, es));
-	ret = ft_execcmd();
-	cmd = (t_execcmd *)ret;
-	argc = 0;
-	ret = parseredirs(ret, ps, es);
-	while (!peek(ps, es, "|);&<>"))
-	{
-		if ((tok = gettoken(ps, es, &q, &eq)) == 0)
-			break;
-		if (tok != 'a')
-		{
-			printf("syntax");
-			return(free(cmd), free(ret), NULL);
-		}
-		cmd->argv[argc] = q;
-		cmd->eargv[argc] = eq;
-		argc++;
-		if (argc >= MAX_ARGS)
-		{
-			printf("too many args");
-			return(free(cmd), free(ret), NULL);
-		}
-		ret = parseredirs(ret, ps, es);
-	}
-	cmd->argv[argc] = 0;
-	cmd->eargv[argc] = 0;
-	return (ret);
-} */
-
 t_cmd	*parseexec(char **ps, char *es)
 {
-	t_execcmd	*cmd;		//ci vorra' struttura per ridurre righe e gestire cosi tante variabili in una funzione
+	t_execcmd	*cmd;
 	t_cmd		*ret;
 	char		*q;
 	char		*eq;
@@ -417,12 +297,12 @@ t_cmd	*parseexec(char **ps, char *es)
 		tok = gettoken(ps, es, &q, &eq);
 		if (tok != 'a' && tok != 's' && tok != 'd')
 		{
-			*ps = backup;	//torniamo indietro di un carattere
+			*ps = backup;
 			break;
 		}
 		cmd->argv[argc] = q;
 		cmd->eargv[argc] = eq;
-		cmd->qtype[argc] = tok;   // registra il tipo
+		cmd->qtype[argc] = tok;
 		if (++argc >= MAX_ARGS)
 		{
 			printf("too many args");
@@ -435,10 +315,10 @@ t_cmd	*parseexec(char **ps, char *es)
 	return (ret);
 }
 
-// NUL-terminate all the counted strings.
+// NUL-terminate all the tree strings.
 t_cmd	*nulterminate(t_cmd *cmd)
-{									//da dividere in nullterminate 1 e 2 e forse 3
-	int			i;					//metti anche in file a parte
+{
+	int			i;
 	t_execcmd	*ecmd;
 	t_pipecmd	*pcmd;
 	t_redircmd	*rcmd;
@@ -482,8 +362,8 @@ t_cmd	*nulterminate(t_cmd *cmd)
 	else if (cmd->type == HEREDOC)
 	{
         hd = (t_heredoccmd *) cmd;
-        *hd->lim_end = '\0';  // null term stringa limiter
-        nulterminate(hd->cmd); //discendo nel sotto-albero
+        *hd->lim_end = '\0';
+        nulterminate(hd->cmd);
     }
 	return (cmd);
 }
