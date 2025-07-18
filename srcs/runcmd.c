@@ -183,8 +183,17 @@ int	ft_runcmd(t_cmd *cmd, char ***envp, int *p_last_exit_status)
     	if (status != -1)
 			return(status); //exit status già aggiornato in ft_check_builtin
 		execve(find_path(ecmd->argv, *envp), ecmd->argv, *envp);
-		printf("exec %s failed\n", ecmd->argv[0]);
-		exit(127);
+		if (errno == ENOENT)
+		{
+			update_exit_status(127, p_last_exit_status);
+            exit(127);
+		}
+		else
+		{
+			ft_putstr_fd(" Is a directory\n", 2);
+			update_exit_status(126, p_last_exit_status);
+            exit(126);
+		}
 	}
 	else if (cmd->type == REDIR) {
     t_redircmd *redirs[32];
