@@ -6,7 +6,7 @@
 /*   By: mpierant & sfelici <marvin@student.42ro    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 10:33:46 by mpierant          #+#    #+#             */
-/*   Updated: 2025/07/17 23:00:35 by mpierant &       ###   ########.fr       */
+/*   Updated: 2025/07/18 23:03:54 by mpierant &       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,9 +141,36 @@ void							ft_child(int *fd, t_heredoccmd *hcmd,
 									char **envp);
 char							*my_getenv(char **envp, char *word);
 
-// PARSING
+// PARSING: LEXER (gettoken) struct and helpers
+typedef struct s_token_data
+{
+	char						*s;
+	char						*es;
+	char						**q;
+	char						**eq;
+	char						*whitespace;
+	char						*symbols;
+	int							ret;
+}								t_token_data;
+
+void							set_positions(t_token_data *data);
+int								handle_pipe_token(t_token_data *data);
+int								handle_and_token(t_token_data *data);
+int								handle_redirect_out_token(t_token_data *data);
+int								handle_redirect_in_token(t_token_data *data);
+void							handle_quoted_string(t_token_data *data,
+									char **out_write, char quote, int *ret);
+void							handle_argument_loop(t_token_data *data,
+									char **out_write, int *ret);
+int								handle_argument_token(t_token_data *data);
+int								dispatch_token(t_token_data *data);
+void							skip_trailing_whitespace_and_update_ps(t_token_data *data,
+									char **ps);
+
+// PARSING: SYNTAX
 t_cmd							*ft_parsecmd(char *s, int *status);
 t_cmd							*parseandor(char **ps, char *es);
+t_cmd							*parseblock(char **ps, char *es);
 t_cmd							*parsepipe(char **ps, char *es);
 t_cmd							*parseredirs(t_cmd *cmd, char **ps, char *es);
 t_cmd							*parseexec(char **ps, char *es);
@@ -151,6 +178,14 @@ t_cmd							*nulterminate(t_cmd *cmd);
 int								gettoken(char **ps, char *es, char **q,
 									char **eq);
 int								peek(char **ps, char *es, char *toks);
+
+// NULLTERMINATE TREE helpers
+void							handle_exec_cmd(t_cmd *cmd);
+void							handle_redir_cmd(t_cmd *cmd);
+void							handle_pipe_cmd(t_cmd *cmd);
+void							handle_and_cmd(t_cmd *cmd);
+void							handle_or_cmd(t_cmd *cmd);
+void							handle_heredoc_cmd(t_cmd *cmd);
 
 // AST NODE'S CONSTRUCTORS
 t_cmd							*ft_execcmd(void);
