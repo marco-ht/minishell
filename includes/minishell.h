@@ -6,7 +6,7 @@
 /*   By: mpierant & sfelici <marvin@student.42ro    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 10:33:46 by mpierant          #+#    #+#             */
-/*   Updated: 2025/07/18 23:03:54 by mpierant &       ###   ########.fr       */
+/*   Updated: 2025/07/19 00:29:01 by mpierant &       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,6 +106,18 @@ typedef struct s_redin
 	int							fd;
 	int							allocated;
 }								t_redin;
+
+// parseexec VARS STRUCT
+typedef struct s_parseexec_vars
+{
+	t_execcmd	*cmd;
+	t_cmd		*ret;
+	char		*q;
+	char		*eq;
+	char		*backup;
+	int			tok;
+	int			argc;
+}				t_parseexec_vars;
 
 // MAIN STRUCT
 typedef struct s_vars

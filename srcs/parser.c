@@ -6,43 +6,11 @@
 /*   By: mpierant & sfelici <marvin@student.42ro    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/18 19:10:36 by mpierant &        #+#    #+#             */
-/*   Updated: 2025/07/18 19:45:08 by mpierant &       ###   ########.fr       */
+/*   Updated: 2025/07/18 23:35:43 by mpierant &       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
-
-// Does the parsing job
-t_cmd	*parseandor(char **ps, char *es)
-{
-	t_cmd	*cmd;
-	char	*backup;
-	int		tok;
-
-	cmd = parsepipe(ps, es);
-	if (!cmd)
-		return (NULL);
-	while (1)
-	{
-		backup = *ps;
-		tok = gettoken(ps, es, NULL, NULL);
-		if (tok == '&' || tok == ';')
-		{
-			printf("minishell: unexpected ';' or single '&' near '%s'\n", *ps);
-			return (free_tree(cmd), NULL);
-		}
-		else if (tok == 'e')
-			cmd = ft_andcmd(cmd, parsepipe(ps, es));
-		else if (tok == 'o')
-			cmd = ft_orcmd(cmd, parsepipe(ps, es));
-		else
-		{
-			*ps = backup;
-			break ;
-		}
-	}
-	return (cmd);
-}
 
 t_cmd	*parseredirs(t_cmd *cmd, char **ps, char *es)
 {
@@ -89,44 +57,4 @@ t_cmd	*parseredirs(t_cmd *cmd, char **ps, char *es)
 			cmd = ft_heredoccmd(cmd, tok_type, rin.file, rin.efile);
 	}
 	return (cmd);
-}
-
-t_cmd	*parseexec(char **ps, char *es)
-{
-	t_execcmd	*cmd;
-	t_cmd		*ret;
-	char		*q;
-	char		*eq;
-	char		*backup;
-	int			tok;
-	int			argc;
-
-	if (peek(ps, es, "("))
-		return (parseblock(ps, es));
-	ret = ft_execcmd();
-	cmd = (t_execcmd *)ret;
-	argc = 0;
-	ret = parseredirs(ret, ps, es);
-	while (1)
-	{
-		backup = *ps;
-		tok = gettoken(ps, es, &q, &eq);
-		if (tok != 'a' && tok != 's' && tok != 'd')
-		{
-			*ps = backup;
-			break ;
-		}
-		cmd->argv[argc] = q;
-		cmd->eargv[argc] = eq;
-		cmd->qtype[argc] = tok;
-		if (++argc >= MAX_ARGS)
-		{
-			printf("too many args");
-			return (free(cmd), free(ret), NULL);
-		}
-		ret = parseredirs(ret, ps, es);
-	}
-	cmd->argv[argc] = NULL;
-	cmd->eargv[argc] = NULL;
-	return (ret);
 }
