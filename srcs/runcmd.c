@@ -49,12 +49,12 @@ int	ft_check_builtin(t_execcmd *ecmd, char ***envp, int *p_last_exit_status)
     return (-1); //no builtin
 }
 
-// ora restituisce 1 se fd==1 è stato rediretto, 0 altrimenti
+// ora restituisce 1 se fd==1 è stato rediretto, 2 se fd==0 rediretto, 0 altrimenti
 static int apply_redirs(t_cmd *cmd, int *p_last_exit_status)
 {
     t_redircmd *redirs[32];
     int         n = 0, i;
-    int         did_redirect_stdout = 0;
+    int         did_redirect_std_in_out = 0;
     t_cmd      *cur = cmd;
 
     while (cur && cur->type == REDIR) {
@@ -64,7 +64,9 @@ static int apply_redirs(t_cmd *cmd, int *p_last_exit_status)
     for (i = n - 1; i >= 0; i--) {
         t_redircmd *rc = redirs[i];
         if (rc->fd == STDOUT_FILENO)
-            did_redirect_stdout = 1;
+            did_redirect_std_in_out = 1;
+		else if (rc->fd == STDIN_FILENO)
+            did_redirect_std_in_out = 2;
         int flags = (rc->fd == STDIN_FILENO)
                     ? O_RDONLY
                     : ((rc->mode & O_APPEND)
@@ -88,7 +90,7 @@ static int apply_redirs(t_cmd *cmd, int *p_last_exit_status)
         }
         close(fd);
     }
-    return did_redirect_stdout;
+    return did_redirect_std_in_out;
 }
 
 /* funzione per rimuovere argv[i]=="" empty strings */
@@ -264,7 +266,7 @@ int	ft_runcmd(t_cmd *cmd, char ***envp, int *p_last_exit_status)
 		{
 			setup_signals_child();
 			int redir_stdout = apply_redirs(pcmd->left, p_last_exit_status);
-        	if (!redir_stdout)
+        	if (redir_stdout != 1)
 				dup2(p[1], 1);
 			close(p[0]);
 			close(p[1]);
@@ -277,7 +279,7 @@ int	ft_runcmd(t_cmd *cmd, char ***envp, int *p_last_exit_status)
 		{
 			setup_signals_child();
 			int redir_stdin = apply_redirs(pcmd->right, p_last_exit_status); 
-        	if (!redir_stdin)
+        	if (redir_stdin != 2)
 				dup2(p[0], 0);
 			close(p[0]);
 			close(p[1]);
