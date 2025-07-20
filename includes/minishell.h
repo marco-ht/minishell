@@ -6,7 +6,7 @@
 /*   By: mpierant & sfelici <marvin@student.42ro    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 10:33:46 by mpierant          #+#    #+#             */
-/*   Updated: 2025/07/19 00:29:01 by mpierant &       ###   ########.fr       */
+/*   Updated: 2025/07/20 15:18:45 by mpierant &       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,14 +110,14 @@ typedef struct s_redin
 // parseexec VARS STRUCT
 typedef struct s_parseexec_vars
 {
-	t_execcmd	*cmd;
-	t_cmd		*ret;
-	char		*q;
-	char		*eq;
-	char		*backup;
-	int			tok;
-	int			argc;
-}				t_parseexec_vars;
+	t_execcmd					*cmd;
+	t_cmd						*ret;
+	char						*q;
+	char						*eq;
+	char						*backup;
+	int							tok;
+	int							argc;
+}								t_parseexec_vars;
 
 // MAIN STRUCT
 typedef struct s_vars
@@ -176,7 +176,7 @@ void							handle_argument_loop(t_token_data *data,
 									char **out_write, int *ret);
 int								handle_argument_token(t_token_data *data);
 int								dispatch_token(t_token_data *data);
-void							skip_trailing_whitespace_and_update_ps(t_token_data *data,
+void							skip_whitespace_update_ps(t_token_data *data,
 									char **ps);
 
 // PARSING: SYNTAX
@@ -334,7 +334,7 @@ void							add_directory_matches_to_argv(t_execcmd *ecmd,
 									t_expand_vars *vars);
 int								handle_slash_wildcard(t_execcmd *ecmd,
 									t_expand_vars *vars);
-void							process_simple_wildcard_matches(t_expand_vars *vars);
+void							process_simple_wildcard(t_expand_vars *vars);
 void							add_simple_matches_to_argv(t_execcmd *ecmd,
 									t_expand_vars *vars);
 int								handle_simple_wildcard(t_execcmd *ecmd,

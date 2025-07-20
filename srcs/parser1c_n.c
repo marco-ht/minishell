@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parser1c.c                                         :+:      :+:    :+:   */
+/*   parser1c_n.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mpierant & sfelici <marvin@student.42ro    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/18 22:54:40 by mpierant &        #+#    #+#             */
-/*   Updated: 2025/07/18 22:56:08 by mpierant &       ###   ########.fr       */
+/*   Updated: 2025/07/20 15:14:33 by mpierant &       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ int	dispatch_token(t_token_data *data)
 	return (ret);
 }
 
-void	skip_trailing_whitespace_and_update_ps(t_token_data *data,
+void	skip_whitespace_update_ps(t_token_data *data,
 		char **ps)
 {
 	while (data->s < data->es && ft_strchr(data->whitespace, *data->s))

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   wildcards1c.c                                      :+:      :+:    :+:   */
+/*   wildcards1c_n.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mpierant & sfelici <marvin@student.42ro    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 22:56:50 by mpierant &        #+#    #+#             */
-/*   Updated: 2025/07/17 22:58:00 by mpierant &       ###   ########.fr       */
+/*   Updated: 2025/07/20 15:18:55 by mpierant &       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ int	handle_slash_wildcard(t_execcmd *ecmd, t_expand_vars *vars)
 	return (0);
 }
 
-void	process_simple_wildcard_matches(t_expand_vars *vars)
+void	process_simple_wildcard(t_expand_vars *vars)
 {
 	vars->d1 = opendir(".");
 	if (vars->d1)
@@ -87,7 +87,7 @@ int	handle_simple_wildcard(t_execcmd *ecmd, t_expand_vars *vars)
 	{
 		vars->found = 0;
 		vars->match_count = 0;
-		process_simple_wildcard_matches(vars);
+		process_simple_wildcard(vars);
 		add_simple_matches_to_argv(ecmd, vars);
 		if (vars->found == 0)
 		{
