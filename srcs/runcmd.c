@@ -1,54 +1,5 @@
 #include "../includes/minishell.h"
 
-void update_exit_status(int status, int *p_last_exit_status)
-{
-    *p_last_exit_status = status;
-}
-
-int	ft_check_builtin(t_execcmd *ecmd, char ***envp, int *p_last_exit_status)
-{
-    int exit_status;
-    
-    if (ecmd->argv[0] == NULL)
-        return (-1); //no builtin
-    if (ft_strncmp(ecmd->argv[0], "pwd", 4) == 0)
-    {
-        exit_status = builtin_pwd();
-        return (update_exit_status(exit_status, p_last_exit_status), exit_status);
-    }
-    else if (ft_strncmp(ecmd->argv[0], "echo", 5) == 0)
-    {
-        exit_status = builtin_echo(ecmd);
-        return (update_exit_status(exit_status, p_last_exit_status), exit_status);
-    }
-    else if (ft_strncmp(ecmd->argv[0], "cd", 3) == 0)
-    {
-        exit_status = builtin_cd(ecmd, *envp);
-        return (update_exit_status(exit_status, p_last_exit_status), exit_status);
-    }
-    else if (ft_strncmp(ecmd->argv[0], "exit", 5) == 0)
-    {
-        exit_status = builtin_exit(ecmd);
-        return (update_exit_status(exit_status, p_last_exit_status), exit_status);
-    }
-    else if (ft_strncmp(ecmd->argv[0], "env", 4) == 0)
-    {
-        exit_status = builtin_env(*envp);
-        return (update_exit_status(exit_status, p_last_exit_status), exit_status);
-    }
-    else if (ft_strncmp(ecmd->argv[0], "export", 7) == 0)
-    {
-        exit_status = builtin_export(ecmd, envp);
-        return (update_exit_status(exit_status, p_last_exit_status), exit_status);
-    }
-    else if (ft_strncmp(ecmd->argv[0], "unset", 6) == 0)
-    {
-        exit_status = builtin_unset(ecmd, envp);
-        return (update_exit_status(exit_status, p_last_exit_status), exit_status);
-    }
-    return (-1); //no builtin
-}
-
 // ora restituisce 1 se fd==1 è stato rediretto, 2 se fd==0 rediretto, 0 altrimenti
 static int apply_redirs(t_cmd *cmd, int *p_last_exit_status)
 {

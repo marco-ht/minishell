@@ -6,7 +6,7 @@
 /*   By: mpierant & sfelici <marvin@student.42ro    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 10:33:46 by mpierant          #+#    #+#             */
-/*   Updated: 2025/07/20 15:18:45 by mpierant &       ###   ########.fr       */
+/*   Updated: 2025/07/20 23:33:42 by mpierant &       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,6 +152,8 @@ char							*find_path(char **cmd, char **envp);
 void							ft_child(int *fd, t_heredoccmd *hcmd,
 									char **envp);
 char							*my_getenv(char **envp, char *word);
+int								ft_check_builtin(t_execcmd *ecmd, char ***envp,
+									int *p_last_exit_status);
 
 // PARSING: LEXER (gettoken) struct and helpers
 typedef struct s_token_data
