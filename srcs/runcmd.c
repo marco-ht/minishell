@@ -44,30 +44,6 @@ static int apply_redirs(t_cmd *cmd, int *p_last_exit_status)
     return did_redirect_std_in_out;
 }
 
-/* funzione per rimuovere argv[i]=="" empty strings */
-static void remove_empty_args(t_execcmd *ecmd)
-{
-    int read_i;
-    int write_i;
-
-    read_i  = 0;
-    write_i = 0;
-    while (ecmd->argv[read_i])
-    {
-        if (ecmd->argv[read_i][0] != '\0')
-        {
-            ecmd->argv[write_i]     = ecmd->argv[read_i];
-            ecmd->eargv[write_i]    = ecmd->eargv[read_i];
-            ecmd->qtype[write_i]    = ecmd->qtype[read_i];
-            ecmd->allocated[write_i]= ecmd->allocated[read_i];
-            write_i++;
-        }
-        read_i++;
-    }
-    ecmd->argv[write_i]  = NULL;
-    ecmd->eargv[write_i] = NULL;
-}
-
 int	ft_runcmd(t_cmd *cmd, char ***envp, int *p_last_exit_status)
 {
 	int				p[2];
@@ -305,27 +281,4 @@ int	ft_runcmd(t_cmd *cmd, char ***envp, int *p_last_exit_status)
 		return (1);
 	}
 	return (1);
-}
-
-void	ft_child(int *fd, t_heredoccmd *hcmd, char **envp)
-{
-	char	*line;
-
-	close(fd[0]);
-	line = get_next_line(STDIN_FILENO);
-	while (line != NULL)
-	{
-		if (ft_strncmp(line, hcmd->lim_start, ft_strlen(hcmd->lim_start)) == 0)
-		{
-			free(line);
-			close(fd[1]);
-			return;
-		}
-		if (hcmd->expand && ft_strchr(line, '$'))
-			perform_expansion(&line, envp);
-		write(fd[1], line, ft_strlen(line));
-		free(line);
-		line = get_next_line(STDIN_FILENO);
-	}
-	close(fd[1]);
 }
