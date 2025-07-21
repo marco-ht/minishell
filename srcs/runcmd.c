@@ -10,10 +10,10 @@ int	ft_runcmd(t_cmd *cmd, char ***envp, int *p_last_exit_status)
 	pid_t			pid_left;
 	pid_t			pid_right;
 	pid_t			pid_here;
-	//int				fd;
+	int				fd;
 	t_execcmd		*ecmd;
 	t_pipecmd		*pcmd;
-	//t_redircmd		*rcmd;
+	t_redircmd		*rcmd;
 	t_andcmd		*acmd;
 	t_orcmd			*ocmd;
 	t_heredoccmd	*hcmd;
@@ -83,60 +83,65 @@ int	ft_runcmd(t_cmd *cmd, char ***envp, int *p_last_exit_status)
 	else if (cmd->type == REDIR)
 	{
 		t_redircmd *redirs[32];
-		int         n = 0, i;
-		t_cmd      *cur = cmd;
-		int         saved_stdin  = dup(STDIN_FILENO);
-		int         saved_stdout = dup(STDOUT_FILENO);
-		int         status = 0;
+		int         n;
+		int         i;
+		t_cmd      *cur;
+		int         saved_stdin;
+		int         saved_stdout;
+		int         status;
 
+		n = 0;
+		cur = cmd;
+		saved_stdin = dup(STDIN_FILENO);
+		saved_stdout = dup(STDOUT_FILENO);
+		status = 0;
 		if (saved_stdin < 0 || saved_stdout < 0) {
 			perror("dup");
 			update_exit_status(1, p_last_exit_status);
 			return 1;
 		}
-
-		// 1) Raccogli tutte le REDIR in un array
 		while (cur->type == REDIR) {
-			redirs[n++] = (t_redircmd *)cur;
+			redirs[n] = (t_redircmd *)cur;
+			n++;
 			cur = redirs[n-1]->cmd;
 		}
-
-		// 2) Applica bottom-up: prima inner (last parsed), poi outer
-		for (i = n - 1; i >= 0; i--) {
-			t_redircmd *rc = redirs[i];
-			int flags = (rc->fd == STDIN_FILENO)
-						? O_RDONLY
-						: ((rc->mode & O_APPEND)
-						? O_WRONLY|O_APPEND|O_CREAT
-						: O_WRONLY|O_CREAT|O_TRUNC);
-			int fd = open(rc->file, flags, 0644);
+		i = n - 1;
+		while (i >= 0) {
+			rcmd = redirs[i];
+			fd = open(rcmd->file, rcmd->mode, 0644);
 			if (fd < 0) {
-				ft_putstr_fd(rc->file, 2);
+				ft_putstr_fd(rcmd->file, 2);
 				if (errno == ENOENT)
 					ft_putstr_fd(": No such file or directory\n", 2);
 				else
 					ft_putstr_fd(": Permission denied\n", 2);
 				update_exit_status(1, p_last_exit_status);
 				status = 1;
-				goto restore_fds;
+				dup2(saved_stdin,  STDIN_FILENO);
+				close(saved_stdin);
+				dup2(saved_stdout, STDOUT_FILENO);
+				close(saved_stdout);
+				return status;
 			}
-			if (dup2(fd, rc->fd) < 0) {
+			if (dup2(fd, rcmd->fd) < 0) {
 				perror("dup2");
 				close(fd);
 				update_exit_status(1, p_last_exit_status);
 				status = 1;
-				goto restore_fds;
+				dup2(saved_stdin,  STDIN_FILENO);
+				close(saved_stdin);
+				dup2(saved_stdout, STDOUT_FILENO);
+				close(saved_stdout);
+				return status;
 			}
 			close(fd);
+			i--;
 		}
-
-		// 3) Esegui finalmente il comando vero (EXEC, PIPE, etc.)
 		status = ft_runcmd(cur, envp, p_last_exit_status);
-
-		restore_fds:
-		// 4) Ripristina sempre stdin/stdout originali
-		dup2(saved_stdin,  STDIN_FILENO);  close(saved_stdin);
-		dup2(saved_stdout, STDOUT_FILENO); close(saved_stdout);
+		dup2(saved_stdin,  STDIN_FILENO);
+		close(saved_stdin);
+		dup2(saved_stdout, STDOUT_FILENO);
+		close(saved_stdout);
 		return status;
 	}
 	else if (cmd->type == PIPE)
