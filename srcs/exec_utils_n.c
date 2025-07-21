@@ -6,7 +6,7 @@
 /*   By: mpierant & sfelici <marvin@student.42ro    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 11:15:21 by mpierant          #+#    #+#             */
-/*   Updated: 2025/07/16 13:59:49 by mpierant &       ###   ########.fr       */
+/*   Updated: 2025/07/21 22:53:44 by mpierant &       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,21 +38,33 @@ char	*my_getenv(char **envp, char *word)
 			return (envp[i] + word_len);
 		i++;
 	}
-	perror("PATH not found in environment");
 	return (NULL);
 }
 
 static char	*check_absolute_path(char *cmd)
 {
-	if (access(cmd, F_OK) == 0)
+	struct stat	st;
+
+	if (access(cmd, F_OK) != 0)
 	{
-		if (access(cmd, X_OK) == 0)
-			return (ft_strdup(cmd));
-		ft_putstr_fd(" Permission denied\n", 2);
+		ft_putstr_fd(cmd, 2);
+		ft_putstr_fd(": No such file or directory\n", 2);
 		return (NULL);
 	}
-	ft_putstr_fd(" No such file or directory\n", 2);
-	return (NULL);
+	if (stat(cmd, &st) == 0 && S_ISDIR(st.st_mode))
+	{
+		ft_putstr_fd(cmd, 2);
+		ft_putstr_fd(": Is a directory\n", 2);
+		return (NULL);
+	}
+	if (access(cmd, X_OK) != 0)
+	{
+		ft_putstr_fd(cmd, 2);
+		ft_putstr_fd(": Permission denied\n", 2);
+		return (NULL);
+	}
+	
+	return (ft_strdup(cmd));
 }
 
 static char	*search_in_paths(char **paths, char *cmd)
@@ -83,10 +95,23 @@ char	*find_path(char **cmd, char **envp)
 {
 	char	*path_str;
 	char	**paths;
+	char	*result;
 
 	if (ft_strchr(cmd[0], '/'))
 		return (check_absolute_path(cmd[0]));
 	path_str = my_getenv(envp, "PATH=");
+	if (path_str == NULL)
+	{
+		ft_putstr_fd(cmd[0], 2);
+		ft_putstr_fd(": No such file or directory\n", 2);
+		return (NULL);
+	}
 	paths = ft_split(path_str, ':');
-	return (search_in_paths(paths, cmd[0]));
+	result = search_in_paths(paths, cmd[0]);
+	if (result == NULL)
+	{
+		ft_putstr_fd(cmd[0], 2);
+		ft_putstr_fd(": command not found\n", 2);
+	}
+	return (result);
 }

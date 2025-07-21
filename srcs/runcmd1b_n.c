@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   runcmd1b.c                                         :+:      :+:    :+:   */
+/*   runcmd1b_n.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mpierant & sfelici <marvin@student.42ro    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/21 13:34:09 by mpierant &        #+#    #+#             */
-/*   Updated: 2025/07/21 13:44:55 by mpierant &       ###   ########.fr       */
+/*   Updated: 2025/07/21 22:58:33 by mpierant &       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ static void	run_exec_cmd_child(t_execcmd *ecmd, char **envp,
         int *p_last_exit_status, pid_t *pid)
 {
     char *path;
+    int exit_code;
 
     *pid = fork1();
     if (*pid == 0)
@@ -42,27 +43,29 @@ static void	run_exec_cmd_child(t_execcmd *ecmd, char **envp,
         path = find_path(ecmd->argv, envp);
         if (path == NULL)
         {
-            ft_putstr_fd(ecmd->argv[0], 2);
-            ft_putstr_fd(": command not found\n", 2);
-            update_exit_status(127, p_last_exit_status);
             free_tree((t_cmd *)ecmd);
             ft_free_envp(envp);
-            exit(127);
+            exit_code = 126;
+            if (errno == ENOENT)
+                exit_code = 127;
+            update_exit_status(exit_code, p_last_exit_status);
+            exit(exit_code);
         }
         execve(path, ecmd->argv, envp);
         free(path);
-
         ft_putstr_fd(ecmd->argv[0], 2);
         ft_putstr_fd(": ", 2);
         perror("");
-
-        int exit_code = (errno == EACCES) ? 126 : 127;
-        update_exit_status(exit_code, p_last_exit_status);
         free_tree((t_cmd *)ecmd);
         ft_free_envp(envp);
+        exit_code = 126;
+        if (errno == ENOENT)
+            exit_code = 127;
+        update_exit_status(exit_code, p_last_exit_status);
         exit(exit_code);
     }
 }
+
 int	run_exec_cmd(t_cmd *cmd, char ***envp, int *p_last_exit_status)
 {
 	int			status;
