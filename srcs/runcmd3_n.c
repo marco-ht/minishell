@@ -6,7 +6,7 @@
 /*   By: mpierant & sfelici <marvin@student.42ro    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/21 00:24:32 by mpierant &        #+#    #+#             */
-/*   Updated: 2025/07/21 21:16:07 by mpierant &       ###   ########.fr       */
+/*   Updated: 2025/07/21 21:22:29 by mpierant &       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 void	gnl_cleanup(void)
 {
 	static char	*str;
-	
+
 	if (str)
 	{
 		free(str);
