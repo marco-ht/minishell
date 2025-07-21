@@ -68,6 +68,7 @@ void	execute_and_cleanup(t_vars *v)
 	ft_runcmd(v->tree, &v->envp, &v->last_exit_status);
 	free(v->lineparser);
 	free_tree(v->tree);
+	v->tree = NULL;
 	free(v->buf);
 }
 
@@ -75,10 +76,20 @@ void	read_and_parse(t_vars *v)
 {
 	while (ft_getcmd(&v->buf) >= 0)
 	{
+		if (v->tree)
+		{
+			free_tree(v->tree);
+			v->tree = NULL;
+		}
 		reset_signal_flag();
 		if (parse_until_tree(v))
 			continue ;
 		sanitize_buf(v);
 		execute_and_cleanup(v);
+	}
+	if (v->tree)
+	{
+		free_tree(v->tree);
+		v->tree = NULL;
 	}
 }
