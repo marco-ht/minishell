@@ -21,6 +21,7 @@ int	main(int argc, char **argv, char **env)
 		v.envp = ft_envcpy(env);
 	setup_signals_interactive();
 	read_and_parse(&v);
+	free_tree(v.tree);
 	free(v.buf);
 	ft_free_envp(v.envp);
 	rl_clear_history();

@@ -41,12 +41,14 @@ static void	run_exec_cmd_child(t_execcmd *ecmd, char **envp,
 		if (errno == ENOENT)
 		{
 			update_exit_status(127, p_last_exit_status);
+			free_tree((t_cmd *)ecmd);
 			exit(127);
 		}
 		else
 		{
 			ft_putstr_fd(" Is a directory\n", 2);
 			update_exit_status(126, p_last_exit_status);
+			free_tree((t_cmd *)ecmd);
 			exit(126);
 		}
 	}

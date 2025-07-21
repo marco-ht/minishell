@@ -31,12 +31,14 @@ int	run_execp_cmd(t_cmd *cmd, char ***envp, int *p_last_exit_status)
 	if (errno == ENOENT)
 	{
 		update_exit_status(127, p_last_exit_status);
+		free_tree(cmd);
 		exit(127);
 	}
 	else
 	{
 		ft_putstr_fd(" Is a directory\n", 2);
 		update_exit_status(126, p_last_exit_status);
+		free_tree(cmd);
 		exit(126);
 	}
 }
