@@ -77,6 +77,7 @@ static char	*search_in_paths(char **paths, char *cmd)
 	}
 	ft_free_args(paths);
 	ft_putstr_fd(" command not found\n", 2);
+	free(cmd);
 	exit(127);
 }
 
