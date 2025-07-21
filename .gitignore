@@ -17,4 +17,9 @@ objs/
 # Misc
 .DS_Store
 *.swp
-srcs/wildcards5*
+comando_valgrind_completo
+err.log
+out.txt
+test (Copy).cmds
+test.cmds
+valgrind-minishell.log

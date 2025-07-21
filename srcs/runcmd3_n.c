@@ -1,16 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   runcmd3.c                                          :+:      :+:    :+:   */
+/*   runcmd3_n.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mpierant & sfelici <marvin@student.42ro    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/21 00:24:32 by mpierant &        #+#    #+#             */
-/*   Updated: 2025/07/21 00:33:06 by mpierant &       ###   ########.fr       */
+/*   Updated: 2025/07/21 21:16:07 by mpierant &       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
+
+void	gnl_cleanup(void)
+{
+	static char	*str;
+	
+	if (str)
+	{
+		free(str);
+		str = NULL;
+	}
+}
 
 /* function to remove argv[i]=="" empty strings */
 void	remove_empty_args(t_execcmd *ecmd)
@@ -47,6 +58,7 @@ void	ft_child(int *fd, t_heredoccmd *hcmd, char **envp)
 		if (ft_strncmp(line, hcmd->lim_start, ft_strlen(hcmd->lim_start)) == 0)
 		{
 			free(line);
+			get_next_line(-1);
 			close(fd[1]);
 			return ;
 		}
