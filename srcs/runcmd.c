@@ -1,49 +1,5 @@
 #include "../includes/minishell.h"
 
-// ora restituisce 1 se fd==1 è stato rediretto, 2 se fd==0 rediretto, 0 altrimenti
-static int apply_redirs(t_cmd *cmd, int *p_last_exit_status)
-{
-    t_redircmd *redirs[32];
-    int         n = 0, i;
-    int         did_redirect_std_in_out = 0;
-    t_cmd      *cur = cmd;
-
-    while (cur && cur->type == REDIR) {
-        redirs[n++] = (t_redircmd *)cur;
-        cur = redirs[n-1]->cmd;
-    }
-    for (i = n - 1; i >= 0; i--) {
-        t_redircmd *rc = redirs[i];
-        if (rc->fd == STDOUT_FILENO)
-            did_redirect_std_in_out = 1;
-		else if (rc->fd == STDIN_FILENO)
-            did_redirect_std_in_out = 2;
-        int flags = (rc->fd == STDIN_FILENO)
-                    ? O_RDONLY
-                    : ((rc->mode & O_APPEND)
-                       ? O_WRONLY|O_APPEND|O_CREAT
-                       : O_WRONLY|O_CREAT|O_TRUNC);
-        int fd = open(rc->file, flags, 0644);
-        if (fd < 0) {
-            ft_putstr_fd(rc->file, 2);
-            if (errno == ENOENT)
-    			ft_putstr_fd(": No such file or directory\n", 2);
-			else
-    			ft_putstr_fd(": Permission denied\n", 2);
-            update_exit_status(1, p_last_exit_status);
-            exit(1);
-        }
-        if (dup2(fd, rc->fd) < 0) {
-            perror("dup2");
-            close(fd);
-            update_exit_status(1, p_last_exit_status);
-            exit(1);
-        }
-        close(fd);
-    }
-    return did_redirect_std_in_out;
-}
-
 int	ft_runcmd(t_cmd *cmd, char ***envp, int *p_last_exit_status)
 {
 	int				p[2];
