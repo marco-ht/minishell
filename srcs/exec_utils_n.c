@@ -39,7 +39,7 @@ char	*my_getenv(char **envp, char *word)
 		i++;
 	}
 	perror("PATH not found in environment");
-	exit(1);
+	return (NULL);
 }
 
 static char	*check_absolute_path(char *cmd)
@@ -49,10 +49,10 @@ static char	*check_absolute_path(char *cmd)
 		if (access(cmd, X_OK) == 0)
 			return (ft_strdup(cmd));
 		ft_putstr_fd(" Permission denied\n", 2);
-		exit(126);
+		return (NULL);
 	}
 	ft_putstr_fd(" No such file or directory\n", 2);
-	exit(127);
+	return (NULL);
 }
 
 static char	*search_in_paths(char **paths, char *cmd)
@@ -76,9 +76,7 @@ static char	*search_in_paths(char **paths, char *cmd)
 		i++;
 	}
 	ft_free_args(paths);
-	ft_putstr_fd(" command not found\n", 2);
-	free(cmd);
-	exit(127);
+	return (NULL);
 }
 
 char	*find_path(char **cmd, char **envp)

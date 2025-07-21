@@ -31,29 +31,38 @@ static int	run_exec_exp_redirs_builtin(t_cmd *cmd, char ***envp,
 }
 
 static void	run_exec_cmd_child(t_execcmd *ecmd, char **envp,
-		int *p_last_exit_status, pid_t *pid)
+        int *p_last_exit_status, pid_t *pid)
 {
-	*pid = fork1();
-	if (*pid == 0)
-	{
-		setup_signals_child();
-		execve(find_path(ecmd->argv, envp), ecmd->argv, envp);
-		if (errno == ENOENT)
-		{
-			update_exit_status(127, p_last_exit_status);
-			free_tree((t_cmd *)ecmd);
-			exit(127);
-		}
-		else
-		{
-			ft_putstr_fd(" Is a directory\n", 2);
-			update_exit_status(126, p_last_exit_status);
-			free_tree((t_cmd *)ecmd);
-			exit(126);
-		}
-	}
-}
+    char *path;
 
+    *pid = fork1();
+    if (*pid == 0)
+    {
+        setup_signals_child();
+        path = find_path(ecmd->argv, envp);
+        if (path == NULL)
+        {
+            ft_putstr_fd(ecmd->argv[0], 2);
+            ft_putstr_fd(": command not found\n", 2);
+            update_exit_status(127, p_last_exit_status);
+            free_tree((t_cmd *)ecmd);
+            ft_free_envp(envp);
+            exit(127);
+        }
+        execve(path, ecmd->argv, envp);
+        free(path);
+
+        ft_putstr_fd(ecmd->argv[0], 2);
+        ft_putstr_fd(": ", 2);
+        perror("");
+
+        int exit_code = (errno == EACCES) ? 126 : 127;
+        update_exit_status(exit_code, p_last_exit_status);
+        free_tree((t_cmd *)ecmd);
+        ft_free_envp(envp);
+        exit(exit_code);
+    }
+}
 int	run_exec_cmd(t_cmd *cmd, char ***envp, int *p_last_exit_status)
 {
 	int			status;
