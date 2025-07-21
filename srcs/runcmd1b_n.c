@@ -6,7 +6,7 @@
 /*   By: mpierant & sfelici <marvin@student.42ro    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/21 13:34:09 by mpierant &        #+#    #+#             */
-/*   Updated: 2025/07/21 22:58:33 by mpierant &       ###   ########.fr       */
+/*   Updated: 2025/07/22 01:35:28 by mpierant &       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,39 +31,39 @@ static int	run_exec_exp_redirs_builtin(t_cmd *cmd, char ***envp,
 }
 
 static void	run_exec_cmd_child(t_execcmd *ecmd, char **envp,
-        int *p_last_exit_status, pid_t *pid)
+		int *p_last_exit_status, pid_t *pid)
 {
-    char *path;
-    int exit_code;
+	char	*path;
+	int		exit_code;
 
-    *pid = fork1();
-    if (*pid == 0)
-    {
-        setup_signals_child();
-        path = find_path(ecmd->argv, envp);
-        if (path == NULL)
-        {
-            free_tree((t_cmd *)ecmd);
-            ft_free_envp(envp);
-            exit_code = 126;
-            if (errno == ENOENT)
-                exit_code = 127;
-            update_exit_status(exit_code, p_last_exit_status);
-            exit(exit_code);
-        }
-        execve(path, ecmd->argv, envp);
-        free(path);
-        ft_putstr_fd(ecmd->argv[0], 2);
-        ft_putstr_fd(": ", 2);
-        perror("");
-        free_tree((t_cmd *)ecmd);
-        ft_free_envp(envp);
-        exit_code = 126;
-        if (errno == ENOENT)
-            exit_code = 127;
-        update_exit_status(exit_code, p_last_exit_status);
-        exit(exit_code);
-    }
+	*pid = fork1();
+	if (*pid == 0)
+	{
+		setup_signals_child();
+		path = find_path(ecmd->argv, envp);
+		if (path == NULL)
+		{
+			free_tree((t_cmd *)ecmd);
+			ft_free_envp(envp);
+			exit_code = 126;
+			if (errno == ENOENT)
+				exit_code = 127;
+			update_exit_status(exit_code, p_last_exit_status);
+			exit(exit_code);
+		}
+		execve(path, ecmd->argv, envp);
+		free(path);
+		ft_putstr_fd(ecmd->argv[0], 2);
+		ft_putstr_fd(": ", 2);
+		perror("");
+		free_tree((t_cmd *)ecmd);
+		ft_free_envp(envp);
+		exit_code = 126;
+		if (errno == ENOENT)
+			exit_code = 127;
+		update_exit_status(exit_code, p_last_exit_status);
+		exit(exit_code);
+	}
 }
 
 int	run_exec_cmd(t_cmd *cmd, char ***envp, int *p_last_exit_status)
