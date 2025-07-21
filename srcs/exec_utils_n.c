@@ -6,7 +6,7 @@
 /*   By: mpierant & sfelici <marvin@student.42ro    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 11:15:21 by mpierant          #+#    #+#             */
-/*   Updated: 2025/07/21 22:53:44 by mpierant &       ###   ########.fr       */
+/*   Updated: 2025/07/21 23:05:41 by mpierant &       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,6 @@ static char	*check_absolute_path(char *cmd)
 		ft_putstr_fd(": Permission denied\n", 2);
 		return (NULL);
 	}
-	
 	return (ft_strdup(cmd));
 }
 
