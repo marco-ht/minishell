@@ -6,7 +6,7 @@
 /*   By: mpierant & sfelici <marvin@student.42ro    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 10:33:46 by mpierant          #+#    #+#             */
-/*   Updated: 2025/07/21 00:41:09 by mpierant &       ###   ########.fr       */
+/*   Updated: 2025/07/21 14:39:47 by mpierant &       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,6 +157,43 @@ int								ft_check_builtin(t_execcmd *ecmd, char ***envp,
 void							remove_empty_args(t_execcmd *ecmd);
 int								apply_redirs(t_cmd *cmd,
 									int *p_last_exit_status);
+
+// runcmd helpers
+int								run_exec_cmd(t_cmd *cmd, char ***envp,
+									int *p_last_exit_status);
+int								run_execp_cmd(t_cmd *cmd, char ***envp,
+									int *p_last_exit_status);
+int								run_redir_cmd(t_cmd *cmd, char ***envp,
+									int *p_last_exit_status);
+int								run_pipe_cmd(t_cmd *cmd, char ***envp,
+									int *p_last_exit_status);
+int								run_and_cmd(t_cmd *cmd, char ***envp,
+									int *p_last_exit_status);
+int								run_or_cmd(t_cmd *cmd, char ***envp,
+									int *p_last_exit_status);
+int								run_heredoc_cmd(t_cmd *cmd, char ***envp,
+									int *p_last_exit_status);
+
+// run_pipe_cmd vars struct
+typedef struct s_pipe_ctx
+{
+	int							p[2];
+	int							status_right;
+	pid_t						pid_left;
+	pid_t						pid_right;
+	t_pipecmd					*pcmd;
+}								t_pipe_ctx;
+
+// run_redir_cmd vars struct
+typedef struct s_redir_ctx
+{
+	t_redircmd					*redirs[32];
+	int							n;
+	t_cmd						*cur;
+	int							saved_stdin;
+	int							saved_stdout;
+	int							status;
+}								t_redir_ctx;
 
 // PARSING: LEXER (gettoken) struct and helpers
 typedef struct s_token_data
