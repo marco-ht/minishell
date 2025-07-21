@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main2.c                                            :+:      :+:    :+:   */
+/*   main2_n.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mpierant & sfelici <marvin@student.42ro    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 19:37:24 by mpierant &        #+#    #+#             */
-/*   Updated: 2025/07/16 19:38:34 by mpierant &       ###   ########.fr       */
+/*   Updated: 2025/07/22 01:40:37 by mpierant &       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,18 +36,19 @@ int	parse_until_tree(t_vars *v)
 			v->more = readline("> ");
 			if (v->more == NULL)
 				return (1);
+			v->old_buf = v->buf;
 			v->buf = ft_strjoin(v->buf, "\n");
+			free(v->old_buf);
+			v->old_buf = v->buf;
 			v->buf = ft_strjoin(v->buf, v->more);
+			free(v->old_buf);
 			free(v->more);
 			continue ;
 		}
 		break ;
 	}
 	if (v->tree == NULL)
-	{
-		free(v->lineparser);
-		return (1);
-	}
+		return (free(v->lineparser), 1);
 	return (0);
 }
 

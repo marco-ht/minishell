@@ -6,7 +6,7 @@
 /*   By: mpierant & sfelici <marvin@student.42ro    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 10:33:46 by mpierant          #+#    #+#             */
-/*   Updated: 2025/07/21 14:39:47 by mpierant &       ###   ########.fr       */
+/*   Updated: 2025/07/22 01:38:12 by mpierant &       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 # define MINISHELL_H
 
 # include "../libft/libft.h"
-# include <stdio.h>
 # include <dirent.h>
 # include <errno.h>
 # include <fcntl.h>
@@ -22,6 +21,7 @@
 # include <readline/history.h>
 # include <readline/readline.h>
 # include <signal.h>
+# include <stdio.h>
 # include <stdlib.h>
 # include <string.h>
 # include <sys/stat.h>
@@ -125,6 +125,7 @@ typedef struct s_vars
 	char						*buf;
 	char						*tmp;
 	char						*more;
+	char						*old_buf;
 	char						*lineparser;
 	int							status;
 	int							last_exit_status;
