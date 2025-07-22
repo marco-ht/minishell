@@ -25,9 +25,11 @@ int	add_new_var(char ***envp, char *arg_copy, char *value)
 		return (1);
 	}
 	copy_env_vars(new_envp, *envp, count);
-	*(value - 1) = '=';
+	if (value)
+		*(value - 1) = '=';
 	new_envp[count] = ft_strdup(arg_copy);
-	*(value - 1) = '\0';
+	if (value)
+		*(value - 1) = '\0';
 	if (!new_envp[count])
 	{
 		perror("minishell: export");
@@ -77,7 +79,6 @@ int	validate_and_process_key(char *key, char *value, char ***envp,
 
 int	handle_no_value_case(char *key, char *arg_copy, char ***envp)
 {
-	char	*new_var;
 	char	**var_ptr;
 
 	if (!is_valid_identifier(key))
@@ -89,15 +90,8 @@ int	handle_no_value_case(char *key, char *arg_copy, char ***envp)
 	var_ptr = find_env_var(*envp, key);
 	if (!var_ptr)
 	{
-		new_var = malloc(ft_strlen(key) + 2);
-		if (!new_var)
-			return (perror("minishell: export"), free(arg_copy), 1);
-		ft_strlcpy(new_var, key, ft_strlen(key) + 2);
-		new_var[ft_strlen(key)] = '=';
-		new_var[ft_strlen(key) + 1] = '\0';
-		if (add_new_var(envp, new_var, new_var + ft_strlen(key) + 1))
-			return (free(new_var), free(arg_copy), 1);
-		free(new_var);
+		if (add_new_var(envp, key, NULL))
+			return (1);
 	}
 	return (0);
 }
