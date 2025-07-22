@@ -6,7 +6,7 @@
 /*   By: mpierant & sfelici <marvin@student.42ro    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 11:52:15 by mpierant          #+#    #+#             */
-/*   Updated: 2025/07/16 13:59:19 by mpierant &       ###   ########.fr       */
+/*   Updated: 2025/07/22 06:07:36 by mpierant &       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ int	builtin_cd(t_execcmd *ecmd, char **envp)
 
 	if (ecmd->argv[1] && ecmd->argv[2])
 	{
-		ft_putstr_fd(" too many arguments", 2);
+		ft_putstr_fd(" too many arguments\n", 2);
 		return (1);
 	}
 	if (!ecmd->argv[1])
