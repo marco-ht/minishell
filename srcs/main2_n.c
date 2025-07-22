@@ -6,7 +6,7 @@
 /*   By: mpierant & sfelici <marvin@student.42ro    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 19:37:24 by mpierant &        #+#    #+#             */
-/*   Updated: 2025/07/22 04:45:39 by mpierant &       ###   ########.fr       */
+/*   Updated: 2025/07/22 06:36:18 by mpierant &       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,11 @@ void	read_and_parse(t_vars *v)
 		}
 		reset_signal_flag();
 		if (parse_until_tree(v))
+		{
+			if (v->buf)
+				free(v->buf);
 			continue ;
+		}
 		sanitize_buf(v);
 		execute_and_cleanup(v);
 	}
