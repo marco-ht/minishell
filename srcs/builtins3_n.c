@@ -6,7 +6,7 @@
 /*   By: mpierant & sfelici <marvin@student.42ro    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 11:42:20 by mpierant          #+#    #+#             */
-/*   Updated: 2025/07/22 16:18:24 by mpierant &       ###   ########.fr       */
+/*   Updated: 2025/07/23 00:21:38 by mpierant &       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@ int	builtin_exit(t_execcmd *ecmd, t_vars *v)
 	{
 		rl_clear_history();
 		ft_exit_err_n(NULL, &v->last_exit_status, 0, v);
-		//exit(0);
 	}
 	else if (ecmd->argv[2] != NULL)
 	{
@@ -28,19 +27,15 @@ int	builtin_exit(t_execcmd *ecmd, t_vars *v)
 		return (1);
 	}
 	else if (!ft_isnumreal(ecmd->argv[1]))
-	{
-		//ft_putstr_fd(" numeric argument required\n", 2);
-		ft_exit_err_n(" numeric argument required\n", &v->last_exit_status, 2, v);
-		//exit(2);
-	}
+		ft_exit_err_n(" numeric argument required\n", &v->last_exit_status, 2,
+			v);
 	else
 	{
 		exit_status = (int)(ft_atoi(ecmd->argv[1]) & 0xFF);
 		rl_clear_history();
 		ft_exit_err_n(NULL, &v->last_exit_status, exit_status, v);
-		//exit(exit_status);
 	}
-	return(exit_status);
+	return (exit_status);
 }
 
 int	builtin_env(char **envp)
@@ -63,8 +58,8 @@ char	**find_env_var(char **envp, const char *key)
 	key_len = ft_strlen(key);
 	while (*envp)
 	{
-			if (ft_strncmp(*envp, key, key_len) == 0
-				&& ((*envp)[key_len] == '=' || (*envp)[key_len] == '\0'))
+		if (ft_strncmp(*envp, key, key_len) == 0 && ((*envp)[key_len] == '='
+			|| (*envp)[key_len] == '\0'))
 			return (envp);
 		envp++;
 	}

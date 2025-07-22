@@ -6,7 +6,7 @@
 /*   By: mpierant & sfelici <marvin@student.42ro    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/21 00:47:12 by mpierant &        #+#    #+#             */
-/*   Updated: 2025/07/22 16:27:22 by mpierant &       ###   ########.fr       */
+/*   Updated: 2025/07/23 00:33:32 by mpierant &       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,16 +49,13 @@ static void	handle_open_and_dup(t_redircmd *rc, int *p_last_exit_status,
 			ft_putstr_fd(": No such file or directory\n", 2);
 		else
 			ft_putstr_fd(": Permission denied\n", 2);
-		free_tree(v->tree);
-		ft_free_envp(v->envp);
-		update_exit_status(1, p_last_exit_status);
-		exit(1);
+		ft_exit_err_n(NULL, p_last_exit_status, 1, v);
 	}
 	if (dup2(fd, rc->fd) < 0)
 	{
 		perror("dup2");
 		close(fd);
-		free_tree(v->tree);			//eventualmente funzione ft_exit_err_n(NULL, exit_code, v) che fa tutte queste cose
+		free_tree(v->tree);
 		ft_free_envp(v->envp);
 		update_exit_status(1, p_last_exit_status);
 		exit(1);

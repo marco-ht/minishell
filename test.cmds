@@ -1,0 +1,42 @@
+pwd
+cd /
+pwd
+cd nonexistent_dir
+cd ..
+pwd
+cd /home/mpierant/consegnare/leakstest/minishell
+echo $HOME
+export TESTVAR=“123”
+echo $TESTVAR
+unset TESTVAR
+echo $TESTVAR
+echo Hello\ World
+echo "Una stringa con spazi e $HOME non espanso"
+echo Home is $HOME expanded
+echo 'Home is $HOME literally'
+echo "Line1" > out.txt
+echo "Line2" >> out.txt
+cat < out.txt
+wc -l < out.txt
+cat << EOF
+qui-documento
+riga 2
+EOF
+echo 1 2 3 4 5 | tr ' ' '\n' | tail -n2
+ls -l /nonexistent | grep mini
+invalidcmd
+ls /nonexistent_dir 2> err.log
+cat err.log
+echo prima && echo seconda
+false && echo non_eseguito
+true || echo non_eseguito
+sleep 0.1 &&
+jobs
+wait
+( echo in_subshell && cd / && pwd )
+pwd
+cd /home/mpierant/consegnare/leakstest/minishell
+touch a1.txt a2.txt b1.txt
+ls a*.txt
+rm a*.txt b1.txt
+exit

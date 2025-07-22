@@ -6,7 +6,7 @@
 /*   By: mpierant & sfelici <marvin@student.42ro    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/21 13:34:09 by mpierant &        #+#    #+#             */
-/*   Updated: 2025/07/22 16:24:31 by mpierant &       ###   ########.fr       */
+/*   Updated: 2025/07/23 00:17:35 by mpierant &       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ static void	run_exec_cmd_child(t_execcmd *ecmd, char **envp,
 	if (*pid == 0)
 	{
 		setup_signals_child();
-		path = find_path(ecmd->argv, envp);		// eventualmente usa ft_exit_err_n(NULL, exit_status ...) per ridurre righe con str=NULL
+		path = find_path(ecmd->argv, envp);
 		if (path == NULL)
 		{
 			free_tree(v->tree);
@@ -72,7 +72,8 @@ int	run_exec_cmd(t_cmd *cmd, char ***envp, int *p_last_exit_status, t_vars *v)
 	pid_t		pid;
 	t_execcmd	*ecmd;
 
-	status = run_exec_exp_redirs_builtin(cmd, envp, p_last_exit_status, &ecmd, v);
+	status = run_exec_exp_redirs_builtin(cmd, envp, p_last_exit_status, &ecmd,
+			v);
 	if (status != -2)
 		return (status);
 	run_exec_cmd_child(ecmd, *envp, p_last_exit_status, &pid, v);

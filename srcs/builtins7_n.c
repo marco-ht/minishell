@@ -6,7 +6,7 @@
 /*   By: mpierant & sfelici <marvin@student.42ro    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 13:28:01 by mpierant          #+#    #+#             */
-/*   Updated: 2025/07/22 07:08:03 by mpierant &       ###   ########.fr       */
+/*   Updated: 2025/07/22 23:49:02 by mpierant &       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,10 +20,7 @@ int	add_new_var(char ***envp, char *arg_copy, char *value)
 	count = count_env_vars(*envp);
 	new_envp = ft_calloc(count + 2, sizeof(char *));
 	if (!new_envp)
-	{
-		perror("minishell: export");
-		return (1);
-	}
+		return (perror("minishell: export"), 1);
 	copy_env_vars(new_envp, *envp, count);
 	if (value)
 		*(value - 1) = '=';

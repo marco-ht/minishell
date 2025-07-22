@@ -6,7 +6,7 @@
 /*   By: mpierant & sfelici <marvin@student.42ro    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/20 15:29:55 by mpierant &        #+#    #+#             */
-/*   Updated: 2025/07/22 15:25:09 by mpierant &       ###   ########.fr       */
+/*   Updated: 2025/07/22 23:46:43 by mpierant &       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,8 @@ static int	check_export_unset(t_execcmd *ecmd, char ***envp,
 	return (-1);
 }
 
-int	ft_check_builtin(t_execcmd *ecmd, char ***envp, int *p_last_exit_status, t_vars *v)
+int	ft_check_builtin(t_execcmd *ecmd, char ***envp, int *p_last_exit_status,
+		t_vars *v)
 {
 	int	ret;
 

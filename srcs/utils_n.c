@@ -6,7 +6,7 @@
 /*   By: mpierant & sfelici <marvin@student.42ro    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 10:46:39 by mpierant          #+#    #+#             */
-/*   Updated: 2025/07/22 16:39:35 by mpierant &       ###   ########.fr       */
+/*   Updated: 2025/07/23 00:25:43 by mpierant &       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,25 +48,17 @@ void	ft_exit_err(char *str)
 	exit(1);
 }
 
-void	ft_exit_err_n(char *str, int *p_last_exit_status, int exit_code, t_vars *v)
+void	ft_exit_err_n(char *str, int *p_last_exit_status, int exit_code,
+		t_vars *v)
 {
-	char *s;
-	int	allocated;
-	
 	if (str)
 	{
-		allocated = 0;
-		s = str;
+		ft_putstr_fd(str, 2);
 		if (!ft_strchr(str, '\n'))
-		{
-			s = ft_strjoin(str, "\n");
-			allocated = 1;
-		}
-		ft_putstr_fd(s, 2);
-		if (allocated)
-			free(s);
-		//printf("%s\n", str);
+			ft_putstr_fd("\n", 2);
 	}
+	rl_clear_history();
+	free(v->buf);
 	free_tree(v->tree);
 	ft_free_envp(v->envp);
 	update_exit_status(exit_code, p_last_exit_status);

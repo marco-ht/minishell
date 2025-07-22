@@ -6,7 +6,7 @@
 /*   By: mpierant & sfelici <marvin@student.42ro    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 14:08:11 by mpierant &        #+#    #+#             */
-/*   Updated: 2025/07/22 17:35:57 by mpierant &       ###   ########.fr       */
+/*   Updated: 2025/07/22 23:45:45 by mpierant &       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ void	free_tree(t_cmd *cmd)
 	if (cmd->type == EXEC)
 		free_exec((t_execcmd *)cmd);
 	else if (cmd->type == EXECP)
-    	free_exec((t_execcmd *)cmd);
+		free_exec((t_execcmd *)cmd);
 	else if (cmd->type == PIPE)
 		free_pipe_cmd((t_pipecmd *)cmd);
 	else if (cmd->type == REDIR)
