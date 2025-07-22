@@ -6,22 +6,11 @@
 /*   By: mpierant & sfelici <marvin@student.42ro    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/21 00:24:32 by mpierant &        #+#    #+#             */
-/*   Updated: 2025/07/21 21:22:29 by mpierant &       ###   ########.fr       */
+/*   Updated: 2025/07/22 05:20:56 by mpierant &       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
-
-void	gnl_cleanup(void)
-{
-	static char	*str;
-
-	if (str)
-	{
-		free(str);
-		str = NULL;
-	}
-}
 
 /* function to remove argv[i]=="" empty strings */
 void	remove_empty_args(t_execcmd *ecmd)
