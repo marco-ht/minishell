@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   runcmd1d.c                                         :+:      :+:    :+:   */
+/*   runcmd1d_n.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mpierant & sfelici <marvin@student.42ro    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/21 14:02:43 by mpierant &        #+#    #+#             */
-/*   Updated: 2025/07/21 14:23:08 by mpierant &       ###   ########.fr       */
+/*   Updated: 2025/07/22 05:50:23 by mpierant &       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ static void	run_pipe_left(t_pipe_ctx *ctx, char ***envp,
 		int *p_last_exit_status)
 {
 	int	redir_stdout;
+	int	exit_status;
 
 	ctx->pid_left = fork1();
 	if (ctx->pid_left == 0)
@@ -28,7 +29,10 @@ static void	run_pipe_left(t_pipe_ctx *ctx, char ***envp,
 		close(ctx->p[1]);
 		if (ctx->pcmd->left->type == EXEC)
 			ctx->pcmd->left->type = EXECP;
-		exit(ft_runcmd(ctx->pcmd->left, envp, p_last_exit_status));
+		exit_status = ft_runcmd(ctx->pcmd->left, envp, p_last_exit_status);
+		free_tree((t_cmd *)ctx->pcmd);
+		ft_free_envp(*envp);
+		exit(exit_status);
 	}
 }
 
@@ -36,6 +40,7 @@ static void	run_pipe_right(t_pipe_ctx *ctx, char ***envp,
 		int *p_last_exit_status)
 {
 	int	redir_stdin;
+	int	exit_status;
 
 	ctx->pid_right = fork1();
 	if (ctx->pid_right == 0)
@@ -48,7 +53,10 @@ static void	run_pipe_right(t_pipe_ctx *ctx, char ***envp,
 		close(ctx->p[1]);
 		if (ctx->pcmd->right->type == EXEC)
 			ctx->pcmd->right->type = EXECP;
-		exit(ft_runcmd(ctx->pcmd->right, envp, p_last_exit_status));
+		exit_status = ft_runcmd(ctx->pcmd->right, envp, p_last_exit_status);
+		free_tree((t_cmd *)ctx->pcmd);
+		ft_free_envp(*envp);
+		exit(exit_status);
 	}
 }
 
