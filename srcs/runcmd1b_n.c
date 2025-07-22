@@ -6,7 +6,7 @@
 /*   By: mpierant & sfelici <marvin@student.42ro    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/21 13:34:09 by mpierant &        #+#    #+#             */
-/*   Updated: 2025/07/23 00:58:33 by mpierant &       ###   ########.fr       */
+/*   Updated: 2025/07/23 01:11:42 by mpierant &       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,16 +41,10 @@ static void	run_exec_cmd_child(t_execcmd *ecmd, char **envp, pid_t *pid,
 	{
 		setup_signals_child();
 		path = find_path(ecmd->argv, envp);
+		if (path == NULL && errno == ENOENT)
+			ft_exit_err_n(NULL, &v->last_exit_status, 127, v);
 		if (path == NULL)
-		{
-			free_tree(v->tree);
-			ft_free_envp(envp);
-			exit_code = 126;
-			if (errno == ENOENT)
-				exit_code = 127;
-			update_exit_status(exit_code, &v->last_exit_status);
-			exit(exit_code);
-		}
+			ft_exit_err_n(NULL, &v->last_exit_status, 126, v);
 		execve(path, ecmd->argv, envp);
 		free(path);
 		ft_putstr_fd(ecmd->argv[0], 2);
