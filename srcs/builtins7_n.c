@@ -6,7 +6,7 @@
 /*   By: mpierant & sfelici <marvin@student.42ro    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 13:28:01 by mpierant          #+#    #+#             */
-/*   Updated: 2025/07/16 13:59:37 by mpierant &       ###   ########.fr       */
+/*   Updated: 2025/07/22 07:08:03 by mpierant &       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ int	validate_and_process_key(char *key, char *value, char ***envp,
 
 int	handle_no_value_case(char *key, char *arg_copy, char ***envp)
 {
-	char	*value;
+	char	*new_var;
 	char	**var_ptr;
 
 	if (!is_valid_identifier(key))
@@ -89,12 +89,15 @@ int	handle_no_value_case(char *key, char *arg_copy, char ***envp)
 	var_ptr = find_env_var(*envp, key);
 	if (!var_ptr)
 	{
-		value = key + ft_strlen(key);
-		*value = '=';
-		*(value + 1) = '\0';
-		if (add_new_var(envp, arg_copy, value + 1))
-			return (1);
-		*value = '\0';
+		new_var = malloc(ft_strlen(key) + 2);
+		if (!new_var)
+			return (perror("minishell: export"), free(arg_copy), 1);
+		ft_strlcpy(new_var, key, ft_strlen(key) + 2);
+		new_var[ft_strlen(key)] = '=';
+		new_var[ft_strlen(key) + 1] = '\0';
+		if (add_new_var(envp, new_var, new_var + ft_strlen(key) + 1))
+			return (free(new_var), free(arg_copy), 1);
+		free(new_var);
 	}
 	return (0);
 }
