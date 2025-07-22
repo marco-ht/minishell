@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   expansions2.c                                      :+:      :+:    :+:   */
+/*   expansions2_n.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mpierant & sfelici <marvin@student.42ro    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 16:44:05 by mpierant &        #+#    #+#             */
-/*   Updated: 2025/07/16 16:44:17 by mpierant &       ###   ########.fr       */
+/*   Updated: 2025/07/22 04:08:12 by mpierant &       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,8 +66,12 @@ void	perform_expansion(char **arg_ptr, char **envp)
 		else
 			buffer[i++] = *arg++;
 	}
+	buffer[i] = '\0';
 	free(*arg_ptr);
-	*arg_ptr = ft_strdup(buffer);
+	if (buffer[0] == '\0')
+		*arg_ptr = "";
+	else
+		*arg_ptr = ft_strdup(buffer);
 }
 
 void	handle_exit_status_expansion(t_execcmd *ecmd, int i,
