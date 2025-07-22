@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   expansions.c                                       :+:      :+:    :+:   */
+/*   expansions_n.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mpierant & sfelici <marvin@student.42ro    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 16:30:00 by mpierant &        #+#    #+#             */
-/*   Updated: 2025/07/16 16:42:35 by mpierant &       ###   ########.fr       */
+/*   Updated: 2025/07/22 03:17:55 by mpierant &       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,13 +53,16 @@ char	*expand_exit_status(char *str, int *p_last_exit_status)
 	if (!pos)
 		return (str);
 	exit_str = ft_itoa(*p_last_exit_status);
+	if (!exit_str)
+		return (NULL);
 	len = ft_strlen(str) - 2 + ft_strlen(exit_str) + 1;
 	result = malloc(len);
 	if (!result)
-		return (NULL);
+		return (free(exit_str), NULL);
 	ft_strlcpy(result, str, pos - str + 1);
 	result[pos - str] = '\0';
 	ft_strlcat(result, exit_str, len);
 	ft_strlcat(result, pos + 2, len);
+	free(exit_str);
 	return (result);
 }
