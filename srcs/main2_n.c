@@ -6,7 +6,7 @@
 /*   By: mpierant & sfelici <marvin@student.42ro    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 19:37:24 by mpierant &        #+#    #+#             */
-/*   Updated: 2025/07/22 06:36:18 by mpierant &       ###   ########.fr       */
+/*   Updated: 2025/07/22 12:59:02 by mpierant &       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ void	execute_and_cleanup(t_vars *v)
 {
 	add_history(v->lineparser);
 	free(v->lineparser);
-	ft_runcmd(v->tree, &v->envp, &v->last_exit_status);
+	ft_runcmd(v->tree, &v->envp, &v->last_exit_status, v);
 	free_tree(v->tree);
 	v->tree = NULL;
 	free(v->buf);

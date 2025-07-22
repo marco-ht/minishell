@@ -6,7 +6,7 @@
 /*   By: mpierant & sfelici <marvin@student.42ro    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 10:33:46 by mpierant          #+#    #+#             */
-/*   Updated: 2025/07/22 01:38:12 by mpierant &       ###   ########.fr       */
+/*   Updated: 2025/07/22 16:03:49 by mpierant &       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,32 +148,32 @@ char							**ft_envcpy(char **env);
 
 // EXECUTION
 int								ft_runcmd(t_cmd *cmd, char ***envp,
-									int *p_last_exit_status);
+									int *p_last_exit_status, t_vars *v);
 char							*find_path(char **cmd, char **envp);
 void							ft_child(int *fd, t_heredoccmd *hcmd,
 									char **envp);
 char							*my_getenv(char **envp, char *word);
 int								ft_check_builtin(t_execcmd *ecmd, char ***envp,
-									int *p_last_exit_status);
+									int *p_last_exit_status, t_vars *v);
 void							remove_empty_args(t_execcmd *ecmd);
 int								apply_redirs(t_cmd *cmd,
-									int *p_last_exit_status);
+									int *p_last_exit_status, t_vars *v);
 
 // runcmd helpers
 int								run_exec_cmd(t_cmd *cmd, char ***envp,
-									int *p_last_exit_status);
+									int *p_last_exit_status, t_vars *v);
 int								run_execp_cmd(t_cmd *cmd, char ***envp,
-									int *p_last_exit_status);
+									int *p_last_exit_status, t_vars *v);
 int								run_redir_cmd(t_cmd *cmd, char ***envp,
-									int *p_last_exit_status);
+									int *p_last_exit_status, t_vars *v);
 int								run_pipe_cmd(t_cmd *cmd, char ***envp,
-									int *p_last_exit_status);
+									int *p_last_exit_status, t_vars *v);
 int								run_and_cmd(t_cmd *cmd, char ***envp,
-									int *p_last_exit_status);
+									int *p_last_exit_status, t_vars *v);
 int								run_or_cmd(t_cmd *cmd, char ***envp,
-									int *p_last_exit_status);
+									int *p_last_exit_status, t_vars *v);
 int								run_heredoc_cmd(t_cmd *cmd, char ***envp,
-									int *p_last_exit_status);
+									int *p_last_exit_status, t_vars *v);
 
 // run_pipe_cmd vars struct
 typedef struct s_pipe_ctx
@@ -254,7 +254,8 @@ t_cmd							*ft_heredoccmd(t_cmd *subcmd, int tok_type,
 // ERROR HANDLING
 void							ft_exit_err(char *str);
 void							ft_exit_err_n(char *str,
-									int *p_last_exit_status);
+									int *p_last_exit_status, int exit_code,
+									t_vars *v);
 void							ft_ret_err(char *str);
 int								fork1(void);
 
@@ -269,7 +270,7 @@ char							*get_pwd(void);
 int								builtin_pwd(void);
 int								builtin_echo(t_execcmd *ecmd);
 int								builtin_cd(t_execcmd *ecmd, char **envp);
-int								builtin_exit(t_execcmd *ecmd);
+int								builtin_exit(t_execcmd *ecmd, t_vars *v);
 char							*get_current_directory_string(char *buffer,
 									size_t size);
 int								builtin_env(char **envp);

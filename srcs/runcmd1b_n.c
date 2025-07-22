@@ -6,14 +6,14 @@
 /*   By: mpierant & sfelici <marvin@student.42ro    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/21 13:34:09 by mpierant &        #+#    #+#             */
-/*   Updated: 2025/07/22 01:35:28 by mpierant &       ###   ########.fr       */
+/*   Updated: 2025/07/22 16:24:31 by mpierant &       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
 static int	run_exec_exp_redirs_builtin(t_cmd *cmd, char ***envp,
-		int *p_last_exit_status, t_execcmd **ecmd)
+		int *p_last_exit_status, t_execcmd **ecmd, t_vars *v)
 {
 	int	status;
 
@@ -23,15 +23,15 @@ static int	run_exec_exp_redirs_builtin(t_cmd *cmd, char ***envp,
 	remove_empty_args(*ecmd);
 	if ((*ecmd)->argv[0] == NULL)
 		return (update_exit_status(0, p_last_exit_status), 0);
-	apply_redirs(cmd, p_last_exit_status);
-	status = ft_check_builtin(*ecmd, envp, p_last_exit_status);
+	apply_redirs(cmd, p_last_exit_status, v);
+	status = ft_check_builtin(*ecmd, envp, p_last_exit_status, v);
 	if (status != -1)
 		return (status);
 	return (-2);
 }
 
 static void	run_exec_cmd_child(t_execcmd *ecmd, char **envp,
-		int *p_last_exit_status, pid_t *pid)
+		int *p_last_exit_status, pid_t *pid, t_vars *v)
 {
 	char	*path;
 	int		exit_code;
@@ -40,10 +40,10 @@ static void	run_exec_cmd_child(t_execcmd *ecmd, char **envp,
 	if (*pid == 0)
 	{
 		setup_signals_child();
-		path = find_path(ecmd->argv, envp);
+		path = find_path(ecmd->argv, envp);		// eventualmente usa ft_exit_err_n(NULL, exit_status ...) per ridurre righe con str=NULL
 		if (path == NULL)
 		{
-			free_tree((t_cmd *)ecmd);
+			free_tree(v->tree);
 			ft_free_envp(envp);
 			exit_code = 126;
 			if (errno == ENOENT)
@@ -56,7 +56,7 @@ static void	run_exec_cmd_child(t_execcmd *ecmd, char **envp,
 		ft_putstr_fd(ecmd->argv[0], 2);
 		ft_putstr_fd(": ", 2);
 		perror("");
-		free_tree((t_cmd *)ecmd);
+		free_tree(v->tree);
 		ft_free_envp(envp);
 		exit_code = 126;
 		if (errno == ENOENT)
@@ -66,16 +66,16 @@ static void	run_exec_cmd_child(t_execcmd *ecmd, char **envp,
 	}
 }
 
-int	run_exec_cmd(t_cmd *cmd, char ***envp, int *p_last_exit_status)
+int	run_exec_cmd(t_cmd *cmd, char ***envp, int *p_last_exit_status, t_vars *v)
 {
 	int			status;
 	pid_t		pid;
 	t_execcmd	*ecmd;
 
-	status = run_exec_exp_redirs_builtin(cmd, envp, p_last_exit_status, &ecmd);
+	status = run_exec_exp_redirs_builtin(cmd, envp, p_last_exit_status, &ecmd, v);
 	if (status != -2)
 		return (status);
-	run_exec_cmd_child(ecmd, *envp, p_last_exit_status, &pid);
+	run_exec_cmd_child(ecmd, *envp, p_last_exit_status, &pid, v);
 	waitpid(pid, &status, 0);
 	if (WIFEXITED(status))
 		return (update_exit_status(WEXITSTATUS(status), p_last_exit_status),

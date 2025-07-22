@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   runcmd1e.c                                         :+:      :+:    :+:   */
+/*   runcmd1e_n.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mpierant & sfelici <marvin@student.42ro    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/21 14:27:07 by mpierant &        #+#    #+#             */
-/*   Updated: 2025/07/21 14:55:09 by mpierant &       ###   ########.fr       */
+/*   Updated: 2025/07/22 16:25:55 by mpierant &       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,7 @@ static int	handle_redir_apply(t_redir_ctx *ctx, int *p_last_exit_status)
 	return (0);
 }
 
-int	run_redir_cmd(t_cmd *cmd, char ***envp, int *p_last_exit_status)
+int	run_redir_cmd(t_cmd *cmd, char ***envp, int *p_last_exit_status, t_vars *v)
 {
 	t_redir_ctx	ctx;
 
@@ -103,7 +103,7 @@ int	run_redir_cmd(t_cmd *cmd, char ***envp, int *p_last_exit_status)
 		return (1);
 	if (handle_redir_apply(&ctx, p_last_exit_status) != 0)
 		return (1);
-	ctx.status = ft_runcmd(ctx.cur, envp, p_last_exit_status);
+	ctx.status = ft_runcmd(ctx.cur, envp, p_last_exit_status, v);
 	dup2(ctx.saved_stdin, STDIN_FILENO);
 	close(ctx.saved_stdin);
 	dup2(ctx.saved_stdout, STDOUT_FILENO);

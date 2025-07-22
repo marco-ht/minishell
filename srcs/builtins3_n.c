@@ -6,20 +6,21 @@
 /*   By: mpierant & sfelici <marvin@student.42ro    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 11:42:20 by mpierant          #+#    #+#             */
-/*   Updated: 2025/07/16 13:59:10 by mpierant &       ###   ########.fr       */
+/*   Updated: 2025/07/22 16:18:24 by mpierant &       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-int	builtin_exit(t_execcmd *ecmd)
+int	builtin_exit(t_execcmd *ecmd, t_vars *v)
 {
 	int	exit_status;
 
 	if (ecmd->argv[1] == NULL)
 	{
 		rl_clear_history();
-		exit(0);
+		ft_exit_err_n(NULL, &v->last_exit_status, 0, v);
+		//exit(0);
 	}
 	else if (ecmd->argv[2] != NULL)
 	{
@@ -28,15 +29,18 @@ int	builtin_exit(t_execcmd *ecmd)
 	}
 	else if (!ft_isnumreal(ecmd->argv[1]))
 	{
-		ft_putstr_fd(" numeric argument required\n", 2);
-		exit(2);
+		//ft_putstr_fd(" numeric argument required\n", 2);
+		ft_exit_err_n(" numeric argument required\n", &v->last_exit_status, 2, v);
+		//exit(2);
 	}
 	else
 	{
 		exit_status = (int)(ft_atoi(ecmd->argv[1]) & 0xFF);
 		rl_clear_history();
-		exit(exit_status);
+		ft_exit_err_n(NULL, &v->last_exit_status, exit_status, v);
+		//exit(exit_status);
 	}
+	return(exit_status);
 }
 
 int	builtin_env(char **envp)

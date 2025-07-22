@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   runcmd2.c                                          :+:      :+:    :+:   */
+/*   runcmd2_n.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mpierant & sfelici <marvin@student.42ro    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/20 15:29:55 by mpierant &        #+#    #+#             */
-/*   Updated: 2025/07/21 00:20:28 by mpierant &       ###   ########.fr       */
+/*   Updated: 2025/07/22 15:25:09 by mpierant &       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ static int	check_pwd_echo(t_execcmd *ecmd, int *p_last_exit_status)
 }
 
 static int	check_cd_exit_env(t_execcmd *ecmd, char ***envp,
-		int *p_last_exit_status)
+		int *p_last_exit_status, t_vars *v)
 {
 	int	exit_status;
 
@@ -49,7 +49,7 @@ static int	check_cd_exit_env(t_execcmd *ecmd, char ***envp,
 	}
 	else if (ft_strncmp(ecmd->argv[0], "exit", 5) == 0)
 	{
-		exit_status = builtin_exit(ecmd);
+		exit_status = builtin_exit(ecmd, v);
 		return (update_exit_status(exit_status, p_last_exit_status),
 			exit_status);
 	}
@@ -82,7 +82,7 @@ static int	check_export_unset(t_execcmd *ecmd, char ***envp,
 	return (-1);
 }
 
-int	ft_check_builtin(t_execcmd *ecmd, char ***envp, int *p_last_exit_status)
+int	ft_check_builtin(t_execcmd *ecmd, char ***envp, int *p_last_exit_status, t_vars *v)
 {
 	int	ret;
 
@@ -91,7 +91,7 @@ int	ft_check_builtin(t_execcmd *ecmd, char ***envp, int *p_last_exit_status)
 	ret = check_pwd_echo(ecmd, p_last_exit_status);
 	if (ret != -1)
 		return (ret);
-	ret = check_cd_exit_env(ecmd, envp, p_last_exit_status);
+	ret = check_cd_exit_env(ecmd, envp, p_last_exit_status, v);
 	if (ret != -1)
 		return (ret);
 	ret = check_export_unset(ecmd, envp, p_last_exit_status);

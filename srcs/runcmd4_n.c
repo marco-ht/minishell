@@ -6,7 +6,7 @@
 /*   By: mpierant & sfelici <marvin@student.42ro    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/21 00:47:12 by mpierant &        #+#    #+#             */
-/*   Updated: 2025/07/21 02:28:02 by mpierant &       ###   ########.fr       */
+/*   Updated: 2025/07/22 16:27:22 by mpierant &       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ static void	process_did_redir(t_redircmd *rc, int *did)
 }
 
 static void	handle_open_and_dup(t_redircmd *rc, int *p_last_exit_status,
-		int *did)
+		int *did, t_vars *v)
 {
 	int	fd;
 
@@ -49,6 +49,8 @@ static void	handle_open_and_dup(t_redircmd *rc, int *p_last_exit_status,
 			ft_putstr_fd(": No such file or directory\n", 2);
 		else
 			ft_putstr_fd(": Permission denied\n", 2);
+		free_tree(v->tree);
+		ft_free_envp(v->envp);
 		update_exit_status(1, p_last_exit_status);
 		exit(1);
 	}
@@ -56,16 +58,19 @@ static void	handle_open_and_dup(t_redircmd *rc, int *p_last_exit_status,
 	{
 		perror("dup2");
 		close(fd);
+		free_tree(v->tree);			//eventualmente funzione ft_exit_err_n(NULL, exit_code, v) che fa tutte queste cose
+		ft_free_envp(v->envp);
 		update_exit_status(1, p_last_exit_status);
 		exit(1);
 	}
 	close(fd);
+	return ;
 }
 
 // returns 1 if fd[1] redirected
 // 2 if fd[0] redirected
-// 0 otherwise
-int	apply_redirs(t_cmd *cmd, int *p_last_exit_status)
+// performs clean exit(1) otherwise
+int	apply_redirs(t_cmd *cmd, int *p_last_exit_status, t_vars *v)
 {
 	t_redircmd	*redirs[32];
 	int			n;
@@ -78,7 +83,7 @@ int	apply_redirs(t_cmd *cmd, int *p_last_exit_status)
 	while (i >= 0)
 	{
 		handle_open_and_dup(redirs[i], p_last_exit_status,
-			&did_redirect_std_in_out);
+			&did_redirect_std_in_out, v);
 		i--;
 	}
 	return (did_redirect_std_in_out);

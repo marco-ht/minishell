@@ -6,14 +6,14 @@
 /*   By: mpierant & sfelici <marvin@student.42ro    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/21 13:46:22 by mpierant &        #+#    #+#             */
-/*   Updated: 2025/07/22 05:32:40 by mpierant &       ###   ########.fr       */
+/*   Updated: 2025/07/22 16:06:14 by mpierant &       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
 static void	run_heredoc_write(int p[2], t_heredoccmd *hcmd, char ***envp,
-		int *status)
+		int *status, t_vars *v)
 {
 	pid_t	pid_here;
 
@@ -22,7 +22,7 @@ static void	run_heredoc_write(int p[2], t_heredoccmd *hcmd, char ***envp,
 	{
 		close(p[0]);
 		ft_child(p, hcmd, *envp);
-		free_tree((t_cmd *)hcmd);
+		free_tree(v->tree);
 		ft_free_envp(*envp);
 		exit(0);
 	}
@@ -30,7 +30,7 @@ static void	run_heredoc_write(int p[2], t_heredoccmd *hcmd, char ***envp,
 	waitpid(pid_here, status, 0);
 }
 
-int	run_heredoc_cmd(t_cmd *cmd, char ***envp, int *p_last_exit_status)
+int	run_heredoc_cmd(t_cmd *cmd, char ***envp, int *p_last_exit_status, t_vars *v)
 {
 	int				p[2];
 	int				status;
@@ -39,15 +39,15 @@ int	run_heredoc_cmd(t_cmd *cmd, char ***envp, int *p_last_exit_status)
 
 	hcmd = (t_heredoccmd *)cmd;
 	if (pipe(p) < 0)
-		ft_exit_err_n("pipe", p_last_exit_status);
-	run_heredoc_write(p, hcmd, envp, &status);
+		ft_exit_err_n("pipe", p_last_exit_status, 1, v);
+	run_heredoc_write(p, hcmd, envp, &status, v);
 	pid = fork1();
 	if (pid == 0)
 	{
 		dup2(p[0], STDIN_FILENO);
 		close(p[0]);
-		status = ft_runcmd(hcmd->cmd, envp, p_last_exit_status);
-		free_tree((t_cmd *)hcmd);
+		status = ft_runcmd(hcmd->cmd, envp, p_last_exit_status, v);
+		free_tree(v->tree);
 		ft_free_envp(*envp);
 		exit(status);
 	}
