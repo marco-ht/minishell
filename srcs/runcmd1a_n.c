@@ -6,7 +6,7 @@
 /*   By: mpierant & sfelici <marvin@student.42ro    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/21 13:26:25 by mpierant &        #+#    #+#             */
-/*   Updated: 2025/07/22 16:23:04 by mpierant &       ###   ########.fr       */
+/*   Updated: 2025/07/22 17:12:29 by mpierant &       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@ int	run_execp_cmd(t_cmd *cmd, char ***envp, int *p_last_exit_status, t_vars *v)
 {
 	int			status;
 	t_execcmd	*ecmd;
+	char		*path;
+	int			exit_code;
 
 	ecmd = (t_execcmd *)cmd;
 	expand_wildcards(ecmd);
@@ -27,7 +29,20 @@ int	run_execp_cmd(t_cmd *cmd, char ***envp, int *p_last_exit_status, t_vars *v)
 	status = ft_check_builtin(ecmd, envp, p_last_exit_status, v);
 	if (status != -1)
 		return (status);
-	execve(find_path(ecmd->argv, *envp), ecmd->argv, *envp);
+	//execve(find_path(ecmd->argv, *envp), ecmd->argv, *envp);
+	path = find_path(ecmd->argv, *envp);		// eventualmente usa ft_exit_err_n(NULL, exit_status ...) per ridurre righe con str=NULL
+	if (path == NULL)
+	{
+		free_tree(v->tree);
+		ft_free_envp(*envp);
+		exit_code = 126;
+		if (errno == ENOENT)
+			exit_code = 127;
+		update_exit_status(exit_code, p_last_exit_status);
+		exit(exit_code);
+	}
+	execve(path, ecmd->argv, *envp);
+	free(path);
 	if (errno == ENOENT)
 	{
 		update_exit_status(127, p_last_exit_status); //in realtà anche questo lo potremmo fare in pipe ma lasciamo qui
