@@ -63,7 +63,8 @@ char	**find_env_var(char **envp, const char *key)
 	key_len = ft_strlen(key);
 	while (*envp)
 	{
-		if (ft_strncmp(*envp, key, key_len) == 0 && ((*envp)[key_len] == '='))
+			if (ft_strncmp(*envp, key, key_len) == 0
+				&& ((*envp)[key_len] == '=' || (*envp)[key_len] == '\0'))
 			return (envp);
 		envp++;
 	}

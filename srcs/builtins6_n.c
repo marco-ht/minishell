@@ -32,12 +32,23 @@ int	is_valid_identifier(const char *str)
 
 int	print_all_env(char **envp)
 {
-	int	i;
+	int		i;
+	char	*equal_sign_pos;
 
 	i = 0;
-	while (envp[i])
+	while (envp && envp[i])
 	{
-		printf("declare -x %s\n", envp[i]);
+		equal_sign_pos = ft_strchr(envp[i], '=');
+		if (equal_sign_pos)
+		{
+			*equal_sign_pos = '\0';
+			printf("declare -x %s=\"%s\"\n", envp[i], equal_sign_pos + 1);
+			*equal_sign_pos = '=';
+		}
+		else
+		{
+			printf("declare -x %s\n", envp[i]);
+		}
 		i++;
 	}
 	return (0);
