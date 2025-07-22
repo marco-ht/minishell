@@ -6,7 +6,7 @@
 /*   By: mpierant & sfelici <marvin@student.42ro    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 19:37:24 by mpierant &        #+#    #+#             */
-/*   Updated: 2025/07/22 01:40:37 by mpierant &       ###   ########.fr       */
+/*   Updated: 2025/07/22 04:45:39 by mpierant &       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ int	parse_until_tree(t_vars *v)
 	while (1)
 	{
 		v->lineparser = ft_strdup(v->buf);
-		v->tree = ft_parsecmd(v->lineparser, &v->status);
+		v->tree = ft_parsecmd(v->buf, &v->status);
 		if (v->tree == NULL && v->status == 1)
 		{
 			free(v->lineparser);
@@ -54,7 +54,7 @@ int	parse_until_tree(t_vars *v)
 
 void	sanitize_buf(t_vars *v)
 {
-	v->tmp = v->buf;
+	v->tmp = v->lineparser;
 	while (*v->tmp)
 	{
 		if (*v->tmp == '\n')
@@ -65,9 +65,9 @@ void	sanitize_buf(t_vars *v)
 
 void	execute_and_cleanup(t_vars *v)
 {
-	add_history(v->buf);
-	ft_runcmd(v->tree, &v->envp, &v->last_exit_status);
+	add_history(v->lineparser);
 	free(v->lineparser);
+	ft_runcmd(v->tree, &v->envp, &v->last_exit_status);
 	free_tree(v->tree);
 	v->tree = NULL;
 	free(v->buf);
