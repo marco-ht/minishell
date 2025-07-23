@@ -16,9 +16,9 @@ void	record_match(t_execcmd *ecmd, int *t_count, char *name)
 {
 	char	*full_path;
 
-	full_path = malloc(strlen(name) + 3);
-	strcpy(full_path, "./");
-	strcat(full_path, name);
+	full_path = malloc(ft_strlen(name) + 3);
+	ft_strlcpy(full_path, "./", ft_strlen(name + 3));
+	ft_strlcat(full_path, name, ft_strlen(name + 3));
 	ecmd->argv[*t_count] = full_path;
 	ecmd->qtype[*t_count] = 'a';
 	ecmd->allocated[*t_count] = 1;

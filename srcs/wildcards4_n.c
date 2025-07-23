@@ -32,8 +32,8 @@ static int	iterate_hidden(DIR *d, char *pat, t_execcmd *ecmd, int *t_count)
 	e = readdir(d);
 	while (e && *t_count < MAX_ARGS - 1)
 	{
-		if (e->d_name[0] == '.' && strcmp(e->d_name, ".") != 0
-			&& strcmp(e->d_name, "..") != 0)
+		if (e->d_name[0] == '.' && ft_strncmp(e->d_name, ".", ft_strlen(e->d_name)) != 0
+			&& ft_strncmp(e->d_name, "..", ft_strlen(e->d_name)) != 0)
 		{
 			if (match_star(pat, e->d_name))
 			{
