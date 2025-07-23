@@ -61,18 +61,27 @@ void	print_args_without_newline(char **argv)
 
 int	builtin_echo(t_execcmd *ecmd)
 {
-	if (!ecmd->argv[1])
+	int	i;
+	int	newline;
+	int	first_printed;
+
+	i = 1;
+	newline = 1;
+	first_printed = 1;
+	while (ecmd->argv[i] && check_echo_args(ecmd->argv[i]))
 	{
+		newline = 0;
+		i++;
+	}
+	while (ecmd->argv[i])
+	{
+		if (!first_printed)
+			printf(" ");
+		printf("%s", ecmd->argv[i]);
+		first_printed = 0;
+		i++;
+	}
+	if (newline)
 		printf("\n");
-		return (0);
-	}
-	if (check_echo_args(ecmd->argv[1]))
-	{
-		if (!ecmd->argv[2])
-			return (0);
-		print_args_without_newline(ecmd->argv);
-	}
-	else
-		print_args_with_newline(ecmd->argv);
 	return (0);
 }
