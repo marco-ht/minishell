@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   wildcards2.c                                       :+:      :+:    :+:   */
+/*   wildcards2_n.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mpierant & sfelici <marvin@student.42ro    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 16:10:29 by mpierant &        #+#    #+#             */
-/*   Updated: 2025/07/17 17:23:22 by mpierant &       ###   ########.fr       */
+/*   Updated: 2025/07/23 23:45:56 by mpierant &       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,7 +112,8 @@ void	sort_matches(char **matches, int count)
 		j = 0;
 		while (j < count - i - 1)
 		{
-			if (ft_strncmp(matches[j], matches[j + 1], ft_strlen(matches[j]) + 1) > 0)
+			if (ft_strncmp(matches[j], matches[j + 1], ft_strlen(matches[j])
+					+ 1) > 0)
 			{
 				tmp = matches[j];
 				matches[j] = matches[j + 1];

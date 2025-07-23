@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   wildcards4.c                                       :+:      :+:    :+:   */
+/*   wildcards4_n.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mpierant & sfelici <marvin@student.42ro    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 18:15:40 by mpierant &        #+#    #+#             */
-/*   Updated: 2025/07/17 18:24:04 by mpierant &       ###   ########.fr       */
+/*   Updated: 2025/07/23 23:45:42 by mpierant &       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,9 @@ static int	iterate_hidden(DIR *d, char *pat, t_execcmd *ecmd, int *t_count)
 	e = readdir(d);
 	while (e && *t_count < MAX_ARGS - 1)
 	{
-		if (e->d_name[0] == '.' && ft_strncmp(e->d_name, ".", ft_strlen(e->d_name)) != 0
-			&& ft_strncmp(e->d_name, "..", ft_strlen(e->d_name)) != 0)
+		if (e->d_name[0] == '.' && ft_strncmp(e->d_name, ".",
+				ft_strlen(e->d_name)) != 0 && ft_strncmp(e->d_name, "..",
+				ft_strlen(e->d_name)) != 0)
 		{
 			if (match_star(pat, e->d_name))
 			{
