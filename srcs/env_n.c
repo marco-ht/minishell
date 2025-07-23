@@ -47,6 +47,33 @@ static void	free_partial_envp(char **envp, int n)
 	free(envp);
 }
 
+static void	update_shlvl(char ***envp)
+{
+	char	*current_value;
+	char	*level_str;
+	char	*export_arg;
+	int		level;
+
+	if (!envp || !*envp)
+		return ;
+	current_value = my_getenv(*envp, "SHLVL=");
+	if (current_value)
+		level = ft_atoi(current_value);
+	else
+		level = 0;
+	level++;
+	level_str = ft_itoa(level);
+	if (!level_str)
+		return ;
+	export_arg = ft_strjoin("SHLVL=", level_str);
+	if (export_arg)
+	{
+		process_export_arg(export_arg, envp);
+		free(export_arg);
+	}
+	free(level_str);
+}
+
 char	**ft_envcpy(char **env)
 {
 	int		i;
@@ -72,5 +99,6 @@ char	**ft_envcpy(char **env)
 		i++;
 	}
 	envp[count] = NULL;
+	update_shlvl(&envp);
 	return (envp);
 }
