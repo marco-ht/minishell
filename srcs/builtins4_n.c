@@ -43,7 +43,7 @@ int	handle_tilde_cd(char *arg, char **envp)
 	char	*home;
 	char	*subpath;
 
-	home = my_getenv(envp, "HOME");
+	home = my_getenv(envp, "HOME=");
 	if (!home)
 	{
 		perror("minishell: cd");
@@ -71,7 +71,7 @@ int	builtin_cd(t_execcmd *ecmd, char **envp)
 	}
 	if (!ecmd->argv[1])
 	{
-		home = my_getenv(envp, "HOME");
+		home = my_getenv(envp, "HOME=");
 		return (handle_home_cd(home));
 	}
 	if (ecmd->argv[1][0] == '~')
