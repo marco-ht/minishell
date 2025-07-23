@@ -84,14 +84,14 @@ void	add_directory_matches_to_argv(t_execcmd *ecmd, t_expand_vars *vars)
 	if (vars->match_count > 0)
 	{
 		sort_matches(vars->matches, vars->match_count);
-		vars->i = 0;
-		while (vars->i < vars->match_count && vars->t_count < MAX_ARGS - 1)
+		vars->j = 0;
+		while (vars->j < vars->match_count && vars->t_count < MAX_ARGS - 1)
 		{
-			ecmd->argv[vars->t_count] = vars->matches[vars->i];
+			ecmd->argv[vars->t_count] = vars->matches[vars->j];
 			ecmd->qtype[vars->t_count] = 'a';
 			ecmd->allocated[vars->t_count] = 1;
 			vars->t_count++;
-			vars->i++;
+			vars->j++;
 		}
 	}
 }
